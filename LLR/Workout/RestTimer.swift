@@ -9,10 +9,12 @@ final class RestTimer {
     /// Bumped only on natural expiry so the view can fire a haptic without firing on Skip.
     private(set) var finishedCount = 0
     private var task: Task<Void, Never>?
+    private var exerciseName: String?
 
     var isRunning: Bool { endDate != nil }
 
-    func start(seconds: Int) {
+    func start(seconds: Int, exerciseName: String? = nil) {
+        self.exerciseName = exerciseName
         startDate = .now
         endDate = .now.addingTimeInterval(TimeInterval(seconds))
         schedule()
@@ -31,13 +33,16 @@ final class RestTimer {
 
     func skip() {
         task?.cancel()
+        RestNotifier.cancel()
         startDate = nil
         endDate = nil
     }
 
     private func schedule() {
         task?.cancel()
+        RestNotifier.cancel()
         guard let endDate else { return }
+        RestNotifier.schedule(after: endDate.timeIntervalSinceNow, exerciseName: exerciseName)
         task = Task { [weak self] in
             try? await Task.sleep(for: .seconds(endDate.timeIntervalSinceNow))
             guard !Task.isCancelled, let self else { return }
