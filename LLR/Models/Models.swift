@@ -7,6 +7,8 @@ final class Exercise {
     var name: String
     var muscleGroup: String
     var isCustom: Bool
+    /// nil = use the global default; 0 = no rest timer for this exercise.
+    var restSeconds: Int?
     @Relationship(inverse: \WorkoutExercise.exercise) var usages: [WorkoutExercise] = []
 
     init(name: String, muscleGroup: String, isCustom: Bool = false) {

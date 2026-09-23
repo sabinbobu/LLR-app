@@ -25,6 +25,10 @@ struct ExerciseLogCard: View {
                 }
             }
 
+            if let exercise = entry.exercise {
+                restMenu(for: exercise)
+            }
+
             VStack(spacing: 0) {
                 header
                 let sets = entry.orderedSets
@@ -54,6 +58,22 @@ struct ExerciseLogCard: View {
                     .frame(maxWidth: .infinity, minHeight: 40)
             }
             .buttonStyle(CardButtonStyle())
+        }
+    }
+
+    /// Per-exercise because rest needs differ wildly: 3 min after heavy squats, 45 s after curls.
+    private func restMenu(for exercise: Exercise) -> some View {
+        let fallback: Int = model.defaultRestSeconds
+        let current: String = exercise.restSeconds.map(RestDuration.label) ?? "\(RestDuration.label(fallback)) (default)"
+        return Menu {
+            Button("Default (\(RestDuration.label(fallback)))") { exercise.restSeconds = nil }
+            ForEach(RestDuration.choices, id: \.self) { seconds in
+                Button(RestDuration.label(seconds)) { exercise.restSeconds = seconds }
+            }
+            Button("Off") { exercise.restSeconds = 0 }
+        } label: {
+            Label("Rest Timer: \(current)", systemImage: "timer")
+                .foregroundStyle(Theme.accent)
         }
     }
 

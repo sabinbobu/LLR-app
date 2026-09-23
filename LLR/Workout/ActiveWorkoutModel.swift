@@ -14,8 +14,8 @@ final class ActiveWorkoutModel {
 
     private var context: ModelContext? { workout.modelContext }
 
-    private var restSeconds: Int {
-        UserDefaults.standard.object(forKey: StorageKey.restSeconds) as? Int ?? 90
+    var defaultRestSeconds: Int {
+        UserDefaults.standard.object(forKey: StorageKey.restSeconds) as? Int ?? RestDuration.defaultSeconds
     }
 
     func previousSets(for exercise: Exercise) -> [SetValue] {
@@ -66,7 +66,12 @@ final class ActiveWorkoutModel {
         }
         guard set.reps > 0 else { return false }
         set.completedAt = .now
-        restTimer.start(seconds: restSeconds)
+        let exercise = set.workoutExercise?.exercise
+        if let seconds = RestDuration.resolve(override: exercise?.restSeconds, defaultSeconds: defaultRestSeconds) {
+            restTimer.start(seconds: seconds, exerciseName: exercise?.name)
+        } else {
+            restTimer.skip()
+        }
         return true
     }
 
