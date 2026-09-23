@@ -99,6 +99,22 @@ extension Workout {
     var completedSets: [SetEntry] { exercises.flatMap(\.completedSets) }
     var volumeKg: Double { completedSets.reduce(0) { $0 + $1.weightKg * Double($1.reps) } }
     var duration: TimeInterval { (endedAt ?? .now).timeIntervalSince(startedAt) }
+    var summary: WorkoutSummary {
+        var muscleSets: [String: Int] = [:]
+        for entry in exercises {
+            guard let group = entry.exercise?.muscleGroup else { continue }
+            let working = entry.completedSets.filter(\.kind.countsTowardProgress).count
+            if working > 0 { muscleSets[group, default: 0] += working }
+        }
+        return WorkoutSummary(
+            date: startedAt,
+            duration: duration,
+            volumeKg: volumeKg,
+            reps: completedSets.reduce(0) { $0 + $1.reps },
+            muscleSets: muscleSets
+        )
+    }
+
     var recordSetCount: Int { exercises.reduce(0) { $0 + $1.recordKinds().filter { !$0.isEmpty }.count } }
 
     var title: String {

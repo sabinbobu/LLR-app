@@ -6,6 +6,8 @@ struct ProfileView: View {
     private var workouts: [Workout]
     @State private var showingSettings = false
 
+    private var summaries: [WorkoutSummary] { workouts.map(\.summary) }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,12 +24,23 @@ struct ProfileView: View {
                         Spacer()
                     }
 
+                    WeeklyStatsCard(summaries: summaries)
+
                     Text("Dashboard").font(.title3).foregroundStyle(.secondary)
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible())], spacing: 16) {
                         NavigationLink {
                             ExerciseListView()
                         } label: {
                             Label("Exercises", systemImage: "dumbbell")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                                .padding(.horizontal, 18)
+                        }
+                        .buttonStyle(CardButtonStyle())
+                        NavigationLink {
+                            MuscleSplitView(summaries: summaries)
+                        } label: {
+                            Label("Muscle Split", systemImage: "figure.strengthtraining.traditional")
                                 .font(.title3)
                                 .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
                                 .padding(.horizontal, 18)
