@@ -52,6 +52,7 @@ final class ActiveWorkoutModel {
             weightKg: prefill?.weightKg ?? 0,
             reps: prefill?.reps ?? 0
         )
+        set.kind = prefill?.kind ?? .normal
         context.insert(set)
         entry.sets.append(set)
     }

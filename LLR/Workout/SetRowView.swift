@@ -4,7 +4,7 @@ import SwiftUI
 /// value, so tapping the check alone logs the set — the one-tap path the whole app is built around.
 struct SetRowView: View {
     let entry: SetEntry
-    let number: Int
+    let label: String
     let unit: WeightUnit
     let isStriped: Bool
     let onToggle: () -> Bool
@@ -17,9 +17,17 @@ struct SetRowView: View {
 
     var body: some View {
         HStack {
-            Text("\(number)")
-                .font(.title3.weight(.medium))
-                .frame(width: 56)
+            Menu {
+                Picker("Set type", selection: kindBinding) {
+                    ForEach(SetKind.allCases) { Text($0.title).tag($0) }
+                }
+            } label: {
+                Text(label)
+                    .font(.title3.weight(.medium))
+                    .foregroundStyle(Self.color(for: entry.kind))
+                    .frame(width: 56, height: 52)
+                    .contentShape(Rectangle())
+            }
             TextField(entry.weightKg > 0 ? unit.format(kg: entry.weightKg) : "-", text: $weightText)
                 .keyboardType(.decimalPad)
                 .frame(maxWidth: .infinity)
@@ -56,6 +64,19 @@ struct SetRowView: View {
         }
         .onChange(of: repsText) { _, text in
             if let value = Int(text) { entry.reps = value }
+        }
+    }
+
+    private var kindBinding: Binding<SetKind> {
+        Binding(get: { entry.kind }, set: { entry.kind = $0 })
+    }
+
+    static func color(for kind: SetKind) -> Color {
+        switch kind {
+        case .normal: .primary
+        case .warmup: .orange
+        case .drop: .purple
+        case .failure: .red
         }
     }
 

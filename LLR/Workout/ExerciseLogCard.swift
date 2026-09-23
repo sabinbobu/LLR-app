@@ -27,8 +27,10 @@ struct ExerciseLogCard: View {
 
             VStack(spacing: 0) {
                 header
-                ForEach(Array(entry.orderedSets.enumerated()), id: \.element.id) { index, set in
-                    SetRowView(entry: set, number: index + 1, unit: unit, isStriped: index.isMultiple(of: 2)) {
+                let sets = entry.orderedSets
+                let labels = SetKind.labels(for: sets.map(\.kind))
+                ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
+                    SetRowView(entry: set, label: labels[index], unit: unit, isStriped: index.isMultiple(of: 2)) {
                         model.toggle(set)
                     }
                     .contextMenu {

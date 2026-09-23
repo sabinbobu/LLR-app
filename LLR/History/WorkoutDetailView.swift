@@ -16,9 +16,13 @@ struct WorkoutDetailView: View {
             }
             ForEach(workout.orderedExercises) { entry in
                 Section(entry.exercise?.name ?? "Exercise") {
-                    ForEach(Array(entry.completedSets.enumerated()), id: \.element.id) { index, set in
+                    let sets = entry.completedSets
+                    let labels = SetKind.labels(for: sets.map(\.kind))
+                    ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
                         HStack {
-                            Text("\(index + 1)").foregroundStyle(.secondary).frame(width: 28, alignment: .leading)
+                            Text(labels[index])
+                                .foregroundStyle(set.kind == .normal ? Color.secondary : SetRowView.color(for: set.kind))
+                                .frame(width: 28, alignment: .leading)
                             Text("\(unit.format(kg: set.weightKg)) \(unit.rawValue) × \(set.reps)")
                             Spacer()
                             Text("1RM \(unit.format(kg: OneRepMax.epley(set.value)))")
