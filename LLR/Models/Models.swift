@@ -73,6 +73,23 @@ extension SetEntry {
 extension WorkoutExercise {
     var orderedSets: [SetEntry] { sets.sorted { $0.order < $1.order } }
     var completedSets: [SetEntry] { orderedSets.filter { $0.completedAt != nil } }
+
+    /// Aligned index-for-index with `orderedSets`; history is only sessions that started earlier,
+    /// so re-opening an old workout shows the records it set at the time, not relative to today.
+    func recordKinds() -> [Set<PersonalRecords.Kind>] {
+        let sets = orderedSets
+        guard let exercise, let workout else { return sets.map { _ in [] } }
+        let history = exercise.sessions(excluding: workout)
+            .filter { $0.date < workout.startedAt }
+            .flatMap(\.sets)
+        var earlier: [SetValue] = []
+        return sets.map { set in
+            guard set.completedAt != nil else { return [] }
+            let kinds = PersonalRecords.kinds(for: set.value, history: history, earlierToday: earlier)
+            earlier.append(set.value)
+            return kinds
+        }
+    }
 }
 
 extension Workout {
@@ -80,6 +97,7 @@ extension Workout {
     var completedSets: [SetEntry] { exercises.flatMap(\.completedSets) }
     var volumeKg: Double { completedSets.reduce(0) { $0 + $1.weightKg * Double($1.reps) } }
     var duration: TimeInterval { (endedAt ?? .now).timeIntervalSince(startedAt) }
+    var recordSetCount: Int { exercises.reduce(0) { $0 + $1.recordKinds().filter { !$0.isEmpty }.count } }
 
     var title: String {
         switch Calendar.current.component(.hour, from: startedAt) {

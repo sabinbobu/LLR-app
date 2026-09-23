@@ -15,6 +15,10 @@ struct WorkoutCard: View {
                 stat("Time", Format.duration(workout.duration))
                 stat("Volume", "\(unit.format(kg: workout.volumeKg)) \(unit.rawValue)")
                 stat("Sets", "\(workout.completedSets.count)")
+                let records = workout.recordSetCount
+                if records > 0 {
+                    stat("PRs", "🏆 \(records)")
+                }
             }
             Divider()
             ForEach(workout.orderedExercises) { entry in

@@ -29,8 +29,15 @@ struct ExerciseLogCard: View {
                 header
                 let sets = entry.orderedSets
                 let labels = SetKind.labels(for: sets.map(\.kind))
+                let records = entry.recordKinds()
                 ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
-                    SetRowView(entry: set, label: labels[index], unit: unit, isStriped: index.isMultiple(of: 2)) {
+                    SetRowView(
+                        entry: set,
+                        label: labels[index],
+                        unit: unit,
+                        isStriped: index.isMultiple(of: 2),
+                        isRecord: !records[index].isEmpty
+                    ) {
                         model.toggle(set)
                     }
                     .contextMenu {

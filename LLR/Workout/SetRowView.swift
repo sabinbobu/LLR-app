@@ -7,6 +7,7 @@ struct SetRowView: View {
     let label: String
     let unit: WeightUnit
     let isStriped: Bool
+    let isRecord: Bool
     let onToggle: () -> Bool
 
     @State private var weightText = ""
@@ -26,8 +27,18 @@ struct SetRowView: View {
                     .font(.title3.weight(.medium))
                     .foregroundStyle(Self.color(for: entry.kind))
                     .frame(width: 56, height: 52)
+                    .overlay(alignment: .topTrailing) {
+                        if isRecord {
+                            Image(systemName: "trophy.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.yellow)
+                                .padding(6)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
                     .contentShape(Rectangle())
             }
+            .animation(.bouncy, value: isRecord)
             TextField(entry.weightKg > 0 ? unit.format(kg: entry.weightKg) : "-", text: $weightText)
                 .keyboardType(.decimalPad)
                 .frame(maxWidth: .infinity)
@@ -58,6 +69,7 @@ struct SetRowView: View {
         .background(isDone ? Theme.completedRow : (isStriped ? Theme.card : Color.clear))
         .sensoryFeedback(.impact(weight: .medium), trigger: isDone)
         .sensoryFeedback(.error, trigger: rejectCount)
+        .sensoryFeedback(.success, trigger: isRecord) { _, new in new }
         .onAppear { if isDone { fillTextFromModel() } }
         .onChange(of: weightText) { _, text in
             if let value = WeightUnit.parse(text) { entry.weightKg = unit.toKg(value) }
