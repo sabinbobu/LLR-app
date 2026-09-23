@@ -22,4 +22,39 @@ enum WorkoutFactory {
         try? context.save()
         return workout
     }
+
+    /// A planned weight/reps is used as-is; a blank one falls back to last session's value at
+    /// that position, same rule as mid-workout prefill — "leave it blank to workout on the go".
+    static func start(routine: Routine, in context: ModelContext) -> Workout {
+        let workout = Workout()
+        context.insert(workout)
+        for routineEntry in routine.orderedExercises {
+            guard let exercise = routineEntry.exercise else { continue }
+            let entry = WorkoutExercise(order: routineEntry.order)
+            context.insert(entry)
+            entry.exercise = exercise
+            workout.exercises.append(entry)
+            if let restSeconds = routineEntry.restSeconds {
+                exercise.restSeconds = restSeconds
+            }
+
+            let previous = PreviousPerformance.latestSets(in: exercise.sessions(excluding: workout))
+            let plans = routineEntry.orderedSets
+            let count = max(plans.count, 1)
+            for index in 0..<count {
+                let plan = index < plans.count ? plans[index] : nil
+                let fallback = PreviousPerformance.prefill(index: index, previous: previous, currentLast: nil)
+                let set = SetEntry(
+                    order: index,
+                    weightKg: plan?.weightKg ?? fallback?.weightKg ?? 0,
+                    reps: plan?.reps ?? fallback?.reps ?? 0
+                )
+                set.kind = plan?.kind ?? fallback?.kind ?? .normal
+                context.insert(set)
+                entry.sets.append(set)
+            }
+        }
+        try? context.save()
+        return workout
+    }
 }
