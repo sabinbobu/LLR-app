@@ -14,6 +14,7 @@ enum WorkoutFactory {
             workout.exercises.append(entry)
             for (setIndex, sourceSet) in sourceEntry.completedSets.enumerated() {
                 let set = SetEntry(order: setIndex, weightKg: sourceSet.weightKg, reps: sourceSet.reps)
+                set.kind = sourceSet.kind
                 context.insert(set)
                 entry.sets.append(set)
             }

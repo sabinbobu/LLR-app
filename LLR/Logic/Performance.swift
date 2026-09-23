@@ -3,6 +3,7 @@ import Foundation
 struct SetValue: Equatable {
     var weightKg: Double
     var reps: Int
+    var kind: SetKind = .normal
 }
 
 struct Session: Equatable {
@@ -29,7 +30,10 @@ enum PreviousPerformance {
     /// since that reflects current fatigue better than last session's final set.
     static func prefill(index: Int, previous: [SetValue], currentLast: SetValue?) -> SetValue? {
         if index >= 0, index < previous.count { return previous[index] }
-        return currentLast ?? previous.last
+        // Extra sets are working sets: repeating a trailing warm-up/drop label would be wrong.
+        guard var fallback = currentLast ?? previous.last else { return nil }
+        fallback.kind = .normal
+        return fallback
     }
 }
 
@@ -41,7 +45,7 @@ enum ExerciseProgress {
 
     static func bestSet(in sessions: [Session]) -> SetValue? {
         sessions.flatMap(\.sets)
-            .filter { OneRepMax.epley($0) > 0 }
+            .filter { $0.kind.countsTowardProgress && OneRepMax.epley($0) > 0 }
             .max { a, b in
                 let ea = OneRepMax.epley(a), eb = OneRepMax.epley(b)
                 // Tolerance: 100×3 and 110×1 are equal on paper but differ in the last float bit.
@@ -59,6 +63,7 @@ enum ExerciseProgress {
 
     private static func series(_ sessions: [Session], metric: ([SetValue]) -> Double) -> [Point] {
         sessions
+            .map { Session(date: $0.date, sets: $0.sets.filter(\.kind.countsTowardProgress)) }
             .filter { !$0.sets.isEmpty }
             .sorted { $0.date < $1.date }
             .map { Point(date: $0.date, value: metric($0.sets)) }

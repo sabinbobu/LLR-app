@@ -51,6 +51,8 @@ final class SetEntry {
     var weightKg: Double
     var reps: Int
     var completedAt: Date?
+    // Stored as a raw string with a default so existing stores migrate without a schema version bump.
+    var kindRaw: String = "normal"
 
     init(order: Int, weightKg: Double, reps: Int) {
         self.order = order
@@ -60,7 +62,12 @@ final class SetEntry {
 }
 
 extension SetEntry {
-    var value: SetValue { SetValue(weightKg: weightKg, reps: reps) }
+    var kind: SetKind {
+        get { SetKind(rawValue: kindRaw) ?? .normal }
+        set { kindRaw = newValue.rawValue }
+    }
+
+    var value: SetValue { SetValue(weightKg: weightKg, reps: reps, kind: kind) }
 }
 
 extension WorkoutExercise {
