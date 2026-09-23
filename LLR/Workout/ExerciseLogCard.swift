@@ -4,6 +4,11 @@ struct ExerciseLogCard: View {
     let entry: WorkoutExercise
     let model: ActiveWorkoutModel
     let unit: WeightUnit
+    @State private var plateTargetKg: Double?
+
+    private var showingPlates: Binding<Bool> {
+        Binding(get: { plateTargetKg != nil }, set: { if !$0 { plateTargetKg = nil } })
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -45,6 +50,7 @@ struct ExerciseLogCard: View {
                         model.toggle(set)
                     }
                     .contextMenu {
+                        Button("Plate Calculator", systemImage: "circle.grid.2x1") { plateTargetKg = set.weightKg }
                         Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
                     }
                 }
@@ -58,6 +64,9 @@ struct ExerciseLogCard: View {
                     .frame(maxWidth: .infinity, minHeight: 40)
             }
             .buttonStyle(CardButtonStyle())
+        }
+        .sheet(isPresented: showingPlates) {
+            PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
         }
     }
 
