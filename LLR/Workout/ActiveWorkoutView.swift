@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ActiveWorkoutView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
     @State private var model: ActiveWorkoutModel
     @State private var showingPicker = false
@@ -37,12 +38,17 @@ struct ActiveWorkoutView: View {
                 }
             }
             .animation(.snappy, value: model.restTimer.isRunning)
+            .onAppear { LiveWorkoutActivity.sync(startIfNeeded: true) }
+            // Typed weight/reps change the Lock Screen target; leaving the app is when that matters.
+            .onChange(of: scenePhase) { _, phase in
+                if phase != .active { LiveWorkoutActivity.sync() }
+            }
             .sensoryFeedback(.success, trigger: model.restTimer.finishedCount)
             .navigationTitle("Log Workout")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .sheet(isPresented: $showingPicker) {
-                ExercisePickerView { model.add($0) }
+                ExercisePickerView { $0.forEach(model.add) }
             }
             .confirmationDialog("Discard this workout?", isPresented: $confirmDiscard, titleVisibility: .visible) {
                 Button("Discard Workout", role: .destructive) {

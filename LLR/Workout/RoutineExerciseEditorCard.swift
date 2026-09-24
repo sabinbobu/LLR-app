@@ -6,48 +6,73 @@ struct RoutineExerciseEditorCard: View {
     let onRemove: () -> Void
     let onAddSet: () -> Void
     let onDeleteSet: (RoutineSetPlan) -> Void
+    @State private var showingDetails = false
+    @FocusState private var notesFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 14) {
-                Image(systemName: "dumbbell.fill")
-                    .frame(width: 44, height: 44)
-                    .overlay(Circle().stroke(Theme.border))
-                Text(entry.exercise?.name ?? "Exercise")
-                    .font(.title3.weight(.medium))
-                    .foregroundStyle(Theme.accent)
-                Spacer()
-                Menu {
-                    Button("Remove Exercise", systemImage: "trash", role: .destructive, action: onRemove)
-                } label: {
-                    Image(systemName: "ellipsis").frame(width: 44, height: 44)
+        VStack(spacing: 0) {
+            titleRow
+
+            TextField("Add notes (optional)", text: notesBinding, axis: .vertical)
+                .font(.subheadline)
+                .focused($notesFocused)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
+                .frame(minHeight: 44)
+                .fieldChrome(isFocused: notesFocused)
+                .padding(.horizontal, 16)
+
+            restRow
+            Divider().padding(.horizontal, 16)
+            header
+
+            let sets = entry.orderedSets
+            let labels = SetKind.labels(for: sets.map(\.kind))
+            ForEach(Array(sets.enumerated()), id: \.element.id) { index, plan in
+                RoutineSetRowView(plan: plan, label: labels[index], unit: unit, canRemove: sets.count > 1) {
+                    onDeleteSet(plan)
                 }
             }
 
-            TextField("Add routine notes here", text: notesBinding, axis: .vertical)
-                .foregroundStyle(.secondary)
-
-            restMenu
-
-            VStack(spacing: 0) {
-                header
-                let sets = entry.orderedSets
-                let labels = SetKind.labels(for: sets.map(\.kind))
-                ForEach(Array(sets.enumerated()), id: \.element.id) { index, plan in
-                    RoutineSetRowView(plan: plan, label: labels[index], unit: unit)
-                        .background(index.isMultiple(of: 2) ? Theme.card : Color.clear)
-                        .contextMenu {
-                            Button("Delete Set", systemImage: "trash", role: .destructive) { onDeleteSet(plan) }
-                        }
-                }
-            }
-            .padding(.horizontal, -16)
-
-            Button(action: onAddSet) {
-                Label("Add Set", systemImage: "plus").frame(maxWidth: .infinity, minHeight: 40)
-            }
-            .buttonStyle(CardButtonStyle())
+            addSetButton
         }
+        .cardStyle()
+        .sheet(isPresented: $showingDetails) {
+            if let exercise = entry.exercise {
+                NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }
+            }
+        }
+    }
+
+    private var titleRow: some View {
+        HStack(spacing: 12) {
+            ExerciseIconTile(size: 44)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.exercise?.name ?? "Exercise").font(.headline)
+                if let muscle = entry.exercise?.muscleGroup {
+                    Text(muscle).font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+            Spacer(minLength: 0)
+            Menu {
+                if entry.exercise != nil {
+                    Button("Exercise Details", systemImage: "info.circle") { showingDetails = true }
+                }
+                Button("Remove Exercise", systemImage: "trash", role: .destructive, action: onRemove)
+            } label: {
+                // Explicit colour: inside a Menu label the hierarchical `.secondary` resolves against the tint.
+                Image(systemName: "ellipsis")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Color(.secondaryLabel))
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Exercise options")
+        }
+        .padding(.leading, 16)
+        .padding(.trailing, 8)
+        .padding(.top, 14)
+        .padding(.bottom, 12)
     }
 
     private var notesBinding: Binding<String> {
@@ -55,27 +80,69 @@ struct RoutineExerciseEditorCard: View {
     }
 
     /// Unset (nil) reads as Off here, unlike the workout screen where unset means "use the global default".
-    private var restMenu: some View {
-        let current = entry.restSeconds.map(RestDuration.label) ?? "OFF"
-        return Menu {
-            Button("Off") { entry.restSeconds = nil }
-            ForEach(RestDuration.choices, id: \.self) { seconds in
-                Button(RestDuration.label(seconds)) { entry.restSeconds = seconds }
+    private var restRow: some View {
+        HStack {
+            Label {
+                Text("Rest timer")
+            } icon: {
+                Image(systemName: "timer").foregroundStyle(.secondary)
             }
-        } label: {
-            Label("Rest Timer: \(current)", systemImage: "timer")
+            .font(.subheadline)
+            Spacer()
+            Menu {
+                Button("Off") { entry.restSeconds = nil }
+                ForEach(RestDuration.choices, id: \.self) { seconds in
+                    Button(RestDuration.label(seconds)) { entry.restSeconds = seconds }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(entry.restSeconds.map(RestDuration.label) ?? "Off")
+                    Image(systemName: "chevron.down").font(.caption.weight(.bold))
+                }
+                .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.accent)
+                .padding(.leading, 14)
+                .padding(.trailing, 12)
+                .frame(height: 36)
+                .background(Theme.accentSoft, in: Capsule())
+            }
+            .accessibilityLabel("Rest timer")
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
     }
 
     private var header: some View {
-        HStack {
-            Text("SET").frame(width: 56)
+        HStack(spacing: 10) {
+            Text("SET").frame(width: 40)
             Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
             Text("REPS").frame(maxWidth: .infinity)
+            Color.clear.frame(width: 40, height: 1)
         }
-        .font(.caption)
+        .font(.caption.weight(.semibold))
+        .tracking(0.5)
         .foregroundStyle(.secondary)
-        .frame(height: 28)
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
+        .padding(.top, 10)
+        .padding(.bottom, 4)
+    }
+
+    private var addSetButton: some View {
+        Button(action: onAddSet) {
+            Label("Add set", systemImage: "plus")
+                .font(.callout.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(Theme.accent.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(Theme.accent.opacity(0.4), style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                )
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
+        .padding(.bottom, 16)
     }
 }

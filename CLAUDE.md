@@ -21,8 +21,13 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
 5. History list of past workouts
 6. Per-exercise progress: best set, estimated 1RM (Epley), simple line chart (Swift Charts)
 
+## Approved beyond v1
+- Import Hevy/Strong CSV exports; export a Strong-format CSV
+- Lock Screen Live Activity: complete the next set, adjust or skip rest
+- Rule-based progression targets inside a per-exercise rep range (double progression)
+
 ## Non-goals (do not build in v1)
-Accounts, cloud sync, social features, AI coaching, workout plans/programs, Apple Watch, subscriptions, HealthKit write-back.
+Accounts, cloud sync, social features, AI coaching or AI-generated workouts, workout plans/programs, Apple Watch, subscriptions, HealthKit write-back.
 
 ## Stack
 - Swift 5.9+, SwiftUI, iOS 17+ minimum

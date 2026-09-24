@@ -6,7 +6,7 @@ import SwiftData
 @Observable
 final class ActiveWorkoutModel {
     let workout: Workout
-    let restTimer = RestTimer()
+    let restTimer = RestTimer.shared
 
     init(workout: Workout) {
         self.workout = workout
@@ -31,18 +31,20 @@ final class ActiveWorkoutModel {
         // Mirror last session's set count so a repeat day is pure check-tapping.
         let previous = previousSets(for: exercise)
         for index in 0..<max(previous.count, 1) {
-            appendSet(to: entry, prefill: PreviousPerformance.prefill(index: index, previous: previous, currentLast: nil))
+            appendSet(to: entry, prefill: exercise.progressionPrefill(index: index, previous: previous, currentLast: nil))
         }
+        LiveWorkoutActivity.sync()
     }
 
     func addSet(to entry: WorkoutExercise) {
         let previous = entry.exercise.map(previousSets(for:)) ?? []
-        let prefill = PreviousPerformance.prefill(
+        let prefill = entry.exercise?.progressionPrefill(
             index: entry.sets.count,
             previous: previous,
             currentLast: entry.orderedSets.last?.value
-        )
+        ) ?? PreviousPerformance.prefill(index: entry.sets.count, previous: previous, currentLast: entry.orderedSets.last?.value)
         appendSet(to: entry, prefill: prefill)
+        LiveWorkoutActivity.sync()
     }
 
     private func appendSet(to entry: WorkoutExercise, prefill: SetValue?) {
@@ -55,6 +57,19 @@ final class ActiveWorkoutModel {
         set.kind = prefill?.kind ?? .normal
         context.insert(set)
         entry.sets.append(set)
+    }
+
+    /// Re-targets only unticked sets: logged sets are history, whatever the range says now.
+    func setRepRange(_ range: ClosedRange<Int>?, for entry: WorkoutExercise) {
+        guard let exercise = entry.exercise else { return }
+        exercise.repRange = range
+        let previous = previousSets(for: exercise)
+        for (index, set) in entry.orderedSets.enumerated() where set.completedAt == nil {
+            guard let target = exercise.progressionPrefill(index: index, previous: previous, currentLast: nil) else { continue }
+            set.weightKg = target.weightKg
+            set.reps = target.reps
+        }
+        LiveWorkoutActivity.sync()
     }
 
     /// Returns false when the set can't be completed (no reps), so the row can signal it.
@@ -77,10 +92,12 @@ final class ActiveWorkoutModel {
 
     func delete(_ set: SetEntry) {
         context?.delete(set)
+        LiveWorkoutActivity.sync()
     }
 
     func remove(_ entry: WorkoutExercise) {
         context?.delete(entry)
+        LiveWorkoutActivity.sync()
     }
 
     /// Unchecked sets are drafts, not history: drop them so they never pollute previous-value lookups.
@@ -102,11 +119,13 @@ final class ActiveWorkoutModel {
         }
         restTimer.skip()
         try? context.save()
+        LiveWorkoutActivity.sync()
     }
 
     func discard() {
         restTimer.skip()
         context?.delete(workout)
         try? context?.save()
+        LiveWorkoutActivity.sync()
     }
 }

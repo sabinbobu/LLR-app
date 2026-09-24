@@ -5,6 +5,7 @@ struct ExerciseLogCard: View {
     let model: ActiveWorkoutModel
     let unit: WeightUnit
     @State private var plateTargetKg: Double?
+    @State private var showingDetails = false
 
     private var showingPlates: Binding<Bool> {
         Binding(get: { plateTargetKg != nil }, set: { if !$0 { plateTargetKg = nil } })
@@ -21,6 +22,9 @@ struct ExerciseLogCard: View {
                     .foregroundStyle(Theme.accent)
                 Spacer()
                 Menu {
+                    if entry.exercise != nil {
+                        Button("Exercise Details", systemImage: "info.circle") { showingDetails = true }
+                    }
                     Button("Remove Exercise", systemImage: "trash", role: .destructive) {
                         model.remove(entry)
                     }
@@ -32,6 +36,7 @@ struct ExerciseLogCard: View {
 
             if let exercise = entry.exercise {
                 restMenu(for: exercise)
+                repRangeMenu(for: exercise)
             }
 
             VStack(spacing: 0) {
@@ -68,6 +73,11 @@ struct ExerciseLogCard: View {
         .sheet(isPresented: showingPlates) {
             PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
         }
+        .sheet(isPresented: $showingDetails) {
+            if let exercise = entry.exercise {
+                NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }
+            }
+        }
     }
 
     /// Per-exercise because rest needs differ wildly: 3 min after heavy squats, 45 s after curls.
@@ -83,6 +93,39 @@ struct ExerciseLogCard: View {
         } label: {
             Label("Rest Timer: \(current)", systemImage: "timer")
                 .foregroundStyle(Theme.accent)
+        }
+    }
+
+    private func repRangeMenu(for exercise: Exercise) -> some View {
+        let range = exercise.repRange
+        return VStack(alignment: .leading, spacing: 4) {
+            Menu {
+                Button("Off") { model.setRepRange(nil, for: entry) }
+                ForEach(Progression.presets, id: \.self) { preset in
+                    Button("\(preset.lowerBound)–\(preset.upperBound) reps") { model.setRepRange(preset, for: entry) }
+                }
+            } label: {
+                Label("Rep Range: \(range.map { "\($0.lowerBound)–\($0.upperBound)" } ?? "Off")", systemImage: "chart.line.uptrend.xyaxis")
+                    .foregroundStyle(Theme.accent)
+            }
+            if let range, let hint = progressionHint(for: exercise, range: range) {
+                Text(hint)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func progressionHint(for exercise: Exercise, range: ClosedRange<Int>) -> String? {
+        let previous = model.previousSets(for: exercise)
+        let step = Progression.incrementKg(equipment: exercise.equipment, unit: unit)
+        switch Progression.plan(previous: previous, range: range, incrementKg: step) {
+        case .addLoad(let kg):
+            return "Every set hit \(range.upperBound) last time: +\(unit.format(kg: kg)) \(unit.rawValue), back to \(range.lowerBound) reps."
+        case .addReps:
+            return "Same weight, one more rep per set until each reaches \(range.upperBound)."
+        case nil:
+            return "No working sets logged yet — this session sets the baseline."
         }
     }
 

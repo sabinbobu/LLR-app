@@ -7,11 +7,14 @@ struct ExercisePickerView: View {
     @State private var search = ""
     @State private var muscle: String?
     @State private var equipment: String?
+    /// Tap order, so exercises land in the workout or routine in the order they were chosen.
+    @State private var picked: [UUID] = []
     @State private var creating = false
-    let onPick: (Exercise) -> Void
+    @State private var inspecting: Exercise?
+    let onAdd: ([Exercise]) -> Void
 
     private var muscleOptions: [String] { Array(Set(exercises.map(\.muscleGroup))).sorted() }
-    private var equipmentOptions: [String] { Equipment.allTags(in: exercises.map(\.name)) }
+    private var equipmentOptions: [String] { Equipment.options(in: exercises.map(\.equipment)) }
 
     private var filtered: [Exercise] {
         var result: [Exercise] = exercises
@@ -22,52 +25,54 @@ struct ExercisePickerView: View {
             result = result.filter { $0.muscleGroup == muscle }
         }
         if let equipment {
-            result = result.filter { Equipment.tag(for: $0.name) == equipment }
+            result = result.filter { Equipment.matches($0.equipment, filter: equipment) }
         }
         return result
     }
 
-    private var listTitle: String {
-        muscle ?? (search.isEmpty && equipment == nil ? "Popular Exercises" : "Results")
+    private struct ListSection {
+        let title: String
+        let rows: [Exercise]
+    }
+
+    /// Browsing shows the curated Popular set above the full A–Z list; any search or filter
+    /// collapses to one section of matches.
+    private var sections: [ListSection] {
+        guard search.isEmpty, muscle == nil, equipment == nil else {
+            return [ListSection(title: muscle ?? "Results", rows: filtered)]
+        }
+        var builtIns: [String: Exercise] = [:]
+        for exercise in exercises where !exercise.isCustom {
+            builtIns[exercise.name] = exercise
+        }
+        let popular = ExerciseLibrary.popular.compactMap { builtIns[$0] }
+        let all = ListSection(title: "All exercises", rows: exercises)
+        return popular.isEmpty ? [all] : [ListSection(title: "Popular", rows: popular), all]
     }
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    HStack(spacing: 10) {
-                        FilterChip(title: "All Equipment", options: equipmentOptions, selection: $equipment)
-                        FilterChip(title: "All Muscles", options: muscleOptions, selection: $muscle)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        FilterChip(title: "Equipment", options: equipmentOptions, selection: $equipment)
+                        FilterChip(title: "Muscle", options: muscleOptions, selection: $muscle)
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 4)
-                }
-                Section(listTitle) {
-                    ForEach(filtered) { exercise in
-                        Button {
-                            pick(exercise)
-                        } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: "dumbbell.fill")
-                                    .frame(width: 40, height: 40)
-                                    .overlay(Circle().stroke(Theme.border))
-                                    .foregroundStyle(.secondary)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(exercise.name).foregroundStyle(.primary)
-                                    Text(exercise.muscleGroup).font(.caption).foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                if exercise.isCustom {
-                                    Text("Custom").font(.caption).foregroundStyle(.secondary)
-                                }
-                            }
-                        }
+                    .padding(.bottom, 12)
+
+                    ForEach(Array(sections.enumerated()), id: \.offset) { index, section in
+                        header(section.title, showsSelection: index == 0)
+                        results(section.rows)
+                            .padding(.bottom, 12)
                     }
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
-            .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search exercise")
+            .scrollDismissesKeyboard(.immediately)
+            .background(Theme.background)
+            .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search exercises")
+            .safeAreaInset(edge: .bottom) { addBar }
             .navigationTitle("Add Exercise")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -75,17 +80,92 @@ struct ExercisePickerView: View {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Create") { creating = true }
+                    // An HStack rather than a Label: iOS 26 toolbars collapse a Label to its icon alone.
+                    Button { creating = true } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus")
+                            Text("Custom")
+                        }
+                    }
+                    .accessibilityLabel("Create custom exercise")
                 }
             }
             .sheet(isPresented: $creating) {
-                CreateExerciseView(initialName: search) { pick($0) }
+                CreateExerciseView(initialName: search) { picked.append($0.id) }
+            }
+            .sheet(item: $inspecting) { exercise in
+                NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }
             }
         }
     }
 
-    private func pick(_ exercise: Exercise) {
-        onPick(exercise)
-        dismiss()
+    private func header(_ title: String, showsSelection: Bool) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title).font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
+            Spacer()
+            if showsSelection && !picked.isEmpty {
+                Text("\(picked.count) selected")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+        }
+        .padding(.horizontal, 4)
+    }
+
+    @ViewBuilder
+    private func results(_ rows: [Exercise]) -> some View {
+        if rows.isEmpty {
+            Text("No exercises match. Try another search, or add a custom exercise.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(24)
+                .cardStyle(cornerRadius: 14)
+        } else {
+            LazyVStack(spacing: 0) {
+                ForEach(rows) { exercise in
+                    ExercisePickerRow(
+                        exercise: exercise,
+                        isSelected: picked.contains(exercise.id),
+                        onToggle: { toggle(exercise) },
+                        onInfo: { inspecting = exercise }
+                    )
+                    if exercise.id != rows.last?.id {
+                        Divider()
+                    }
+                }
+            }
+            .background(Theme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
+        }
+    }
+
+    private var addBar: some View {
+        Button {
+            onAdd(picked.compactMap { id in exercises.first { $0.id == id } })
+            dismiss()
+        } label: {
+            if picked.isEmpty {
+                Text("Select exercises to add")
+            } else {
+                Text("Add ^[\(picked.count) exercise](inflect: true)")
+            }
+        }
+        .buttonStyle(SheetButtonStyle())
+        .disabled(picked.isEmpty)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Theme.surface)
+        .overlay(alignment: .top) { Divider() }
+    }
+
+    private func toggle(_ exercise: Exercise) {
+        if let index = picked.firstIndex(of: exercise.id) {
+            picked.remove(at: index)
+        } else {
+            picked.append(exercise.id)
+        }
     }
 }

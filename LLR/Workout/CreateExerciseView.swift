@@ -5,6 +5,7 @@ struct CreateExerciseView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var name: String
     @State private var group: MuscleGroup = .chest
+    @State private var equipment = ""
     let onCreate: (Exercise) -> Void
 
     init(initialName: String = "", onCreate: @escaping (Exercise) -> Void) {
@@ -21,6 +22,10 @@ struct CreateExerciseView: View {
                 Picker("Muscle group", selection: $group) {
                     ForEach(MuscleGroup.allCases) { Text($0.rawValue).tag($0) }
                 }
+                Picker("Equipment", selection: $equipment) {
+                    Text(Equipment.none).tag("")
+                    ForEach(Equipment.choices, id: \.self) { Text($0).tag($0) }
+                }
             }
             .navigationTitle("New Exercise")
             .navigationBarTitleDisplayMode(.inline)
@@ -31,6 +36,7 @@ struct CreateExerciseView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         let exercise = Exercise(name: trimmed, muscleGroup: group.rawValue, isCustom: true)
+                        exercise.equipment = equipment.isEmpty ? [] : [equipment]
                         context.insert(exercise)
                         dismiss()
                         onCreate(exercise)

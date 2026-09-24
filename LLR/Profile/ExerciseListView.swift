@@ -12,11 +12,11 @@ struct ExerciseListView: View {
     var body: some View {
         List(filtered) { exercise in
             NavigationLink {
-                ExerciseProgressView(exercise: exercise)
+                ExerciseDetailView(exercise: exercise)
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(exercise.name)
-                    Text(exercise.muscleGroup).font(.caption).foregroundStyle(.secondary)
+                    Text(exercise.detail).font(.caption).foregroundStyle(.secondary)
                 }
             }
         }

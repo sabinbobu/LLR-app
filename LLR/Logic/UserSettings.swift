@@ -16,6 +16,13 @@ enum StorageKey {
     static let barLbs = "barLbs"
 }
 
+extension WeightUnit {
+    /// For code outside views, which can't use @AppStorage.
+    static var stored: WeightUnit {
+        UserDefaults.standard.string(forKey: StorageKey.weightUnit).flatMap(WeightUnit.init(rawValue:)) ?? .kg
+    }
+}
+
 enum Gender: String, CaseIterable, Identifiable {
     case male, female, other
 

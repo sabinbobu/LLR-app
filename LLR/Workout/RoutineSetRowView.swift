@@ -6,34 +6,50 @@ struct RoutineSetRowView: View {
     let plan: RoutineSetPlan
     let label: String
     let unit: WeightUnit
+    let canRemove: Bool
+    let onRemove: () -> Void
 
     @State private var weightText = ""
     @State private var repsText = ""
+    @FocusState private var focus: Field?
+
+    private enum Field { case weight, reps }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 10) {
             Menu {
                 Picker("Set type", selection: kindBinding) {
                     ForEach(SetKind.allCases) { Text($0.title).tag($0) }
                 }
             } label: {
                 Text(label)
-                    .font(.title3.weight(.medium))
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(SetRowView.color(for: plan.kind))
-                    .frame(width: 56, height: 44)
+                    .frame(width: 40, height: 32)
+                    .background(Theme.field, in: RoundedRectangle(cornerRadius: 8))
+            }
+            .accessibilityLabel("Set \(label), \(plan.kind.title)")
+
+            input(text: $weightText, keyboard: .decimalPad, field: .weight)
+                .accessibilityLabel("Set \(label) weight in \(unit.rawValue)")
+            input(text: $repsText, keyboard: .numberPad, field: .reps)
+                .accessibilityLabel("Set \(label) reps")
+
+            Button(action: onRemove) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 15, weight: .semibold))
+                    .frame(width: 40, height: 44)
                     .contentShape(Rectangle())
             }
-            TextField("-", text: $weightText)
-                .keyboardType(.decimalPad)
-                .frame(maxWidth: .infinity)
-            TextField("-", text: $repsText)
-                .keyboardType(.numberPad)
-                .frame(maxWidth: .infinity)
+            .buttonStyle(.plain)
+            .foregroundStyle(Color(.systemGray))
+            .disabled(!canRemove)
+            .opacity(canRemove ? 1 : 0.3)
+            .accessibilityLabel("Remove set \(label)")
         }
-        .font(.title3)
-        .multilineTextAlignment(.center)
-        .monospacedDigit()
-        .frame(height: 44)
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
+        .padding(.vertical, 5)
         .onAppear {
             weightText = plan.weightKg.map { unit.format(kg: $0) } ?? ""
             repsText = plan.reps.map(String.init) ?? ""
@@ -44,6 +60,17 @@ struct RoutineSetRowView: View {
         .onChange(of: repsText) { _, text in
             plan.reps = Int(text)
         }
+    }
+
+    private func input(text: Binding<String>, keyboard: UIKeyboardType, field: Field) -> some View {
+        TextField("0", text: text)
+            .keyboardType(keyboard)
+            .focused($focus, equals: field)
+            .font(.body.weight(.medium))
+            .multilineTextAlignment(.center)
+            .monospacedDigit()
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .fieldChrome(isFocused: focus == field)
     }
 
     private var kindBinding: Binding<SetKind> {

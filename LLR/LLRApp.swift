@@ -3,19 +3,13 @@ import SwiftUI
 
 @main
 struct LLRApp: App {
-    private let container: ModelContainer
+    private let container = Persistence.container
 
     init() {
-        do {
-            container = try ModelContainer(
-                for: Exercise.self, Workout.self, WorkoutExercise.self, SetEntry.self,
-                Routine.self, RoutineExercise.self, RoutineSetPlan.self
-            )
-        } catch {
-            // Without the store there is nothing to show; failing loudly beats silently losing history.
-            fatalError("SwiftData store failed to open: \(error)")
-        }
         ExerciseLibrary.seedIfNeeded(container.mainContext)
+        // A relaunch empties the in-memory rest timer; the Lock Screen still shows the rest in progress.
+        LiveWorkoutActivity.restoreRest()
+        LiveWorkoutActivity.sync()
     }
 
     var body: some Scene {

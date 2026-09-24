@@ -5,21 +5,30 @@ struct FilterChip: View {
     let options: [String]
     @Binding var selection: String?
 
+    private var isActive: Bool { selection != nil }
+
     var body: some View {
         Menu {
-            Button("All") { selection = nil }
-            ForEach(options, id: \.self) { option in
-                Button(option) { selection = option }
+            Picker(title, selection: $selection) {
+                Text("All").tag(String?.none)
+                ForEach(options, id: \.self) { Text($0).tag(Optional($0)) }
             }
         } label: {
-            Text(selection ?? title)
-                .font(.subheadline.weight(.medium))
-                .lineLimit(1)
-                .foregroundStyle(selection == nil ? Color.secondary : Color.primary)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .frame(maxWidth: .infinity)
-                .background(Theme.card, in: Capsule())
+            HStack(spacing: 4) {
+                Text(selection ?? title).lineLimit(1)
+                Image(systemName: "chevron.down")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(isActive ? Theme.accent : Color.secondary)
+            }
+            .font(.subheadline.weight(.medium))
+            .foregroundStyle(isActive ? Theme.accent : Color.primary)
+            .padding(.leading, 14)
+            .padding(.trailing, 10)
+            .frame(height: 36)
+            .background(isActive ? Theme.accentSoft : Theme.surface, in: Capsule())
+            .overlay(Capsule().stroke(isActive ? Theme.accent.opacity(0.4) : Color(.systemGray4)))
         }
+        .accessibilityLabel("\(title) filter")
+        .accessibilityValue(selection ?? "All")
     }
 }

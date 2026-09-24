@@ -2,25 +2,25 @@ import XCTest
 @testable import LLR
 
 final class EquipmentTests: XCTestCase {
-    func testExtractsKnownEquipmentFromTrailingParens() {
-        XCTAssertEqual(Equipment.tag(for: "Bench Press (Barbell)"), "Barbell")
-        XCTAssertEqual(Equipment.tag(for: "Squat (Smith Machine)"), "Smith Machine")
-        XCTAssertEqual(Equipment.tag(for: "Pull Up (Weighted)"), "Other")
+    func testEmptyEquipmentReadsAsNone() {
+        XCTAssertEqual(Equipment.label([]), "None")
+        XCTAssertEqual(Equipment.label(["Barbell"]), "Barbell")
     }
 
-    func testNoParensIsOther() {
-        XCTAssertEqual(Equipment.tag(for: "Push Up"), "Other")
-        XCTAssertEqual(Equipment.tag(for: "Running"), "Other")
+    func testOptionsAreDeduplicatedSortedWithNoneLast() {
+        let options = Equipment.options(in: [["Machine"], [], ["Barbell"], ["Machine"], ["Dumbbell"]])
+        XCTAssertEqual(options, ["Barbell", "Dumbbell", "Machine", "None"])
     }
 
-    func testEarlierParensDoesNotFoolTheMatch() {
-        // "Close Grip" in parens comes before the real equipment tag isn't present here,
-        // so this exercise correctly falls back to Other rather than matching mid-string.
-        XCTAssertEqual(Equipment.tag(for: "Push Up - Close Grip"), "Other")
+    func testNoneFilterMatchesOnlyExercisesWithoutEquipment() {
+        XCTAssertTrue(Equipment.matches([], filter: "None"))
+        XCTAssertFalse(Equipment.matches(["Barbell"], filter: "None"))
+        XCTAssertTrue(Equipment.matches(["Barbell"], filter: "Barbell"))
+        XCTAssertFalse(Equipment.matches([], filter: "Barbell"))
     }
 
-    func testAllTagsIsSortedAndDeduplicated() {
-        let names = ["Bench Press (Barbell)", "Squat (Barbell)", "Curl (Dumbbell)", "Push Up"]
-        XCTAssertEqual(Equipment.allTags(in: names), ["Barbell", "Dumbbell", "Other"])
+    func testDetailOmitsMissingEquipment() {
+        XCTAssertEqual(Equipment.detail(muscle: "Chest", equipment: ["Barbell"]), "Chest · Barbell")
+        XCTAssertEqual(Equipment.detail(muscle: "Cardio", equipment: []), "Cardio")
     }
 }
