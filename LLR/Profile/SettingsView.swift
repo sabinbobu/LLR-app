@@ -28,6 +28,13 @@ struct SettingsView: View {
                         LabeledContent("Bar weight", value: "\(unit.format(kg: unit.toKg(bar.wrappedValue))) \(unit.rawValue)")
                     }
                 }
+                Section("Data") {
+                    NavigationLink {
+                        DataTransferView()
+                    } label: {
+                        Label("Import & Export", systemImage: "arrow.up.arrow.down")
+                    }
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)

@@ -23,8 +23,9 @@ enum WorkoutFactory {
         return workout
     }
 
-    /// A planned weight/reps is used as-is; a blank one falls back to last session's value at
-    /// that position, same rule as mid-workout prefill — "leave it blank to workout on the go".
+    /// A planned weight/reps is used as-is; a blank one falls back to this session's progression
+    /// target (or last session's value when no rep range is set), same rule as mid-workout
+    /// prefill — "leave it blank to workout on the go".
     static func start(routine: Routine, in context: ModelContext) -> Workout {
         let workout = Workout()
         context.insert(workout)
@@ -43,7 +44,7 @@ enum WorkoutFactory {
             let count = max(plans.count, 1)
             for index in 0..<count {
                 let plan = index < plans.count ? plans[index] : nil
-                let fallback = PreviousPerformance.prefill(index: index, previous: previous, currentLast: nil)
+                let fallback = exercise.progressionPrefill(index: index, previous: previous, currentLast: nil)
                 let set = SetEntry(
                     order: index,
                     weightKg: plan?.weightKg ?? fallback?.weightKg ?? 0,

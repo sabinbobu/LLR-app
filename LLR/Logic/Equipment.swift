@@ -1,24 +1,29 @@
 import Foundation
 
-/// The seed data has no explicit equipment field; it's encoded as a trailing "(Barbell)" etc.
-/// in the exercise name. Extracting it here keeps that convention in one place instead of
-/// scattered regexes, and degrades to "Other" for names that don't follow it.
+/// The library lists equipment per exercise; an empty list means none is needed (bodyweight moves,
+/// cardio), which reads better as "None" in a filter than as a blank.
 enum Equipment {
-    // Longer, more specific names first: "Smith Machine" must win over the shorter "Machine".
-    static let known = [
-        "Smith Machine", "Trap Bar", "EZ Bar", "Barbell", "Dumbbell", "Cable", "Machine",
-        "Band", "Kettlebell", "Suspension", "Bodyweight", "Plate",
-    ]
+    static let none = "None"
 
-    static func tag(for exerciseName: String) -> String {
-        guard let open = exerciseName.lastIndex(of: "("), let close = exerciseName.lastIndex(of: ")"), open < close else {
-            return "Other"
-        }
-        let inner = String(exerciseName[exerciseName.index(after: open)..<close])
-        return known.first { inner.localizedCaseInsensitiveContains($0) } ?? "Other"
+    /// The library's own vocabulary, offered for custom exercises so filters stay coherent.
+    static let choices = ["Barbell", "Dumbbell", "Kettlebell", "Machine", "Plate", "Resistance Band", "Suspension", "Other"]
+
+    static func label(_ equipment: [String]) -> String {
+        equipment.isEmpty ? none : equipment.joined(separator: ", ")
     }
 
-    static func allTags(in names: [String]) -> [String] {
-        Array(Set(names.map(tag(for:)))).sorted()
+    /// Sorted, with "None" last so real equipment leads the menu.
+    static func options(in all: [[String]]) -> [String] {
+        let names = Set(all.flatMap { $0.isEmpty ? [none] : $0 })
+        return names.sorted { ($0 == none ? 1 : 0, $0) < ($1 == none ? 1 : 0, $1) }
+    }
+
+    static func matches(_ equipment: [String], filter: String) -> Bool {
+        filter == none ? equipment.isEmpty : equipment.contains(filter)
+    }
+
+    /// "Chest · Barbell"; with no equipment it's just the muscle, not "Chest · None".
+    static func detail(muscle: String, equipment: [String]) -> String {
+        equipment.isEmpty ? muscle : "\(muscle) · \(equipment.joined(separator: ", "))"
     }
 }

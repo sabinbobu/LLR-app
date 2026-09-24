@@ -13,9 +13,12 @@ targets:
     type: application
     platform: iOS
     sources: [LLR]
+    dependencies:
+      - target: LLRWidgets
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.sabinbobu.llr
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: LLR
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
@@ -23,6 +26,23 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
+  LLRWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - LLRWidgets
+      - LLR/LiveActivity/Shared
+    info:
+      path: LLRWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: LLR
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sabinbobu.llr.widgets
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) WIDGET_EXTENSION
+        TARGETED_DEVICE_FAMILY: "1"
   LLRTests:
     type: bundle.unit-test
     platform: iOS

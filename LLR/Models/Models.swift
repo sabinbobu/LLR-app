@@ -9,6 +9,13 @@ final class Exercise {
     var isCustom: Bool
     /// nil = use the global default; 0 = no rest timer for this exercise.
     var restSeconds: Int?
+    // Library metadata; defaults let existing stores migrate without a schema version bump.
+    var equipment: [String] = []
+    var secondaryMuscles: [String] = []
+    var instructions: [String] = []
+    /// Opt-in progression range; nil = prefill last session's values unchanged.
+    var repRangeMin: Int?
+    var repRangeMax: Int?
     @Relationship(inverse: \WorkoutExercise.exercise) var usages: [WorkoutExercise] = []
 
     init(name: String, muscleGroup: String, isCustom: Bool = false) {
@@ -25,6 +32,8 @@ final class Workout {
     var startedAt: Date
     var endedAt: Date?
     var notes: String
+    /// Empty for workouts logged here (they're titled by time of day); imports keep their original name.
+    var name: String = ""
     @Relationship(deleteRule: .cascade, inverse: \WorkoutExercise.workout) var exercises: [WorkoutExercise] = []
 
     init(startedAt: Date = .now) {
@@ -118,7 +127,8 @@ extension Workout {
     var recordSetCount: Int { exercises.reduce(0) { $0 + $1.recordKinds().filter { !$0.isEmpty }.count } }
 
     var title: String {
-        switch Calendar.current.component(.hour, from: startedAt) {
+        if !name.isEmpty { return name }
+        return switch Calendar.current.component(.hour, from: startedAt) {
         case 5..<12: "Morning Workout"
         case 12..<17: "Afternoon Workout"
         case 17..<22: "Evening Workout"
