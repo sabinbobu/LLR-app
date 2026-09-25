@@ -5,7 +5,10 @@ import UniformTypeIdentifiers
 struct DataTransferView: View {
     @Environment(\.modelContext) private var context
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil }) private var finished: [Workout]
+    // Gym only: a Strong-format row can't carry pain, and reimporting it would turn a rehab
+    // session into gym history. Kineto gets its own export (see the Kineto log CSV).
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }) private var finished: [Workout]
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "kineto" }) private var kinetoFinished: [Workout]
     @State private var strongUnit: WeightUnit?
     @State private var choosingFile = false
     @State private var outcome: Outcome?
@@ -18,6 +21,11 @@ struct DataTransferView: View {
     private var exportFile: CSVFile {
         let day = WorkoutCSV.strongDate.string(from: .now).prefix(10)
         return CSVFile(name: "LLR-workouts-\(day).csv", text: WorkoutExport.strongCSV(finished, unit: unit))
+    }
+
+    private var kinetoExportFile: CSVFile {
+        let day = WorkoutCSV.strongDate.string(from: .now).prefix(10)
+        return CSVFile(name: "LLR-kineto-\(day).csv", text: WorkoutExport.kinetoCSV(kinetoFinished))
     }
 
     var body: some View {
@@ -46,6 +54,17 @@ struct DataTransferView: View {
                 Text("Export")
             } footer: {
                 Text("A Strong-format CSV in \(unit.rawValue): Hevy's Strong import reads it, and so does LLR. LLR doesn't sync, so this is how your history leaves the phone.")
+            }
+
+            Section {
+                ShareLink(item: kinetoExportFile, preview: SharePreview("LLR Kineto log")) {
+                    Label("Export Kineto log", systemImage: "square.and.arrow.up")
+                }
+                .disabled(kinetoFinished.isEmpty)
+            } header: {
+                Text("Kineto")
+            } footer: {
+                Text("A separate CSV with sets as reps × seconds and your back/leg pain before and after each session. Not part of the Strong-format export above.")
             }
         }
         .navigationTitle("Import & Export")

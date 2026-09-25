@@ -3,32 +3,55 @@ import SwiftUI
 
 struct WorkoutTabView: View {
     @Environment(\.modelContext) private var context
+    // Unfinished stays section-agnostic on purpose: only one workout can be in progress at a time,
+    // whichever section it's from, so Resume must find it regardless.
     @Query(filter: #Predicate<Workout> { $0.endedAt == nil }) private var unfinished: [Workout]
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil }, sort: \Workout.startedAt, order: .reverse)
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }, sort: \Workout.startedAt, order: .reverse)
     private var past: [Workout]
-    @Query(sort: \Routine.createdAt, order: .reverse) private var routines: [Routine]
+    @Query(filter: #Predicate<Routine> { $0.sectionRaw == "gym" }, sort: \Routine.createdAt, order: .reverse)
+    private var routines: [Routine]
     @State private var presented: Workout?
     @State private var buildingRoutine: Routine?
+    @State private var loggingPast: Workout?
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     startRow
+                    Button("Log a Past Workout", systemImage: "clock.arrow.circlepath", action: logPastWorkout)
+                        .font(.subheadline.weight(.medium))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 4)
+                        .fullScreenCover(item: $loggingPast) { WorkoutEditorView(workout: $0, isNew: true) }
 
                     Text("Routines").font(.title2.weight(.semibold))
                     HStack(spacing: 16) {
                         routineTile(title: "New Routine", icon: "list.clipboard") { newRoutine() }
                         NavigationLink {
-                            RoutineListView(onStart: start(routine:))
+                            ExploreRoutinesView(canStart: unfinished.isEmpty, onStart: start(program:day:))
                         } label: {
                             routineTileLabel(title: "Explore Routines", icon: "magnifyingglass")
                         }
                         .buttonStyle(CardButtonStyle())
                     }
 
+                    NavigationLink {
+                        KinetoView(canStart: unfinished.isEmpty) { presented = $0 }
+                    } label: {
+                        KinetoEntryCard()
+                    }
+                    .buttonStyle(.plain)
+
                     if !routines.isEmpty {
-                        Text("My Routines").font(.title3.weight(.semibold)).padding(.top, 4)
+                        HStack(alignment: .firstTextBaseline) {
+                            Text("My Routines").font(.title3.weight(.semibold))
+                            Spacer()
+                            // The tab shows five; the rest live one tap away.
+                            NavigationLink("See All") { RoutineListView(onStart: start(routine:)) }
+                                .font(.subheadline.weight(.medium))
+                        }
+                        .padding(.top, 4)
                         ForEach(routines.prefix(5)) { routine in
                             routineRow(routine)
                         }
@@ -154,6 +177,15 @@ struct WorkoutTabView: View {
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border, lineWidth: 1.5))
     }
 
+    /// Starts as a finished hour ending now; the editor's date pickers move it to when it happened.
+    private func logPastWorkout() {
+        let end = Date.now
+        let workout = Workout(startedAt: end.addingTimeInterval(-3600))
+        workout.endedAt = end
+        context.insert(workout)
+        loggingPast = workout
+    }
+
     private func newRoutine() {
         let routine = Routine()
         context.insert(routine)
@@ -162,5 +194,10 @@ struct WorkoutTabView: View {
 
     private func start(routine: Routine) {
         presented = WorkoutFactory.start(routine: routine, in: context)
+    }
+
+    private func start(program: ProgramTemplate, day: ProgramTemplate.Day) {
+        let plan = RoutineLibrary.plan(for: day, in: context)
+        presented = WorkoutFactory.start(plan, named: RoutineLibrary.routineName(program, day), in: context)
     }
 }

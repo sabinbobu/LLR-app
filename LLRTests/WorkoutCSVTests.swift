@@ -62,6 +62,15 @@ final class WorkoutCSVTests: XCTestCase {
         XCTAssertEqual(evening.exercises.first?.sets.map(\.kind), [.warmup, .normal, .failure])
     }
 
+    func testStrongHeldRepBecomesADurationSet() throws {
+        let text = [
+            strongHeader,
+            #"2020-12-30 18:51:52,"Back Care",20m,"Bird Dog",1,0,5,0,15,,,"#,
+        ].joined(separator: "\n")
+        let set = try XCTUnwrap(WorkoutCSV.parse(text, strongUnit: .kg).workouts.first?.exercises.first?.sets.first)
+        XCTAssertEqual(set, ImportedSet(weightKg: 0, reps: 5, kind: .normal, durationSeconds: 15))
+    }
+
     func testStrongSemicolonFileWithCommaDecimalsInPounds() throws {
         let text = """
         Date;Workout Name;Duration;Exercise Name;Set Order;Weight;Reps;Distance;Seconds;Notes;Workout Notes;RPE

@@ -77,8 +77,14 @@ enum ExerciseLibrary {
 
     static let popular: [String] = popularNames(in: loadSeeds().map(\.name))
 
+    /// One merged sync, not two: seeding gym and Kineto lists separately would duplicate or
+    /// flip-flop rows a name appears in both places for (every ★ Kineto exercise), since each
+    /// call only ever sees its own list's fields.
     static func seedIfNeeded(_ context: ModelContext) {
-        sync(loadSeeds(), into: context)
+        let gym = loadSeeds()
+        let gymNames = Set(gym.map(\.name))
+        let kinetoOnly = KinetoCatalog.libraryEntries.filter { !gymNames.contains($0.name) }
+        sync(gym + kinetoOnly, into: context)
     }
 
     /// Refreshes built-in rows in place (matched by name) and inserts new ones, so an upgrade that

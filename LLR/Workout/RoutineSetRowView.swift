@@ -6,14 +6,16 @@ struct RoutineSetRowView: View {
     let plan: RoutineSetPlan
     let label: String
     let unit: WeightUnit
+    let isDurationBased: Bool
     let canRemove: Bool
     let onRemove: () -> Void
 
     @State private var weightText = ""
     @State private var repsText = ""
+    @State private var secondsText = ""
     @FocusState private var focus: Field?
 
-    private enum Field { case weight, reps }
+    private enum Field { case weight, reps, seconds }
 
     var body: some View {
         HStack(spacing: 10) {
@@ -30,10 +32,17 @@ struct RoutineSetRowView: View {
             }
             .accessibilityLabel("Set \(label), \(plan.kind.title)")
 
-            input(text: $weightText, keyboard: .decimalPad, field: .weight)
-                .accessibilityLabel("Set \(label) weight in \(unit.rawValue)")
-            input(text: $repsText, keyboard: .numberPad, field: .reps)
-                .accessibilityLabel("Set \(label) reps")
+            if isDurationBased {
+                input(text: $repsText, keyboard: .numberPad, field: .reps)
+                    .accessibilityLabel("Set \(label) reps")
+                input(text: $secondsText, keyboard: .numberPad, field: .seconds)
+                    .accessibilityLabel("Set \(label) hold seconds")
+            } else {
+                input(text: $weightText, keyboard: .decimalPad, field: .weight)
+                    .accessibilityLabel("Set \(label) weight in \(unit.rawValue)")
+                input(text: $repsText, keyboard: .numberPad, field: .reps)
+                    .accessibilityLabel("Set \(label) reps")
+            }
 
             Button(action: onRemove) {
                 Image(systemName: "xmark")
@@ -53,12 +62,16 @@ struct RoutineSetRowView: View {
         .onAppear {
             weightText = plan.weightKg.map { unit.format(kg: $0) } ?? ""
             repsText = plan.reps.map(String.init) ?? ""
+            secondsText = plan.durationSeconds.map(String.init) ?? ""
         }
         .onChange(of: weightText) { _, text in
             plan.weightKg = WeightUnit.parse(text).map(unit.toKg)
         }
         .onChange(of: repsText) { _, text in
             plan.reps = Int(text)
+        }
+        .onChange(of: secondsText) { _, text in
+            plan.durationSeconds = Int(text)
         }
     }
 

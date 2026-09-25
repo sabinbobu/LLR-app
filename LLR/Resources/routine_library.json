@@ -1,0 +1,3637 @@
+[
+  {
+    "id": "starting-strength",
+    "name": "Starting Strength",
+    "author": "Mark Rippetoe",
+    "goal": "strength",
+    "level": "beginner",
+    "equipment": "barbell",
+    "daysPerWeek": 3,
+    "summary": "Rippetoe's novice linear progression: three heavy barbell lifts per session, three full-body sessions a week, more weight every time. Built for true beginners who want to get strong fast.",
+    "schedule": "Alternate Workout A and Workout B on three non-consecutive days (e.g. Mon/Wed/Fri). Run Phase 1 for about 1–3 weeks, then Phase 2, where power cleans replace the Workout B deadlift.",
+    "progression": "Add weight every session while all work sets are completed: squat and deadlift +10 lb (~5 kg) for the first few sessions, then +5 lb (~2.5 kg); press, bench press and power clean +5 lb, later +2.5 lb or less.",
+    "source": "Mark Rippetoe, 'The Starting Strength Program', startingstrength.com; Starting Strength: Basic Barbell Training, 3rd ed.",
+    "sourceURL": "https://startingstrength.com/get-started/programs",
+    "routines": [
+      {
+        "name": "Phase 1 · Workout A",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Phase 1 · Workout B",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Phase 2 · Workout A",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Phase 2 · Workout B",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Power Clean",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 3
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stronglifts-5x5",
+    "name": "StrongLifts 5×5",
+    "author": "Mehdi Hadim",
+    "goal": "strength",
+    "level": "beginner",
+    "equipment": "barbell",
+    "daysPerWeek": 3,
+    "summary": "Two alternating full-body barbell workouts built on five sets of five. Starts light and adds weight almost every session; made for new or returning lifters.",
+    "schedule": "Alternate Workout A and Workout B three times a week with a rest day between sessions (most people train Mon/Wed/Fri).",
+    "progression": "If you completed all sets last time, add 5 lb (2.5 kg) on squat, bench, overhead press and row; men can add 10 lb (5 kg) on the deadlift for a few weeks. If you missed reps, repeat the weight.",
+    "source": "Mehdi Hadim, 'Stronglifts 5×5 Workout Program: Quick Start Guide', stronglifts.com",
+    "sourceURL": "https://stronglifts.com/stronglifts-5x5/workout-program/",
+    "routines": [
+      {
+        "name": "Workout A",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          }
+        ]
+      },
+      {
+        "name": "Workout B",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "texas-method",
+    "name": "Texas Method",
+    "author": "Mark Rippetoe & Glenn Pendlay",
+    "goal": "strength",
+    "level": "intermediate",
+    "equipment": "barbell",
+    "daysPerWeek": 3,
+    "summary": "The classic next step after a novice linear progression: a high-volume Monday, a light Wednesday and a heavy Friday, with progress made week to week instead of session to session.",
+    "schedule": "Mon volume, Wed recovery, Fri intensity. Bench press and press swap roles every week: run Week A, then Week B, and repeat.",
+    "progression": "Aim for a new 5RM on Friday every week (or within ~2%). Monday's 5×5 uses about 90% of that 5RM; Wednesday's squat is 80% of Monday's weight.",
+    "source": "Mark Rippetoe, 'The Texas Method', startingstrength.com (2013; originally T-Nation, 2010)",
+    "sourceURL": "https://startingstrength.com/article/programming/the_texas_method",
+    "routines": [
+      {
+        "name": "Week A · Monday (Volume)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "notes": "≈90% of 5RM"
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "notes": "≈90% of 5RM"
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "One heavy set"
+          }
+        ]
+      },
+      {
+        "name": "Week A · Wednesday (Recovery)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              }
+            ],
+            "notes": "80% of Monday's weight"
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "notes": "Light day"
+          },
+          {
+            "exercise": "Chin Up",
+            "sets": [
+              {
+                "count": 3,
+                "kind": "failure"
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "notes": "Or glute-ham raise; optional"
+          }
+        ]
+      },
+      {
+        "name": "Week A · Friday (Intensity)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "New 5RM"
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "New 5RM"
+          },
+          {
+            "exercise": "Power Clean",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 3
+              }
+            ],
+            "notes": "Or power snatch 6×2"
+          }
+        ]
+      },
+      {
+        "name": "Week B · Monday (Volume)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "notes": "≈90% of 5RM"
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "notes": "≈90% of 5RM"
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "One heavy set"
+          }
+        ]
+      },
+      {
+        "name": "Week B · Wednesday (Recovery)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              }
+            ],
+            "notes": "80% of Monday's weight"
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "notes": "A little lighter than your last bench 5×5"
+          },
+          {
+            "exercise": "Chin Up",
+            "sets": [
+              {
+                "count": 3,
+                "kind": "failure"
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "notes": "Or glute-ham raise; optional"
+          }
+        ]
+      },
+      {
+        "name": "Week B · Friday (Intensity)",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "New 5RM"
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5
+              }
+            ],
+            "notes": "New 5RM"
+          },
+          {
+            "exercise": "Power Clean",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 3
+              }
+            ],
+            "notes": "Or power snatch 6×2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wendler-531-bbb",
+    "name": "5/3/1 Boring But Big",
+    "author": "Jim Wendler",
+    "goal": "strength",
+    "level": "intermediate",
+    "equipment": "barbell",
+    "daysPerWeek": 4,
+    "summary": "Wendler's 5/3/1 strength waves on the four big lifts, followed by five sets of ten of the same lift for size. Slow, steady progress for lifters past the beginner stage.",
+    "schedule": "Four days a week (e.g. Mon/Tue/Thu/Fri): Press, Deadlift, Bench, Squat. Each 4-week cycle: week 1 fives, week 2 threes, week 3 5/3/1, week 4 deload.",
+    "progression": "Training max = 90% of 1RM. After each 4-week cycle add 5 lb (~2.5 kg) to the press and bench training max and 10 lb (~5 kg) to the squat and deadlift training max.",
+    "source": "Jim Wendler, '5/3/1: How to Build Pure Strength' (T-Nation, 2009) and 'Boring But Big' (jimwendler.com)",
+    "sourceURL": "https://www.jimwendler.com/blogs/jimwendler-com/101077382-boring-but-big",
+    "routines": [
+      {
+        "name": "Day 1 · Press",
+        "exercises": [
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              },
+              {
+                "count": 1,
+                "reps": 5,
+                "kind": "failure"
+              }
+            ],
+            "rest": 240,
+            "notes": "% of TM. Wk1 65/75/85 ×5,5,5+ · Wk2 70/80/90 ×3,3,3+ · Wk3 75/85/95 ×5,3,1+ · Wk4 40/50/60 ×5"
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "BBB 5×10 at 50–60% TM (new: 30%→45%→60% over 3 cycles)"
+          },
+          {
+            "exercise": "Chin Up",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "Lat work"
+          }
+        ]
+      },
+      {
+        "name": "Day 2 · Deadlift",
+        "exercises": [
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              },
+              {
+                "count": 1,
+                "reps": 5,
+                "kind": "failure"
+              }
+            ],
+            "rest": 240,
+            "notes": "% of TM. Wk1 65/75/85 ×5,5,5+ · Wk2 70/80/90 ×3,3,3+ · Wk3 75/85/95 ×5,3,1+ · Wk4 40/50/60 ×5"
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "BBB 5×10 at 50–60% TM (new: 30%→45%→60% over 3 cycles)"
+          },
+          {
+            "exercise": "Hanging Leg Raise",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 15
+              }
+            ],
+            "rest": 90,
+            "notes": "Abs"
+          }
+        ]
+      },
+      {
+        "name": "Day 3 · Bench",
+        "exercises": [
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              },
+              {
+                "count": 1,
+                "reps": 5,
+                "kind": "failure"
+              }
+            ],
+            "rest": 240,
+            "notes": "% of TM. Wk1 65/75/85 ×5,5,5+ · Wk2 70/80/90 ×3,3,3+ · Wk3 75/85/95 ×5,3,1+ · Wk4 40/50/60 ×5"
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "BBB 5×10 at 50–60% TM (new: 30%→45%→60% over 3 cycles)"
+          },
+          {
+            "exercise": "Dumbbell Row",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "Lat work"
+          }
+        ]
+      },
+      {
+        "name": "Day 4 · Squat",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5
+              },
+              {
+                "count": 1,
+                "reps": 5,
+                "kind": "failure"
+              }
+            ],
+            "rest": 240,
+            "notes": "% of TM. Wk1 65/75/85 ×5,5,5+ · Wk2 70/80/90 ×3,3,3+ · Wk3 75/85/95 ×5,3,1+ · Wk4 40/50/60 ×5"
+          },
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "BBB 5×10 at 50–60% TM (new: 30%→45%→60% over 3 cycles)"
+          },
+          {
+            "exercise": "Hanging Leg Raise",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 15
+              }
+            ],
+            "rest": 90,
+            "notes": "Abs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "reg-park-5x5",
+    "name": "Reg Park 5×5",
+    "author": "Reg Park",
+    "goal": "muscle",
+    "level": "beginner",
+    "equipment": "barbell",
+    "daysPerWeek": 3,
+    "summary": "The original 5×5 'strength and bulk' course from the three-time Mr. Universe who inspired Arnold: heavy basics three times a week, adding exercises every three months.",
+    "schedule": "Same workout three days a week (e.g. Mon/Wed/Fri). Phase 1 for about three months, then Phase 2 for three months, then Phase 3.",
+    "progression": "Each 5×5 = two ramping warm-up sets plus three work sets at one weight. When all three work sets hit 5 reps, add 5–10 lb (2.5–5 kg) to every set. Don't train to failure.",
+    "source": "Reg Park, Strength & Bulk Training for Weight Lifters and Body Builders (as reproduced by T-Nation, 2008, and Stronglifts)",
+    "sourceURL": "https://archive.t-nation.com/training/reg-parks-5x5-program/",
+    "routines": [
+      {
+        "name": "Phase 1",
+        "exercises": [
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ],
+            "notes": "45° back extension; add weight once easy"
+          },
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 240
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 240
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 240
+          }
+        ]
+      },
+      {
+        "name": "Phase 2",
+        "exercises": [
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ],
+            "rest": 120,
+            "notes": "3–4 sets"
+          },
+          {
+            "exercise": "Front Squat",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Deadlift High Pull",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120,
+            "notes": "High pull"
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Standing Calf Raise (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 25
+              }
+            ],
+            "rest": 120
+          }
+        ]
+      },
+      {
+        "name": "Phase 3",
+        "exercises": [
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 10
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Front Squat",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Overhead Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120,
+            "notes": "One arm at a time, or behind-the-neck press"
+          },
+          {
+            "exercise": "Bicep Curl (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 5,
+                "kind": "warmup"
+              },
+              {
+                "count": 3,
+                "reps": 5
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Skullcrusher (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8
+              }
+            ],
+            "rest": 120,
+            "notes": "Lying triceps extension"
+          },
+          {
+            "exercise": "Standing Calf Raise (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 25
+              }
+            ],
+            "rest": 120
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phat",
+    "name": "PHAT (Power Hypertrophy Adaptive Training)",
+    "author": "Layne Norton",
+    "goal": "muscle",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 5,
+    "summary": "A five-day powerbuilding split: two heavy upper/lower power days, then three bodybuilding days that open with speed work. Each muscle is hit twice a week with both heavy and moderate-rep work.",
+    "schedule": "Day 1 Upper Power, Day 2 Lower Power, Day 3 rest, Day 4 Back & Shoulders Hypertrophy, Day 5 Lower Hypertrophy, Day 6 Chest & Arms Hypertrophy, Day 7 rest.",
+    "progression": "Move more weight on the power days (3–5 reps); rotate power movements every 2–3 weeks. No sets to failure for the first 2–4 weeks, then only the last 1–2 sets of an exercise. Deload at 60–70% of normal weights every 6–12 weeks as needed.",
+    "source": "Layne Norton, 'PHAT: Power Hypertrophy Adaptive Training', biolayne.com (2016; first published on SimplyShredded, 2011)",
+    "sourceURL": "https://biolayne.com/articles/training/phat-power-hypertrophy-adaptive-training/",
+    "routines": [
+      {
+        "name": "Day 1 · Upper Body Power",
+        "exercises": [
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 3,
+                "repsMax": 5
+              }
+            ],
+            "rest": 300,
+            "notes": "Or Pendlay row"
+          },
+          {
+            "exercise": "Pull Up (Weighted)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Inverted Row",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ],
+            "notes": "Stand-in for rack chins"
+          },
+          {
+            "exercise": "Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 3,
+                "repsMax": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Chest Dip (Weighted)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Seated Overhead Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "EZ Bar Biceps Curl",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ],
+            "notes": "Cambered-bar curl"
+          },
+          {
+            "exercise": "Skullcrusher (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Day 2 · Lower Body Power",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 3,
+                "repsMax": 5
+              }
+            ],
+            "rest": 300
+          },
+          {
+            "exercise": "Hack Squat (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Straight Leg Deadlift",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 5,
+                "repsMax": 8
+              }
+            ]
+          },
+          {
+            "exercise": "Lying Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ],
+            "notes": "Or glute-ham raise"
+          },
+          {
+            "exercise": "Standing Calf Raise (Machine)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Seated Calf Raise",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 6,
+                "repsMax": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Day 4 · Back & Shoulders Hypertrophy",
+        "exercises": [
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 6,
+                "reps": 3
+              }
+            ],
+            "rest": 90,
+            "notes": "Speed work: 65–70% of your 3–5RM, explosive"
+          },
+          {
+            "exercise": "Inverted Row",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Stand-in for rack chins"
+          },
+          {
+            "exercise": "Seated Cable Row - V Grip (Cable)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Chest Supported Incline Row (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90,
+            "notes": "Or chest-supported shrugs"
+          },
+          {
+            "exercise": "Lat Pulldown - Close Grip (Cable)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Seated Overhead Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Upright Row (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 12,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90,
+            "notes": "Dumbbells or cables"
+          }
+        ]
+      },
+      {
+        "name": "Day 5 · Lower Body Hypertrophy",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 6,
+                "reps": 3
+              }
+            ],
+            "rest": 90,
+            "notes": "Speed work: 65–70% of your 3–5RM, explosive"
+          },
+          {
+            "exercise": "Hack Squat (Machine)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Leg Press (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Romanian Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Lying Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Seated Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Calf Press (Machine)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 10,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90,
+            "notes": "Stand-in for donkey calf raises"
+          },
+          {
+            "exercise": "Seated Calf Raise",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          }
+        ]
+      },
+      {
+        "name": "Day 6 · Chest & Arms Hypertrophy",
+        "exercises": [
+          {
+            "exercise": "Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 6,
+                "reps": 3
+              }
+            ],
+            "rest": 90,
+            "notes": "Speed work: 65–70% of your 3–5RM, explosive"
+          },
+          {
+            "exercise": "Incline Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Iso-Lateral Chest Press (Machine)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90,
+            "notes": "Hammer Strength chest press"
+          },
+          {
+            "exercise": "Low Cable Fly Crossovers",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90,
+            "notes": "Stand-in for incline cable flyes"
+          },
+          {
+            "exercise": "Preacher Curl (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Cambered (EZ) bar"
+          },
+          {
+            "exercise": "Concentration Curl",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Spider Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Triceps Extension (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Seated, cambered bar"
+          },
+          {
+            "exercise": "Triceps Rope Pushdown",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 12,
+                "repsMax": 15
+              }
+            ],
+            "rest": 90
+          },
+          {
+            "exercise": "Triceps Kickback (Cable)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "golden-six",
+    "name": "The Golden Six",
+    "author": "Arnold Schwarzenegger (attributed)",
+    "goal": "muscle",
+    "level": "beginner",
+    "equipment": "barbell",
+    "daysPerWeek": 3,
+    "summary": "Six basic lifts, full body, three times a week — the routine Arnold reportedly started on. Short and simple, which suits beginners.",
+    "schedule": "The same workout three times a week on alternating days (e.g. Mon/Wed/Fri).",
+    "progression": "Not specified by the source; add weight once every set reaches its target reps.",
+    "source": "Bradley Joe Kelly, 'Tip: Train With Arnold's Golden Six', T-Nation (2016) — second-hand; no Arnold-authored source found",
+    "sourceURL": "https://archive.t-nation.com/training/tip-train-with-arnolds-golden-six/",
+    "routines": [
+      {
+        "name": "Full Body",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Bench Press - Wide Grip (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Chin Up",
+            "sets": [
+              {
+                "count": 3,
+                "kind": "failure"
+              }
+            ]
+          },
+          {
+            "exercise": "Overhead Press (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 10
+              }
+            ],
+            "notes": "Original: behind-the-neck press"
+          },
+          {
+            "exercise": "Bicep Curl (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Sit Up",
+            "sets": [
+              {
+                "count": 3,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Bent-knee sit-ups, 3–4 sets"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "arnold-split-blueprint",
+    "name": "Arnold Split (Blueprint to Mass)",
+    "author": "Arnold Schwarzenegger",
+    "goal": "muscle",
+    "level": "advanced",
+    "equipment": "fullGym",
+    "daysPerWeek": 6,
+    "summary": "Arnold's golden-era double-rotation split: chest/back, shoulders/arms, legs, each twice a week, high volume with pyramids and supersets. For experienced lifters with 1.5–2 hours to train.",
+    "schedule": "Chest & Back, Shoulders & Arms, Legs, Chest & Back, Shoulders & Arms, Legs, rest. Weeks 1–4 of the 8-week Blueprint to Mass.",
+    "progression": "Pyramid within each exercise: a 30-rep warm-up set, then 12, 10, 8 and 6 reps, going heavier as reps drop. Rest 45 seconds between sets.",
+    "source": "Arnold Schwarzenegger Blueprint Trainer — Blueprint to Mass, Phase 1 (Bodybuilding.com, 2013–14)",
+    "sourceURL": "https://web.archive.org/web/20140225135837/http://www.bodybuilding.com/fun/arnold-schwarzenegger-blueprint-trainer-day-1.html",
+    "routines": [
+      {
+        "name": "Chest, Back & Abs",
+        "exercises": [
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Incline Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Low-angle incline"
+          },
+          {
+            "exercise": "Chest Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Pullover (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Wide Pull Up",
+            "sets": [
+              {
+                "count": 4,
+                "kind": "failure"
+              }
+            ],
+            "rest": 45,
+            "notes": "Wide-grip chin-up"
+          },
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Bent Over Row (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Hanging Leg Raise",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 25
+              }
+            ],
+            "rest": 45
+          }
+        ]
+      },
+      {
+        "name": "Shoulders, Arms & Abs",
+        "exercises": [
+          {
+            "exercise": "Clean and Press",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 5
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Overhead Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Standing. Superset with the next exercise"
+          },
+          {
+            "exercise": "Front Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Upright Row (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Bicep Curl (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Seated Incline Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Concentration Curl",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Bench Press - Close Grip (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Skullcrusher (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Single Arm Tricep Extension (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Seated Wrist Curl (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Reverse Wrist Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 30,
+                "kind": "warmup"
+              },
+              {
+                "count": 1,
+                "reps": 12
+              },
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Decline Crunch",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 25
+              }
+            ],
+            "rest": 45,
+            "notes": "Decline sit-up in the original"
+          }
+        ]
+      },
+      {
+        "name": "Legs",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45,
+            "notes": "Optional max-effort squat every couple of weeks"
+          },
+          {
+            "exercise": "Straight Leg Deadlift",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Good Morning (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45,
+            "notes": "Only once per week"
+          },
+          {
+            "exercise": "Lunge (Barbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Seated Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Standing Calf Raise (Machine)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45,
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Seated Calf Raise",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "rest": 45
+          },
+          {
+            "exercise": "Cable Crunch",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 25
+              }
+            ],
+            "rest": 45,
+            "notes": "Kneeling cable crunch"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "german-volume-training",
+    "name": "German Volume Training",
+    "author": "Charles Poliquin",
+    "goal": "muscle",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 3,
+    "summary": "Ten sets of ten on one big lift per body part, paired as antagonist supersets with short rest. Brutal volume aimed at fast size gains; run it in six-cycle blocks.",
+    "schedule": "5-day cycle: Day 1 Chest & Back, Day 2 Legs & Abs, Day 3 off, Day 4 Arms & Shoulders, Day 5 off (about 4 sessions a week). Run six cycles, then switch to lower reps for three weeks.",
+    "progression": "Start the 10×10 lifts at ~60% of 1RM (a weight you could do 20 times) and keep it for all ten sets. Once you complete 10×10 with constant rest, add 4–5%.",
+    "source": "Charles Poliquin, 'German Volume Training', Poliquin Group (2010)",
+    "sourceURL": "https://web.archive.org/web/20130927092047/http://www.poliquingroup.com:80/ArticlesMultimedia/Articles/Article/441/German_Volume_Training.aspx",
+    "routines": [
+      {
+        "name": "Day 1 · Chest & Back",
+        "exercises": [
+          {
+            "exercise": "Decline Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A1 · Superset with the next exercise. Neutral grip, tempo 4-0-X-0"
+          },
+          {
+            "exercise": "Chin Up",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A2 · Tempo 4-0-X-0"
+          },
+          {
+            "exercise": "Incline Chest Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 60,
+            "notes": "B1 · Superset with the next exercise. Tempo 3-0-2-0"
+          },
+          {
+            "exercise": "Dumbbell Row",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 60,
+            "notes": "B2 · One arm, tempo 3-0-2-0"
+          }
+        ]
+      },
+      {
+        "name": "Day 2 · Legs & Abs",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A1 · Superset with the next exercise. Tempo 4-0-2-0"
+          },
+          {
+            "exercise": "Lying Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A2 · Feet turned out, tempo 4-0-X-0"
+          },
+          {
+            "exercise": "Reverse Crunch",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 60,
+            "notes": "B1 · Superset with the next exercise. Stand-in for low-cable pull-ins"
+          },
+          {
+            "exercise": "Seated Calf Raise",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 15,
+                "repsMax": 20
+              }
+            ],
+            "rest": 60,
+            "notes": "B2 · Tempo 2-0-2-0"
+          }
+        ]
+      },
+      {
+        "name": "Day 4 · Arms & Shoulders",
+        "exercises": [
+          {
+            "exercise": "Triceps Dip",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A1 · Superset with the next exercise. Parallel-bar dips, tempo 4-0-X-0"
+          },
+          {
+            "exercise": "Seated Incline Hammer Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "rest": 90,
+            "notes": "A2 · Tempo 4-0-X-0"
+          },
+          {
+            "exercise": "Rear Delt Reverse Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 60,
+            "notes": "B1 · Superset with the next exercise. Bent-over lateral raise"
+          },
+          {
+            "exercise": "Seated Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 60,
+            "notes": "B2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "generic-bulking-routine",
+    "name": "Generic Bulking Routine",
+    "author": "Lyle McDonald",
+    "goal": "muscle",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 4,
+    "summary": "Lyle McDonald's upper/lower hypertrophy template: heavy 6–8 rep compounds plus moderate-rep accessories, each muscle twice a week. For intermediates who want steady size gains.",
+    "schedule": "Four days a week: Upper, Lower, rest, Upper, Lower (e.g. Mon/Tue/Thu/Fri), rest at the weekend.",
+    "progression": "8-week cycles: 2 submaximal run-up weeks, then 6 weeks adding weight as consistently as possible, stopping sets 1–2 reps short of failure. Then drop the weights and start a new cycle.",
+    "source": "Lyle McDonald, 'Training Volume and Muscle Growth: Part 3' — sample GBR workout, bodyrecomposition.com",
+    "sourceURL": "https://bodyrecomposition.com/training/training-volume-muscle-growth-3",
+    "routines": [
+      {
+        "name": "Upper",
+        "exercises": [
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 6,
+                "repsMax": 8
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Bent Over Row (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 6,
+                "repsMax": 8
+              }
+            ],
+            "rest": 180,
+            "notes": "Any row"
+          },
+          {
+            "exercise": "Incline Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Or flyes; 2–3 sets"
+          },
+          {
+            "exercise": "Lat Pulldown (Cable)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Or cable pullover; 2–3 sets"
+          },
+          {
+            "exercise": "Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Rear Delt Reverse Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Bicep Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Any curl; 2–3 sets"
+          },
+          {
+            "exercise": "Triceps Pushdown",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Any triceps exercise; 2–3 sets"
+          }
+        ]
+      },
+      {
+        "name": "Lower",
+        "exercises": [
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 6,
+                "repsMax": 8
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Romanian Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 6,
+                "repsMax": 8
+              }
+            ],
+            "rest": 180
+          },
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "Or split squat; 2–3 sets"
+          },
+          {
+            "exercise": "Lying Leg Curl (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 12
+              }
+            ],
+            "rest": 90,
+            "notes": "2–3 sets"
+          },
+          {
+            "exercise": "Standing Calf Raise (Machine)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "rest": 120
+          },
+          {
+            "exercise": "Seated Calf Raise",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "rest": 120,
+            "notes": "Then abs and low-back work of your choice"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "heavy-duty-ideal-routine",
+    "name": "Heavy Duty (Ideal Routine)",
+    "author": "Mike Mentzer",
+    "goal": "muscle",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 2,
+    "summary": "Mentzer's high-intensity training: one all-out set per exercise, a few big movements, and lots of rest between workouts. For lifters who want short sessions and can push to true failure.",
+    "schedule": "Rotate Workouts 1→2→3→4, one workout every 4 days (96 h). As you get stronger, add rest days — every 5–7 days is common.",
+    "progression": "Beat the previous weight or reps on every set. If you aren't stronger than last time, add rest days before the next workout.",
+    "source": "Mike Mentzer's Ideal Routine, as presented on MikeMentzer.org (John Little, 2026), from Mentzer's own teaching",
+    "sourceURL": "https://mikementzer.org/mike-mentzers-ideal-routine-a-heavy-duty-blueprint/",
+    "routines": [
+      {
+        "name": "Workout 1 · Chest & Back",
+        "exercises": [
+          {
+            "exercise": "Butterfly (Pec Deck)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Incline Chest Press (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 1,
+                "repsMax": 3,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Machine preferred"
+          },
+          {
+            "exercise": "Reverse Grip Lat Pulldown (Cable)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Close grip, palms up"
+          },
+          {
+            "exercise": "Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 5,
+                "repsMax": 8
+              }
+            ],
+            "notes": "Near failure; shrugs 6–10 if you can't deadlift"
+          }
+        ]
+      },
+      {
+        "name": "Workout 2 · Legs",
+        "exercises": [
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 8,
+                "repsMax": 15,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Leg Press (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 8,
+                "repsMax": 15,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Or squat"
+          },
+          {
+            "exercise": "Standing Calf Raise (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 12,
+                "repsMax": 20,
+                "kind": "failure"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Workout 3 · Delts & Arms",
+        "exercises": [
+          {
+            "exercise": "Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ]
+          },
+          {
+            "exercise": "Rear Delt Reverse Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Or reverse pec deck"
+          },
+          {
+            "exercise": "Bicep Curl (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Straight bar"
+          },
+          {
+            "exercise": "Triceps Pushdown",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 6,
+                "repsMax": 10,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Triceps Dip",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 3,
+                "repsMax": 5,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Negatives if you can't do reps"
+          }
+        ]
+      },
+      {
+        "name": "Workout 4 · Legs",
+        "exercises": [
+          {
+            "exercise": "Leg Extension (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 1
+              }
+            ],
+            "notes": "One heavy static hold, 10–25 s. Superset with the next exercise"
+          },
+          {
+            "exercise": "Squat (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 8,
+                "repsMax": 15,
+                "kind": "failure"
+              }
+            ],
+            "notes": "Smith or free weight"
+          },
+          {
+            "exercise": "Standing Calf Raise (Machine)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 12,
+                "repsMax": 20,
+                "kind": "failure"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "westside-for-skinny-bastards",
+    "name": "Westside for Skinny Bastards",
+    "author": "Joe DeFranco",
+    "goal": "athletic",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 4,
+    "summary": "DeFranco's Westside-style template for young athletes: two max-effort days, a jumping day and a high-rep upper day. Builds strength, size and explosiveness.",
+    "schedule": "Mon Max-Effort Upper, Tue Dynamic-Effort Lower (jumps), Wed off, Thu Repetition Upper, Fri Max-Effort Lower, weekend off.",
+    "progression": "Max-effort days: work up to a new 3–5RM and rotate the max-effort lift (bench/floor press/incline/close-grip/weighted chin; box squat/squat/deadlift/trap-bar/rack pull). Repetition sets: beat last time's reps.",
+    "source": "Joe DeFranco, 'Westside for Skinny Bastards, Part III: The Final Chapter', defrancostraining.com",
+    "sourceURL": "https://web.archive.org/web/20081229141314/http://www.defrancostraining.com:80/articles/38-articles/65-westside-for-skinny-bastards-part3.html",
+    "routines": [
+      {
+        "name": "Monday · Max-Effort Upper",
+        "exercises": [
+          {
+            "exercise": "Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 3,
+                "repsMax": 5
+              }
+            ],
+            "notes": "Work up to a 3–5RM"
+          },
+          {
+            "exercise": "Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "kind": "failure"
+              }
+            ],
+            "rest": 180,
+            "notes": "Weight you can do 15–20× on set 1"
+          },
+          {
+            "exercise": "Dumbbell Row",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "notes": "Superset with the next exercise; 3–4 rounds"
+          },
+          {
+            "exercise": "Rear Delt Reverse Fly (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Shrug (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 15
+              }
+            ],
+            "notes": "3–4 sets"
+          },
+          {
+            "exercise": "Bicep Curl (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 15
+              }
+            ],
+            "notes": "3–4 sets"
+          }
+        ]
+      },
+      {
+        "name": "Tuesday · Dynamic-Effort Lower",
+        "exercises": [
+          {
+            "exercise": "Box Jump",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 1,
+                "repsMax": 3
+              }
+            ],
+            "notes": "5–8 sets"
+          },
+          {
+            "exercise": "Bulgarian Split Squat (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "notes": "Per leg, front foot elevated; 2–3 sets"
+          },
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "notes": "45° hyperextension"
+          },
+          {
+            "exercise": "Side Bend (Dumbbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 10,
+                "repsMax": 15
+              }
+            ],
+            "notes": "Weighted abs"
+          }
+        ]
+      },
+      {
+        "name": "Thursday · Repetition Upper",
+        "exercises": [
+          {
+            "exercise": "Incline Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "kind": "failure"
+              }
+            ],
+            "rest": 90,
+            "notes": "Max reps (or 4×12–15); stronger lifters rest up to 3 min"
+          },
+          {
+            "exercise": "Lat Pulldown (Cable)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ],
+            "notes": "Superset with the next exercise; 3–4 rounds"
+          },
+          {
+            "exercise": "Face Pull",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Lateral Raise (Dumbbell)",
+            "sets": [
+              {
+                "count": 4,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Shrug (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 10
+              }
+            ],
+            "notes": "Superset with the next exercise"
+          },
+          {
+            "exercise": "Triceps Extension (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10,
+                "repsMax": 15
+              }
+            ]
+          },
+          {
+            "exercise": "Wrist Roller",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 2,
+                "repsMax": 3
+              }
+            ],
+            "notes": "2–3 sets; skip if deadlifting next day"
+          }
+        ]
+      },
+      {
+        "name": "Friday · Max-Effort Lower",
+        "exercises": [
+          {
+            "exercise": "Box Squat (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 3,
+                "repsMax": 5
+              }
+            ],
+            "notes": "Work up to a 3–5RM"
+          },
+          {
+            "exercise": "Reverse Lunge (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6,
+                "repsMax": 12
+              }
+            ],
+            "notes": "Per leg"
+          },
+          {
+            "exercise": "Romanian Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 8,
+                "repsMax": 12
+              }
+            ]
+          },
+          {
+            "exercise": "V Up",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 20
+              }
+            ],
+            "notes": "Ab circuit, 2–3 rounds"
+          },
+          {
+            "exercise": "Toe Touch",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 20
+              }
+            ],
+            "notes": "Ab circuit"
+          },
+          {
+            "exercise": "Sit Up",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 20
+              }
+            ],
+            "notes": "Ab circuit; sprinter sit-ups"
+          },
+          {
+            "exercise": "Hip Thrust",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10,
+                "repsMax": 20
+              }
+            ],
+            "rest": 90,
+            "notes": "Ab circuit, bodyweight; rest 1–2 min between rounds"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "simple-and-sinister",
+    "name": "Kettlebell Simple & Sinister",
+    "author": "Pavel Tsatsouline",
+    "goal": "conditioning",
+    "level": "beginner",
+    "equipment": "kettlebell",
+    "daysPerWeek": 6,
+    "summary": "One kettlebell, two lifts — 100 one-arm swings and 10 Turkish get-ups — practised almost every day. Builds all-round strength and conditioning in about half an hour.",
+    "schedule": "Near-daily practice (minimum two sessions a week if life gets in the way).",
+    "progression": "Train unhurried, resting until you pass the talk test. Occasionally (e.g. the last session of the week) test the standard: 100 swings in 5 min, then 10 get-ups in 10 min. Goals — Simple: 32 kg swing and get-up (men), 24 kg swing / 16 kg get-up (women); Sinister: 48 kg (men), 32 kg swing / 24 kg get-up (women).",
+    "source": "Pavel Tsatsouline, Kettlebell Simple & Sinister; StrongFirst articles",
+    "sourceURL": "https://www.strongfirst.com/simple-sinister-progression-tactic/",
+    "routines": [
+      {
+        "name": "Daily Practice",
+        "exercises": [
+          {
+            "exercise": "Kettlebell Swing",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 10
+              }
+            ],
+            "notes": "One-arm, switch hands each set (5 sets per arm)"
+          },
+          {
+            "exercise": "Kettlebell Turkish Get Up",
+            "sets": [
+              {
+                "count": 10,
+                "reps": 1
+              }
+            ],
+            "notes": "Switch sides each rep (5 per side)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "convict-conditioning-new-blood",
+    "name": "Convict Conditioning: New Blood",
+    "author": "Paul Wade",
+    "goal": "bodyweight",
+    "level": "beginner",
+    "equipment": "bodyweight",
+    "daysPerWeek": 2,
+    "summary": "Prison-style calisthenics: four big bodyweight movements, each with ten progressively harder steps, trained twice a week. Needs only a pull-up bar.",
+    "schedule": "Monday: push-ups and leg raises. Friday: pull-ups and squats. 2–3 work sets each; the rest of the week off.",
+    "progression": "Train each movement at your current step (1–10). When you reach that step's progression standard, move to the next step. Leave a rep or two in the tank.",
+    "source": "Paul Wade, Convict Conditioning (Dragon Door, 2009) — 'New Blood' program, p. 278; schedule confirmed second-hand",
+    "sourceURL": "https://web.archive.org/web/20091206045352/http://www.dragondoor.com:80/b41.html",
+    "routines": [
+      {
+        "name": "Monday · Push & Core",
+        "exercises": [
+          {
+            "exercise": "Push Up",
+            "sets": [
+              {
+                "count": 2
+              }
+            ],
+            "notes": "Step 5 of 10 — use your step (Incline Push Ups, Kneeling Push Up …); 2–3 work sets"
+          },
+          {
+            "exercise": "Lying Leg Raise",
+            "sets": [
+              {
+                "count": 2
+              }
+            ],
+            "notes": "Step 5 of 10 — earlier: Lying Knee Raise; later: Hanging Knee Raise → Hanging Leg Raise"
+          }
+        ]
+      },
+      {
+        "name": "Friday · Pull & Legs",
+        "exercises": [
+          {
+            "exercise": "Pull Up",
+            "sets": [
+              {
+                "count": 2
+              }
+            ],
+            "notes": "Step 5 of 10 — earlier: Inverted Row; 2–3 work sets"
+          },
+          {
+            "exercise": "Squat (Bodyweight)",
+            "sets": [
+              {
+                "count": 2
+              }
+            ],
+            "notes": "Step 5 of 10 — later: Assisted Pistol Squats → Pistol Squat"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "contreras-glute-program",
+    "name": "Bret Contreras 4-Day Glute Program",
+    "author": "Bret Contreras",
+    "goal": "glutes",
+    "level": "intermediate",
+    "equipment": "fullGym",
+    "daysPerWeek": 4,
+    "summary": "The sample program 'the Glute Guy' gives his gym clients: hip thrusts every session plus squats, hinges and abduction work, with light upper-body pressing and pulling. For lifters who want to grow their glutes.",
+    "schedule": "Four full-body sessions a week, glutes first: Mon, Tue, Thu, Fri.",
+    "progression": "Not specified in the source.",
+    "source": "Bret Contreras, 'How to Design an Optimal Glute Training Program', bretcontreras.com (2015)",
+    "sourceURL": "https://bretcontreras.com/how-to-design-an-optimal-glute-training-program/",
+    "routines": [
+      {
+        "name": "Monday",
+        "exercises": [
+          {
+            "exercise": "Hip Thrust (Barbell)",
+            "sets": [
+              {
+                "count": 1,
+                "reps": 10
+              },
+              {
+                "count": 1,
+                "reps": 8
+              },
+              {
+                "count": 1,
+                "reps": 6
+              },
+              {
+                "count": 1,
+                "reps": 15
+              }
+            ],
+            "notes": "Pyramid"
+          },
+          {
+            "exercise": "Goblet Squat",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Deadlift (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 15
+              }
+            ],
+            "notes": "Stand-in for a heavy kettlebell deadlift"
+          },
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 20
+              }
+            ],
+            "notes": "45° hyper"
+          },
+          {
+            "exercise": "Hip Abduction (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 20
+              }
+            ],
+            "notes": "Stand-in for band seated hip abduction"
+          },
+          {
+            "exercise": "Incline Bench Press (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Lat Pulldown (Cable)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Tuesday",
+        "exercises": [
+          {
+            "exercise": "Hip Thrust",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ],
+            "notes": "Band across the hips"
+          },
+          {
+            "exercise": "Walking Lunge",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 50
+              }
+            ],
+            "notes": "50 total steps (25 per leg)"
+          },
+          {
+            "exercise": "Reverse Hyperextension",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Lateral Band Walks",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 20
+              }
+            ]
+          },
+          {
+            "exercise": "Push Up",
+            "sets": [
+              {
+                "count": 2,
+                "kind": "failure"
+              }
+            ],
+            "notes": "AMRAP"
+          },
+          {
+            "exercise": "Iso-Lateral Row (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ],
+            "notes": "Hammer Strength row"
+          }
+        ]
+      },
+      {
+        "name": "Thursday",
+        "exercises": [
+          {
+            "exercise": "Hip Thrust (Barbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 6
+              }
+            ]
+          },
+          {
+            "exercise": "Bulgarian Split Squat (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ],
+            "notes": "Per leg"
+          },
+          {
+            "exercise": "Back Extension (Hyperextension)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 30
+              }
+            ],
+            "notes": "45° hyper"
+          },
+          {
+            "exercise": "Glute Kickback (Machine)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ],
+            "notes": "Stand-in for pendulum quadruped hip extension"
+          },
+          {
+            "exercise": "Clamshell",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 20
+              }
+            ],
+            "notes": "Band, side-lying"
+          },
+          {
+            "exercise": "Shoulder Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Dumbbell Row",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ],
+            "notes": "One arm"
+          }
+        ]
+      },
+      {
+        "name": "Friday",
+        "exercises": [
+          {
+            "exercise": "Hip Thrust",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 20
+              }
+            ],
+            "notes": "Double band: around knees and over hips"
+          },
+          {
+            "exercise": "Leg Press (Machine)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Romanian Deadlift (Barbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 8
+              }
+            ],
+            "notes": "American deadlift: RDL + posterior pelvic tilt at the top"
+          },
+          {
+            "exercise": "Hip Abduction (Cable)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 20
+              }
+            ],
+            "notes": "Stand-in for band standing hip abduction"
+          },
+          {
+            "exercise": "Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ]
+          },
+          {
+            "exercise": "Inverted Row",
+            "sets": [
+              {
+                "count": 2,
+                "reps": 10
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stronglifts-quarantine",
+    "name": "StrongLifts Quarantine (Dumbbell)",
+    "author": "Mehdi Hadim",
+    "goal": "muscle",
+    "level": "beginner",
+    "equipment": "dumbbells",
+    "daysPerWeek": 3,
+    "summary": "A dumbbell-and-bench version of StrongLifts for home or hotel gyms: two alternating full-body workouts with sets of twelve. Good when there's no barbell.",
+    "schedule": "Alternate Workout A and Workout B three times a week (e.g. Mon/Wed/Fri).",
+    "progression": "When you complete 12 reps on all sets, move up to the next heaviest dumbbell next workout; expect slower jumps than with a barbell.",
+    "source": "Mehdi Hadim, 'Quarantine: Dumbbell Hotel Gym Workout', stronglifts.com",
+    "sourceURL": "https://stronglifts.com/quarantine/",
+    "routines": [
+      {
+        "name": "Workout A",
+        "exercises": [
+          {
+            "exercise": "Lunge (Dumbbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ],
+            "rest": 150,
+            "notes": "12 per leg"
+          },
+          {
+            "exercise": "Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Dumbbell Row",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Bicep Curl (Dumbbell)",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 12
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Workout B",
+        "exercises": [
+          {
+            "exercise": "Romanian Deadlift (Dumbbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Incline Bench Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Overhead Press (Dumbbell)",
+            "sets": [
+              {
+                "count": 5,
+                "reps": 12
+              }
+            ]
+          },
+          {
+            "exercise": "Sit Up",
+            "sets": [
+              {
+                "count": 3,
+                "reps": 12
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

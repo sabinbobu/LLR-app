@@ -68,6 +68,65 @@ final class WorkoutImporterTests: XCTestCase {
         XCTAssertEqual(reparsed.workouts, original.workouts)
     }
 
+    func testExportRoundTripsDurationSets() throws {
+        let context = try makeContext()
+        let text = """
+        Date,Workout Name,Duration,Exercise Name,Set Order,Weight,Reps,Distance,Seconds,Notes,Workout Notes,RPE
+        2021-01-02 09:00:00,"Back Care",20m,"Bird Dog",1,0,5,0,15,,,
+        2021-01-02 09:00:00,"Back Care",20m,"Bird Dog",2,0,5,0,15,,,
+        """
+        _ = WorkoutImporter.apply(try WorkoutCSV.parse(text, strongUnit: .kg), into: context)
+
+        let csv = WorkoutExport.strongCSV(try context.fetch(FetchDescriptor<Workout>()), unit: .kg)
+        let reparsed = try WorkoutCSV.parse(csv, strongUnit: .kg)
+        XCTAssertEqual(reparsed.workouts.first?.exercises.first?.sets, [
+            ImportedSet(weightKg: 0, reps: 5, kind: .normal, durationSeconds: 15),
+            ImportedSet(weightKg: 0, reps: 5, kind: .normal, durationSeconds: 15),
+        ])
+    }
+
+    func testKinetoCSVKeepsAPainOnlySessionAsOneRow() throws {
+        let context = try makeContext()
+        let workout = Workout(startedAt: Date(timeIntervalSince1970: 1_700_000_000))
+        workout.endedAt = workout.startedAt.addingTimeInterval(120)
+        workout.section = .kineto
+        workout.name = "Morning"
+        workout.backPainBefore = 6
+        workout.legPainBefore = 2
+        context.insert(workout)
+        try context.save()
+
+        let rows = WorkoutExport.kinetoCSV([workout]).split(separator: "\n")
+        XCTAssertEqual(rows.count, 2, "header + exactly one row, even though nothing was ticked")
+        XCTAssertTrue(rows[1].hasSuffix("6,2,,,,"), "back/leg pain-before must survive with the after/spread fields left blank")
+    }
+
+    func testKinetoCSVWritesOneRowPerCompletedSet() throws {
+        let context = try makeContext()
+        let exercise = Exercise(name: "Bird Dog", muscleGroup: "Lower Back")
+        context.insert(exercise)
+        let workout = Workout(startedAt: Date(timeIntervalSince1970: 1_700_000_000))
+        workout.endedAt = workout.startedAt.addingTimeInterval(600)
+        workout.section = .kineto
+        context.insert(workout)
+        let entry = WorkoutExercise(order: 0)
+        context.insert(entry)
+        entry.exercise = exercise
+        workout.exercises.append(entry)
+        for index in 0..<2 {
+            let set = SetEntry(order: index, weightKg: 0, reps: 1)
+            set.durationSeconds = 15
+            set.completedAt = workout.startedAt
+            context.insert(set)
+            entry.sets.append(set)
+        }
+        try context.save()
+
+        let rows = WorkoutExport.kinetoCSV([workout]).split(separator: "\n")
+        XCTAssertEqual(rows.count, 3, "header + one row per completed set")
+        XCTAssertTrue(rows[1].contains("Bird Dog,1,1,15"))
+    }
+
     func testExportLeavesOutUnfinishedWorkoutsAndUnticked() throws {
         let context = try makeContext()
         let open = Workout()

@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct RoutineListView: View {
-    @Query(sort: \Routine.createdAt, order: .reverse) private var routines: [Routine]
+    @Query(filter: #Predicate<Routine> { $0.sectionRaw == "gym" }, sort: \Routine.createdAt, order: .reverse)
+    private var routines: [Routine]
     @Environment(\.modelContext) private var context
     let onStart: (Routine) -> Void
     @State private var editing: Routine?
@@ -23,7 +24,7 @@ struct RoutineListView: View {
                 }
             }
         }
-        .navigationTitle("Explore Routines")
+        .navigationTitle("My Routines")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $editing) { RoutineBuilderView(routine: $0) }
     }

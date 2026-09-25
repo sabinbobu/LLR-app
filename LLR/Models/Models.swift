@@ -26,6 +26,13 @@ final class Exercise {
     }
 }
 
+/// Kineto is a physiotherapist-gated back-care section, kept out of gym history and stats. Stored
+/// (not derived) so it can be used in a `#Predicate`, and named unlike `SetEntry.kindRaw`/`SetKind`
+/// on purpose so the two are never confused.
+enum WorkoutSection: String {
+    case gym, kineto
+}
+
 @Model
 final class Workout {
     var id: UUID
@@ -34,12 +41,35 @@ final class Workout {
     var notes: String
     /// Empty for workouts logged here (they're titled by time of day); imports keep their original name.
     var name: String = ""
+    var sectionRaw: String = "gym"
+    // 0–10 each, back and leg scored separately; nil = not asked (every workout before Kineto shipped).
+    var backPainBefore: Int?
+    var legPainBefore: Int?
+    var backPainAfter: Int?
+    var legPainAfter: Int?
+    /// Asked at check-out: did symptoms spread further down the leg during the session — the key
+    /// disc warning sign a pain-score delta alone can miss.
+    var symptomsSpread: Bool?
     @Relationship(deleteRule: .cascade, inverse: \WorkoutExercise.workout) var exercises: [WorkoutExercise] = []
 
     init(startedAt: Date = .now) {
         self.id = UUID()
         self.startedAt = startedAt
         self.notes = ""
+    }
+}
+
+extension Workout {
+    var section: WorkoutSection {
+        get { WorkoutSection(rawValue: sectionRaw) ?? .gym }
+        set { sectionRaw = newValue.rawValue }
+    }
+
+    /// Pain recorded on a session with no completed sets is the single most important data point
+    /// Kineto can capture — stopping early because it hurt — so it must survive cleanup that would
+    /// otherwise treat an empty workout as an abandoned draft.
+    var hasPainRecorded: Bool {
+        backPainBefore != nil || legPainBefore != nil || backPainAfter != nil || legPainAfter != nil
     }
 }
 
@@ -64,6 +94,8 @@ final class SetEntry {
     var completedAt: Date?
     // Stored as a raw string with a default so existing stores migrate without a schema version bump.
     var kindRaw: String = "normal"
+    /// Hold duration for a duration-based set (reps × seconds); nil = an ordinary weight/reps set.
+    var durationSeconds: Int?
 
     init(order: Int, weightKg: Double, reps: Int) {
         self.order = order
@@ -78,19 +110,22 @@ extension SetEntry {
         set { kindRaw = newValue.rawValue }
     }
 
-    var value: SetValue { SetValue(weightKg: weightKg, reps: reps, kind: kind) }
+    var value: SetValue { SetValue(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds) }
 }
 
 extension WorkoutExercise {
     var orderedSets: [SetEntry] { sets.sorted { $0.order < $1.order } }
     var completedSets: [SetEntry] { orderedSets.filter { $0.completedAt != nil } }
+    /// A card renders duration rows only once every set agrees, so a stray nil right after
+    /// "Add Exercise" (before it inherits a value) never shows a mixed-up header.
+    var isDurationBased: Bool { !sets.isEmpty && sets.allSatisfy { $0.durationSeconds != nil } }
 
     /// Aligned index-for-index with `orderedSets`; history is only sessions that started earlier,
     /// so re-opening an old workout shows the records it set at the time, not relative to today.
     func recordKinds() -> [Set<PersonalRecords.Kind>] {
         let sets = orderedSets
         guard let exercise, let workout else { return sets.map { _ in [] } }
-        let history = exercise.sessions(excluding: workout)
+        let history = exercise.sessions(excluding: workout, section: workout.section)
             .filter { $0.date < workout.startedAt }
             .flatMap(\.sets)
         var earlier: [SetValue] = []
@@ -137,70 +172,13 @@ extension Workout {
     }
 }
 
-@Model
-final class Routine {
-    var id: UUID
-    var name: String
-    var createdAt: Date
-    @Relationship(deleteRule: .cascade, inverse: \RoutineExercise.routine) var exercises: [RoutineExercise] = []
-
-    init(name: String = "") {
-        self.id = UUID()
-        self.name = name
-        self.createdAt = .now
-    }
-}
-
-@Model
-final class RoutineExercise {
-    var routine: Routine?
-    var exercise: Exercise?
-    var order: Int
-    var notes: String
-    /// nil = no automatic rest for this exercise (the routine default from the reference screens).
-    var restSeconds: Int?
-    @Relationship(deleteRule: .cascade, inverse: \RoutineSetPlan.routineExercise) var sets: [RoutineSetPlan] = []
-
-    init(order: Int) {
-        self.order = order
-        self.notes = ""
-    }
-}
-
-@Model
-final class RoutineSetPlan {
-    var routineExercise: RoutineExercise?
-    var order: Int
-    /// nil = left blank on purpose ("leave it blank to workout on the go"), not zero.
-    var weightKg: Double?
-    var reps: Int?
-    var kindRaw: String = "normal"
-
-    init(order: Int, weightKg: Double? = nil, reps: Int? = nil) {
-        self.order = order
-        self.weightKg = weightKg
-        self.reps = reps
-    }
-
-    var kind: SetKind {
-        get { SetKind(rawValue: kindRaw) ?? .normal }
-        set { kindRaw = newValue.rawValue }
-    }
-}
-
-extension Routine {
-    var orderedExercises: [RoutineExercise] { exercises.sorted { $0.order < $1.order } }
-}
-
-extension RoutineExercise {
-    var orderedSets: [RoutineSetPlan] { sets.sorted { $0.order < $1.order } }
-}
-
 extension Exercise {
-    /// The in-progress workout is excluded so a set can never be pre-filled from itself.
-    func sessions(excluding workout: Workout? = nil) -> [Session] {
+    /// The in-progress workout is excluded so a set can never be pre-filled from itself. Scoped to
+    /// one section so a gym Plank's history never prefills (or PRs against) a Kineto Plank, and vice versa.
+    func sessions(excluding workout: Workout? = nil, section: WorkoutSection = .gym) -> [Session] {
         usages.compactMap { entry in
-            guard let owner = entry.workout, owner.endedAt != nil, owner.id != workout?.id else { return nil }
+            guard let owner = entry.workout, owner.endedAt != nil, owner.id != workout?.id, owner.section == section
+            else { return nil }
             let done = entry.completedSets.map(\.value)
             return done.isEmpty ? nil : Session(date: owner.startedAt, sets: done)
         }

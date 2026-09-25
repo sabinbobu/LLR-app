@@ -4,6 +4,8 @@ struct SetValue: Equatable {
     var weightKg: Double
     var reps: Int
     var kind: SetKind = .normal
+    /// Hold duration for a duration-based set (reps × seconds); nil = an ordinary weight/reps set.
+    var durationSeconds: Int? = nil
 }
 
 struct Session: Equatable {

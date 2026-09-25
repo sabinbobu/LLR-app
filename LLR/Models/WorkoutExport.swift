@@ -23,7 +23,7 @@ enum WorkoutExport {
                 for (set, label) in zip(sets, labels) {
                     lines.append(CSV.line([
                         date, workout.title, duration, exercise.name, label,
-                        unit.format(kg: set.weightKg), "\(set.reps)", "0", "0", "", workout.notes, "",
+                        unit.format(kg: set.weightKg), "\(set.reps)", "0", "\(set.durationSeconds ?? 0)", "", workout.notes, "",
                     ]))
                 }
             }
@@ -34,6 +34,42 @@ enum WorkoutExport {
     static func durationText(_ interval: TimeInterval) -> String {
         let minutes = max(0, Int(interval / 60))
         return minutes >= 60 ? "\(minutes / 60)h \(minutes % 60)m" : "\(minutes)m"
+    }
+
+    static let kinetoHeader = [
+        "Date", "Routine Name", "Duration", "Exercise Name", "Set Order", "Reps", "Seconds",
+        "Back Pain Before", "Leg Pain Before", "Back Pain After", "Leg Pain After", "Symptoms Spread", "Notes",
+    ]
+
+    /// Separate from the Strong export above: it can't carry pain, and reimporting it would turn
+    /// a rehab session into gym history. A session kept only for its recorded pain (no ticked
+    /// sets) still gets one row here — that's the whole point of keeping it.
+    static func kinetoCSV(_ workouts: [Workout]) -> String {
+        var lines = [CSV.line(kinetoHeader)]
+        for workout in workouts.sorted(by: { $0.startedAt < $1.startedAt }) {
+            let date = WorkoutCSV.strongDate.string(from: workout.startedAt)
+            let duration = durationText(workout.duration)
+            let backBefore: String = workout.backPainBefore.map(String.init) ?? ""
+            let legBefore: String = workout.legPainBefore.map(String.init) ?? ""
+            let backAfter: String = workout.backPainAfter.map(String.init) ?? ""
+            let legAfter: String = workout.legPainAfter.map(String.init) ?? ""
+            let spread: String = workout.symptomsSpread.map { $0 ? "Yes" : "No" } ?? ""
+            let painFields = [backBefore, legBefore, backAfter, legAfter, spread, workout.notes]
+            var wroteARow = false
+            for entry in workout.orderedExercises {
+                guard let exercise = entry.exercise else { continue }
+                let sets = entry.completedSets
+                let labels = SetKind.labels(for: sets.map(\.kind))
+                for (set, label) in zip(sets, labels) {
+                    lines.append(CSV.line([date, workout.title, duration, exercise.name, label, "\(set.reps)", "\(set.durationSeconds ?? 0)"] + painFields))
+                    wroteARow = true
+                }
+            }
+            if !wroteARow {
+                lines.append(CSV.line([date, workout.title, duration, "", "", "", ""] + painFields))
+            }
+        }
+        return lines.joined(separator: "\n") + "\n"
     }
 }
 

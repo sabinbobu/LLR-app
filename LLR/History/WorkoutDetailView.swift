@@ -7,6 +7,7 @@ struct WorkoutDetailView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var confirmDelete = false
+    @State private var editing = false
 
     // Precomputed rows keep `body` cheap to type-check; the inline version took 11s per build.
     private struct Row: Identifiable {
@@ -28,22 +29,32 @@ struct WorkoutDetailView: View {
 
     private func setRow(_ row: Row) -> some View {
         let labelColor: Color = row.set.kind == .normal ? .secondary : SetRowView.color(for: row.set.kind)
-        let weight: String = "\(unit.format(kg: row.set.weightKg)) \(unit.rawValue) × \(row.set.reps)"
-        let oneRepMax: String = "1RM \(unit.format(kg: OneRepMax.epley(row.set.value)))"
+        // Duration sets have no weight, so there's no 1RM to show either.
+        let detail: String
+        let trailing: String?
+        if let seconds = row.set.durationSeconds {
+            detail = "\(row.set.reps) × \(seconds) s"
+            trailing = nil
+        } else {
+            detail = "\(unit.format(kg: row.set.weightKg)) \(unit.rawValue) × \(row.set.reps)"
+            trailing = "1RM \(unit.format(kg: OneRepMax.epley(row.set.value)))"
+        }
         return HStack {
             Text(row.label)
                 .foregroundStyle(labelColor)
                 .frame(width: 28, alignment: .leading)
-            Text(weight)
+            Text(detail)
             if !row.records.isEmpty {
                 Image(systemName: "trophy.fill")
                     .foregroundStyle(.yellow)
                     .accessibilityLabel(row.records.sorted().map(\.title).joined(separator: ", "))
             }
             Spacer()
-            Text(oneRepMax)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            if let trailing {
+                Text(trailing)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .monospacedDigit()
     }
@@ -66,12 +77,14 @@ struct WorkoutDetailView: View {
         .navigationTitle(workout.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            Button("Edit") { editing = true }
             Button(role: .destructive) {
                 confirmDelete = true
             } label: {
                 Image(systemName: "trash")
             }
         }
+        .fullScreenCover(isPresented: $editing) { WorkoutEditorView(workout: workout) }
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Workout", role: .destructive) {
                 dismiss()
