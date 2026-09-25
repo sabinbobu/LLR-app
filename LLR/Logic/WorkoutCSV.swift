@@ -4,6 +4,7 @@ struct ImportedSet: Equatable {
     let weightKg: Double
     let reps: Int
     let kind: SetKind
+    var durationSeconds: Int? = nil
 }
 
 struct ImportedExercise: Equatable {
@@ -87,12 +88,16 @@ enum WorkoutCSV {
                 guard Int(order) != nil else { continue }
                 kind = .normal
             }
+            // A held rep (reps > 0 and a Seconds value) is a duration set; reps == 0 with a Seconds
+            // value is a cardio/timed row LLR can't represent, and stays an unsupported skip below.
+            let seconds = Int(table[row, "Seconds"]).flatMap { $0 > 0 ? $0 : nil }
             builder.add(
                 workout: (table[row, "Workout Name"], start, start + duration(table[row, "Duration"]), table[row, "Workout Notes"]),
                 exercise: table[row, "Exercise Name"],
                 weightKg: unit.toKg(WeightUnit.parse(table[row, "Weight"]) ?? 0),
                 reps: Int(WeightUnit.parse(table[row, "Reps"]) ?? 0),
-                kind: kind
+                kind: kind,
+                durationSeconds: seconds
             )
         }
         return Parsed(source: .strong, workouts: builder.workouts, skippedTimedSets: builder.skipped)
@@ -158,7 +163,8 @@ private struct Builder {
         exercise: String,
         weightKg: Double,
         reps: Int,
-        kind: SetKind
+        kind: SetKind,
+        durationSeconds: Int? = nil
     ) {
         guard reps > 0, !exercise.isEmpty else {
             skipped += 1
@@ -172,7 +178,7 @@ private struct Builder {
                 notes: workout.notes, exercises: []
             ))
         }
-        let set = ImportedSet(weightKg: weightKg, reps: reps, kind: kind)
+        let set = ImportedSet(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds)
         let last = workouts.count - 1
         if workouts[last].exercises.last?.name == exercise {
             workouts[last].exercises[workouts[last].exercises.count - 1].sets.append(set)

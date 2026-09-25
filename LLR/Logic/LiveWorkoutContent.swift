@@ -58,6 +58,7 @@ enum LiveWorkoutContent {
 
     static func target(_ set: SetValue, unit: WeightUnit) -> String {
         guard set.reps > 0 else { return "Enter reps in LLR" }
+        if let seconds = set.durationSeconds { return "\(set.reps) × \(seconds) s" }
         guard set.weightKg > 0 else { return "\(set.reps) reps" }
         return "\(unit.format(kg: set.weightKg)) \(unit.rawValue) × \(set.reps)"
     }

@@ -24,12 +24,16 @@ struct RoutineExerciseEditorCard: View {
 
             restRow
             Divider().padding(.horizontal, 16)
-            header
+            header(isDurationBased: entry.isDurationBased)
 
             let sets = entry.orderedSets
             let labels = SetKind.labels(for: sets.map(\.kind))
+            let isDurationBased = entry.isDurationBased
             ForEach(Array(sets.enumerated()), id: \.element.id) { index, plan in
-                RoutineSetRowView(plan: plan, label: labels[index], unit: unit, canRemove: sets.count > 1) {
+                RoutineSetRowView(
+                    plan: plan, label: labels[index], unit: unit, isDurationBased: isDurationBased,
+                    canRemove: sets.count > 1
+                ) {
                     onDeleteSet(plan)
                 }
             }
@@ -39,7 +43,13 @@ struct RoutineExerciseEditorCard: View {
         .cardStyle()
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }
+                NavigationStack {
+                    if entry.isDurationBased, let kinetoExercise = KinetoCatalog.exercise(named: exercise.name) {
+                        KinetoExerciseDetailView(exercise: kinetoExercise)
+                    } else {
+                        ExerciseDetailView(exercise: exercise, showsDoneButton: true)
+                    }
+                }
             }
         }
     }
@@ -112,11 +122,16 @@ struct RoutineExerciseEditorCard: View {
         .padding(.vertical, 10)
     }
 
-    private var header: some View {
+    private func header(isDurationBased: Bool) -> some View {
         HStack(spacing: 10) {
             Text("SET").frame(width: 40)
-            Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
-            Text("REPS").frame(maxWidth: .infinity)
+            if isDurationBased {
+                Text("REPS").frame(maxWidth: .infinity)
+                Text("HOLD").frame(maxWidth: .infinity)
+            } else {
+                Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
+                Text("REPS").frame(maxWidth: .infinity)
+            }
             Color.clear.frame(width: 40, height: 1)
         }
         .font(.caption.weight(.semibold))

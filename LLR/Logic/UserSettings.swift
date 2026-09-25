@@ -14,6 +14,50 @@ enum StorageKey {
     // One per unit: a 45 lb bar is not 20 kg, so converting a single stored value would be wrong.
     static let barKg = "barKg"
     static let barLbs = "barLbs"
+    // Kineto gate: cleared version/date re-ask the gate whenever the catalog content changes.
+    static let kinetoClearedVersion = "kinetoClearedVersion"
+    static let kinetoClearedAt = "kinetoClearedAt"
+    static let kinetoDirection = "kinetoDirection"
+    static let kinetoPainRule = "kinetoPainRule"
+}
+
+/// The direction the physiotherapist has identified as helpful, set once at the Kineto gate.
+/// Picking a catalog exercise tagged the *other* single direction shows a warning — never hidden,
+/// per Long 2004 vs. Dettori 1995 (see the plan's disagreement table).
+enum KinetoDirectionPreference: String, CaseIterable, Identifiable {
+    case notAssessed, matchesFlexion, matchesExtension, noPreference
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .notAssessed: "Not assessed yet"
+        case .matchesFlexion: "Flexion helps"
+        case .matchesExtension: "Extension helps"
+        case .noPreference: "No preference set"
+        }
+    }
+
+    func warns(for direction: KinetoCatalog.Direction) -> Bool {
+        switch self {
+        case .notAssessed, .noPreference: false
+        case .matchesFlexion: direction == .extension
+        case .matchesExtension: direction == .flexion
+        }
+    }
+}
+
+/// AAOS ("don't feel pain during an exercise") vs. Plymouth ("won't make it worse, even with a
+/// bit of discomfort at first") — the app defaults to the stricter rule and lets the physio switch it.
+enum KinetoPainRule: String, CaseIterable, Identifiable {
+    case stopOnPain, mildDiscomfortOK
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .stopOnPain: "Stop if it hurts"
+        case .mildDiscomfortOK: "Mild discomfort is OK"
+        }
+    }
 }
 
 extension WeightUnit {

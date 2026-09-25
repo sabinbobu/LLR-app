@@ -55,6 +55,7 @@ enum WorkoutImporter {
                 for (setOrder, importedSet) in importedExercise.sets.enumerated() {
                     let set = SetEntry(order: setOrder, weightKg: importedSet.weightKg, reps: importedSet.reps)
                     set.kind = importedSet.kind
+                    set.durationSeconds = importedSet.durationSeconds
                     set.completedAt = imported.startedAt
                     context.insert(set)
                     entry.sets.append(set)

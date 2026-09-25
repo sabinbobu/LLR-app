@@ -7,9 +7,13 @@ import SwiftData
 final class ActiveWorkoutModel {
     let workout: Workout
     let restTimer = RestTimer.shared
+    /// Editing a finished workout: no rest timer, and the Lock Screen is never touched —
+    /// it only ever mirrors the workout in progress.
+    let isHistory: Bool
 
-    init(workout: Workout) {
+    init(workout: Workout, isHistory: Bool = false) {
         self.workout = workout
+        self.isHistory = isHistory
     }
 
     private var context: ModelContext? { workout.modelContext }
@@ -19,7 +23,7 @@ final class ActiveWorkoutModel {
     }
 
     func previousSets(for exercise: Exercise) -> [SetValue] {
-        PreviousPerformance.latestSets(in: exercise.sessions(excluding: workout))
+        PreviousPerformance.latestSets(in: exercise.sessions(excluding: workout, section: workout.section))
     }
 
     func add(_ exercise: Exercise) {
@@ -33,7 +37,21 @@ final class ActiveWorkoutModel {
         for index in 0..<max(previous.count, 1) {
             appendSet(to: entry, prefill: exercise.progressionPrefill(index: index, previous: previous, currentLast: nil))
         }
-        LiveWorkoutActivity.sync()
+        syncLockScreen()
+    }
+
+    /// A Kineto catalog pick: each new set gets the chosen level's dose directly, not history-based
+    /// prefill — progression here is a manual, physio-directed level choice, not double progression.
+    func add(_ exercise: Exercise, level: KinetoCatalog.Level) {
+        guard let context else { return }
+        let entry = WorkoutExercise(order: (workout.exercises.map(\.order).max() ?? -1) + 1)
+        context.insert(entry)
+        entry.exercise = exercise
+        workout.exercises.append(entry)
+        for _ in 0..<max(level.sets ?? 1, 1) {
+            appendSet(to: entry, prefill: SetValue(weightKg: 0, reps: level.reps ?? 1, durationSeconds: level.durationSeconds))
+        }
+        syncLockScreen()
     }
 
     func addSet(to entry: WorkoutExercise) {
@@ -44,7 +62,7 @@ final class ActiveWorkoutModel {
             currentLast: entry.orderedSets.last?.value
         ) ?? PreviousPerformance.prefill(index: entry.sets.count, previous: previous, currentLast: entry.orderedSets.last?.value)
         appendSet(to: entry, prefill: prefill)
-        LiveWorkoutActivity.sync()
+        syncLockScreen()
     }
 
     private func appendSet(to entry: WorkoutExercise, prefill: SetValue?) {
@@ -55,6 +73,7 @@ final class ActiveWorkoutModel {
             reps: prefill?.reps ?? 0
         )
         set.kind = prefill?.kind ?? .normal
+        set.durationSeconds = prefill?.durationSeconds
         context.insert(set)
         entry.sets.append(set)
     }
@@ -69,7 +88,7 @@ final class ActiveWorkoutModel {
             set.weightKg = target.weightKg
             set.reps = target.reps
         }
-        LiveWorkoutActivity.sync()
+        syncLockScreen()
     }
 
     /// Returns false when the set can't be completed (no reps), so the row can signal it.
@@ -80,6 +99,11 @@ final class ActiveWorkoutModel {
             return true
         }
         guard set.reps > 0 else { return false }
+        if isHistory {
+            // The set happened during that workout, not now, and nobody is resting.
+            set.completedAt = workout.startedAt
+            return true
+        }
         set.completedAt = .now
         let exercise = set.workoutExercise?.exercise
         if let seconds = RestDuration.resolve(override: exercise?.restSeconds, defaultSeconds: defaultRestSeconds) {
@@ -92,17 +116,18 @@ final class ActiveWorkoutModel {
 
     func delete(_ set: SetEntry) {
         context?.delete(set)
-        LiveWorkoutActivity.sync()
+        syncLockScreen()
     }
 
     func remove(_ entry: WorkoutExercise) {
         context?.delete(entry)
-        LiveWorkoutActivity.sync()
+        syncLockScreen()
     }
 
     /// Unchecked sets are drafts, not history: drop them so they never pollute previous-value lookups.
-    func finish() {
-        guard let context else { return }
+    /// Returns whether anything is left.
+    private func dropUnticked() -> Bool {
+        guard let context else { return false }
         var keptAny = false
         for entry in workout.exercises {
             entry.sets.filter { $0.completedAt == nil }.forEach(context.delete)
@@ -112,7 +137,14 @@ final class ActiveWorkoutModel {
                 context.delete(entry)
             }
         }
-        if keptAny {
+        return keptAny
+    }
+
+    func finish() {
+        guard let context else { return }
+        // A Kineto session that recorded pain is kept even with nothing ticked: stopping early
+        // because it hurt is the most important thing it captured.
+        if dropUnticked() || workout.hasPainRecorded {
             workout.endedAt = .now
         } else {
             context.delete(workout)
@@ -122,10 +154,19 @@ final class ActiveWorkoutModel {
         LiveWorkoutActivity.sync()
     }
 
+    func saveEdits() {
+        _ = dropUnticked()
+        try? context?.save()
+    }
+
     func discard() {
         restTimer.skip()
         context?.delete(workout)
         try? context?.save()
         LiveWorkoutActivity.sync()
+    }
+
+    private func syncLockScreen() {
+        if !isHistory { LiveWorkoutActivity.sync() }
     }
 }

@@ -25,6 +25,7 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
 - Import Hevy/Strong CSV exports; export a Strong-format CSV
 - Lock Screen Live Activity: complete the next set, adjust or skip rest
 - Rule-based progression targets inside a per-exercise rep range (double progression)
+- Kineto: a physiotherapist-gated section for logging cited, low-load back-care exercises and pain before/after each session (see `LLR/Kineto/`, `KinetoCatalog.swift`). Content still needs real clinical sign-off — see the roadmap in the plan this was built from.
 
 ## Non-goals (do not build in v1)
 Accounts, cloud sync, social features, AI coaching or AI-generated workouts, workout plans/programs, Apple Watch, subscriptions, HealthKit write-back.
@@ -51,8 +52,9 @@ Accounts, cloud sync, social features, AI coaching or AI-generated workouts, wor
 - Keep files under ~200 lines; split when exceeded
 
 ## Commands
-- Build: `xcodebuild -scheme LLR -destination 'platform=iOS Simulator,name=iPhone 15' build`
-- Test: `xcodebuild -scheme LLR -destination 'platform=iOS Simulator,name=iPhone 15' test`
+- Build: `xcodebuild -scheme LLR -destination 'platform=iOS Simulator,name=iPhone 17' build`
+- Test: `xcodebuild -scheme LLR -destination 'platform=iOS Simulator,name=iPhone 17' test`
+- After editing `project.yml`, or adding/removing files under `LLR/`, run `xcodegen generate` before building — it scans the tree at generation time and won't pick up new files on its own.
 
 ## Working rules for Claude
 - Implement one v1 item at a time; run build and tests before declaring it done

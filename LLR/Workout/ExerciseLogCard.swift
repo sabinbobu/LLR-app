@@ -34,9 +34,11 @@ struct ExerciseLogCard: View {
                 }
             }
 
-            if let exercise = entry.exercise {
+            // Rest and progression shape the next session, not one already done. A rep range is a
+            // weight/reps concept, so it's hidden for duration sets, which progress manually.
+            if let exercise = entry.exercise, !model.isHistory {
                 restMenu(for: exercise)
-                repRangeMenu(for: exercise)
+                if !entry.isDurationBased { repRangeMenu(for: exercise) }
             }
 
             VStack(spacing: 0) {
@@ -44,19 +46,34 @@ struct ExerciseLogCard: View {
                 let sets = entry.orderedSets
                 let labels = SetKind.labels(for: sets.map(\.kind))
                 let records = entry.recordKinds()
+                let isDurationBased = entry.isDurationBased
                 ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
-                    SetRowView(
-                        entry: set,
-                        label: labels[index],
-                        unit: unit,
-                        isStriped: index.isMultiple(of: 2),
-                        isRecord: !records[index].isEmpty
-                    ) {
-                        model.toggle(set)
-                    }
-                    .contextMenu {
-                        Button("Plate Calculator", systemImage: "circle.grid.2x1") { plateTargetKg = set.weightKg }
-                        Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
+                    if isDurationBased {
+                        HoldSetRowView(
+                            entry: set,
+                            label: labels[index],
+                            isStriped: index.isMultiple(of: 2),
+                            isRecord: !records[index].isEmpty
+                        ) {
+                            model.toggle(set)
+                        }
+                        .contextMenu {
+                            Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
+                        }
+                    } else {
+                        SetRowView(
+                            entry: set,
+                            label: labels[index],
+                            unit: unit,
+                            isStriped: index.isMultiple(of: 2),
+                            isRecord: !records[index].isEmpty
+                        ) {
+                            model.toggle(set)
+                        }
+                        .contextMenu {
+                            Button("Plate Calculator", systemImage: "circle.grid.2x1") { plateTargetKg = set.weightKg }
+                            Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
+                        }
                     }
                 }
             }
@@ -75,7 +92,15 @@ struct ExerciseLogCard: View {
         }
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }
+                NavigationStack {
+                    // A gym how-to can contradict a Kineto dose (Plank: "hold as long as possible"
+                    // vs. the catalog's 5 × 30 s), so a duration entry always shows its own page.
+                    if entry.isDurationBased, let kinetoExercise = KinetoCatalog.exercise(named: exercise.name) {
+                        KinetoExerciseDetailView(exercise: kinetoExercise)
+                    } else {
+                        ExerciseDetailView(exercise: exercise, showsDoneButton: true)
+                    }
+                }
             }
         }
     }
@@ -132,8 +157,13 @@ struct ExerciseLogCard: View {
     private var header: some View {
         HStack {
             Text("SET").frame(width: 56)
-            Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
-            Text("REPS").frame(maxWidth: .infinity)
+            if entry.isDurationBased {
+                Text("REPS").frame(maxWidth: .infinity)
+                Text("HOLD").frame(maxWidth: .infinity)
+            } else {
+                Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
+                Text("REPS").frame(maxWidth: .infinity)
+            }
             Image(systemName: "checkmark").frame(width: 64)
         }
         .font(.caption)

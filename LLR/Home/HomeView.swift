@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil }, sort: \Workout.startedAt, order: .reverse)
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
 
     var body: some View {

@@ -36,11 +36,15 @@ struct RoutineBuilderView: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .background(Theme.background)
-            .navigationTitle("Create Routine")
+            .navigationTitle(routine.section == .kineto ? "Create Kineto Routine" : "Create Routine")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .sheet(isPresented: $showingPicker) {
-                ExercisePickerView { $0.forEach(add) }
+                if routine.section == .kineto {
+                    KinetoCatalogView(mode: .pick { exercise, level in add(exercise, level: level) })
+                } else {
+                    ExercisePickerView { $0.forEach(add) }
+                }
             }
         }
     }
@@ -136,6 +140,22 @@ struct RoutineBuilderView: View {
         entry.exercise = exercise
         routine.exercises.append(entry)
         addSet(to: entry)
+    }
+
+    /// A Kineto pick pre-fills the chosen level's dose (reps × seconds) instead of a blank plan —
+    /// the physio sets the numbers, but starting from the catalog's dosing beats starting from zero.
+    private func add(_ exercise: Exercise, level: KinetoCatalog.Level) {
+        let entry = RoutineExercise(order: (routine.exercises.map(\.order).max() ?? -1) + 1)
+        context.insert(entry)
+        entry.exercise = exercise
+        routine.exercises.append(entry)
+        for _ in 0..<max(level.sets ?? 1, 1) {
+            let plan = RoutineSetPlan(order: (entry.sets.map(\.order).max() ?? -1) + 1, reps: level.reps ?? 1)
+            plan.durationSeconds = level.durationSeconds
+            context.insert(plan)
+            entry.sets.append(plan)
+        }
+        try? context.save()
     }
 
     private func addSet(to entry: RoutineExercise) {

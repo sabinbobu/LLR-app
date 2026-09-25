@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "exercises": [
+    {
+      "Name": "Abdominal Brace",
+      "Muscle": "Abdominals",
+      "Equipment": [],
+      "Secondary": ["Lower Back"],
+      "Howto": [
+        "Lie on your back with knees bent and feet flat on the floor.",
+        "Gently tighten your abdominal muscles as if bracing for a light poke, without holding your breath.",
+        "Keep your lower back neutral — don't let it arch up or flatten hard into the floor.",
+        "Hold, breathing normally, then relax."
+      ],
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Brace", "Sets": 5, "Reps": null, "DurationSeconds": 15, "Notes": "Daily." }
+      ],
+      "Mistakes": "Letting the lower back arch off the floor; holding the breath instead of breathing normally.",
+      "Cautions": "Stop if it causes pain.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" },
+        { "Title": "Quantification of lumbar stability, abdominal strategies (Grenier & McGill 2007)", "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22Quantification%20of%20lumbar%20stability%20by%20using%202%20different%20abdominal%20activation%20strategies%22&resultType=core&format=json", "Kind": "lab-study" },
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Dead Bug",
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard", "Sets": 1, "Reps": 15, "DurationSeconds": null, "Notes": null }
+      ],
+      "Mistakes": null,
+      "Cautions": "Stop on pain.",
+      "Sources": [
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Bird Dog",
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "L1 — Single-leg extension", "Sets": 5, "Reps": null, "DurationSeconds": 15, "Notes": "Extend one leg at a time — the lowest-load version." },
+        { "Label": "L2 — Opposite arm + leg", "Sets": 5, "Reps": null, "DurationSeconds": 15, "Notes": "Hold 15 s, daily (AAOS). Plymouth doses this as 15 alternating reps, 5 s hold each." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Stop on pain.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" },
+        { "Title": "Lumbar spine load during extensor exercises (Callaghan 1998)", "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22relationship%20between%20lumbar%20spine%20load%20and%20muscle%20activity%20during%20extensor%20exercises%22&resultType=core&format=json", "Kind": "lab-study" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Side Plank (Knees)",
+      "Muscle": "Abdominals",
+      "Equipment": [],
+      "Secondary": ["Lower Back"],
+      "Howto": [
+        "Lie on your side with your knees bent and stacked, propped up on your forearm.",
+        "Lift your hips off the floor until your body forms a straight line from shoulders to knees.",
+        "Hold the position, then lower with control.",
+        "Repeat on the other side."
+      ],
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "From knees", "Sets": 5, "Reps": null, "DurationSeconds": 15, "Notes": "Per side, daily." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Stop on pain.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Side Plank",
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "From feet", "Sets": null, "Reps": null, "DurationSeconds": null, "Notes": "No verified dose — set by your physiotherapist. Progress from Side Plank (Knees) only once that's pain-free." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Only after the knees version is pain-free.",
+      "Sources": [
+        { "Title": "Endurance times for low back stabilization exercises (McGill 1999)", "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22Endurance%20times%20for%20low%20back%20stabilization%20exercises%22&resultType=core&format=json", "Kind": "lab-study" },
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Plank",
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard", "Sets": 5, "Reps": null, "DurationSeconds": 30, "Notes": "Daily." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Stop on pain.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Partial Curl Up",
+      "Muscle": "Abdominals",
+      "Equipment": [],
+      "Secondary": [],
+      "Howto": [
+        "Lie on your back with knees bent and feet flat on the floor, hands resting lightly behind your head or crossed on your chest.",
+        "Curl your head and shoulders a few inches off the floor, keeping your lower back pressed down.",
+        "Hold briefly, then lower with control."
+      ],
+      "Category": "Stability & endurance",
+      "Direction": "flexion",
+      "Levels": [
+        { "Label": "Standard", "Sets": 2, "Reps": 10, "DurationSeconds": 2, "Notes": "2 s hold per rep." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Flexion-direction exercise — check this matches your physiotherapist's preferred direction.",
+      "Sources": [
+        { "Title": "Searching for the safest abdominal exercise (Axler & McGill 1997)", "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22searching%20for%20the%20safest%20abdominal%20challenge%22&resultType=core&format=json", "Kind": "lab-study" },
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Glute Bridge",
+      "Category": "Stability & endurance",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard (AAOS)", "Sets": 5, "Reps": null, "DurationSeconds": 15, "Notes": "Hold 15 s, daily. Plymouth doses this as 15 reps with no hold." }
+      ],
+      "Mistakes": "Arching the lower back (Plymouth) — keep it neutral.",
+      "Cautions": "Stop on pain.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" },
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Pelvic Tilt",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": ["Abdominals"],
+      "Howto": [
+        "Lie on your back with knees bent and feet flat on the floor.",
+        "Slowly flatten your lower back into the floor by gently tilting your pelvis, then release into a slight arch.",
+        "Move slowly between the two positions, staying within a pain-free range."
+      ],
+      "Category": "Mobility",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard", "Sets": 1, "Reps": 12, "DurationSeconds": null, "Notes": "10–15 slow reps." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Stay in the pain-free range.",
+      "Sources": [
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Knee to Chest Stretch",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": ["Glutes"],
+      "Howto": [
+        "Lie on your back with both knees bent.",
+        "Bring one knee toward your chest, holding behind the thigh.",
+        "Hold gently, then lower and repeat on the other side."
+      ],
+      "Category": "Mobility",
+      "Direction": "flexion",
+      "Levels": [
+        { "Label": "Standard (AAOS)", "Sets": 3, "Reps": 10, "DurationSeconds": 5, "Notes": "5 s hold per rep. Plymouth doses this as 5–10 reps, 15 s hold, per leg." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Flexion-direction exercise — check this matches your physiotherapist's preferred direction.",
+      "Sources": [
+        { "Title": "AAOS OrthoInfo — Spine Conditioning Program", "Url": "https://www.orthoinfo.org/en/recovery/spine-conditioning-program/", "Kind": "patient-education" },
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Bottom to Heel Stretch",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": [],
+      "Howto": [
+        "Kneel on all fours, then sit your hips back toward your heels.",
+        "Let your arms stretch forward and your back round gently.",
+        "Hold for one breath, then return to the starting position."
+      ],
+      "Category": "Mobility",
+      "Direction": "flexion",
+      "Levels": [
+        { "Label": "Standard", "Sets": 1, "Reps": 9, "DurationSeconds": null, "Notes": "8–10 reps, one breath each." }
+      ],
+      "Mistakes": null,
+      "Cautions": "Flexion-direction exercise — check this matches your physiotherapist's preferred direction.",
+      "Sources": [
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Knee Rolls",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": ["Abdominals"],
+      "Howto": [
+        "Lie on your back with knees bent and feet flat on the floor, arms out to the sides.",
+        "Slowly let both knees fall to one side, keeping both shoulders on the floor.",
+        "Return to the centre and repeat on the other side."
+      ],
+      "Category": "Mobility",
+      "Direction": "rotation",
+      "Levels": [
+        { "Label": "Standard", "Sets": 1, "Reps": 9, "DurationSeconds": null, "Notes": "8–10 alternating reps." }
+      ],
+      "Mistakes": "Shoulders lifting off the floor; letting the upper trunk move (keep it in the pelvis).",
+      "Cautions": "Stay in the pain-free range.",
+      "Sources": [
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Cat Camel",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": ["Abdominals"],
+      "Howto": [
+        "Start on all fours, hands under shoulders and knees under hips.",
+        "Slowly round your back toward the ceiling, then let it sag gently into a slight arch.",
+        "Move slowly and smoothly between the two positions."
+      ],
+      "Category": "Mobility",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard", "Sets": 1, "Reps": 9, "DurationSeconds": null, "Notes": "8–10 reps. Moves through both flexion and extension, so it isn't tagged to either." }
+      ],
+      "Mistakes": "Locking the elbows.",
+      "Cautions": "Stay in the pain-free range.",
+      "Sources": [
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    },
+    {
+      "Name": "Prone Press Up",
+      "Muscle": "Lower Back",
+      "Equipment": [],
+      "Secondary": [],
+      "Howto": [
+        "Lie face down, propped up on your forearms (or hands, for the straight-arm version).",
+        "Let your lower back relax and sink gently, keeping your hips and legs on the floor.",
+        "Hold, then lower back down with control."
+      ],
+      "Category": "Mobility",
+      "Direction": "extension",
+      "Levels": [
+        { "Label": "L1 — On forearms", "Sets": 1, "Reps": 8, "DurationSeconds": 5, "Notes": "8–10 reps, 5–10 s hold each (Plymouth). CUH leaves the exact dose for your physiotherapist to set." },
+        { "Label": "L2 — Arms straight", "Sets": 1, "Reps": 8, "DurationSeconds": 5, "Notes": "Progress here once L1 is comfortable." }
+      ],
+      "Mistakes": "Tensing the hips or legs — keep your pelvis and legs relaxed.",
+      "Cautions": "Extension-direction exercise — check this matches your physiotherapist's preferred direction.",
+      "Sources": [
+        { "Title": "Cambridge University Hospitals — Back mobility exercises", "Url": "https://www.cuh.nhs.uk/patient-information/back-mobility-exercises/", "Kind": "patient-education" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" },
+        { "Title": "APTA/JOSPT — Low back pain clinical practice guideline (Delitto 2012)", "Url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4893951/", "Kind": "guideline" }
+      ]
+    },
+    {
+      "Name": "Walking",
+      "Category": "Walking",
+      "Direction": "neutral",
+      "Levels": [
+        { "Label": "Standard", "Sets": null, "Reps": null, "DurationSeconds": 1200, "Notes": "Individualised and progressive — build toward 150 min/week of moderate activity." }
+      ],
+      "Mistakes": null,
+      "Cautions": null,
+      "Sources": [
+        { "Title": "WalkBack trial (Pocovi 2024)", "Url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22WalkBack%22%20AND%20PUB_YEAR:2024&resultType=core&format=json", "Kind": "trial" },
+        { "Title": "APTA/JOSPT — Low back pain clinical practice guideline (Delitto 2012)", "Url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4893951/", "Kind": "guideline" },
+        { "Title": "Plymouth Hospitals NHS — Back rehabilitation programme", "Url": "https://www.plymouthhospitals.nhs.uk/display-pil/pil-back-rehabilitation-programme-3972/", "Kind": "patient-education" }
+      ]
+    }
+  ]
+}

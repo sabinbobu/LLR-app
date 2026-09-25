@@ -45,6 +45,11 @@ final class LiveWorkoutContentTests: XCTestCase {
         XCTAssertEqual(LiveWorkoutContent.target(SetValue(weightKg: 0, reps: 12), unit: .kg), "12 reps")
     }
 
+    func testDurationTargetShowsRepsAndHoldSeconds() {
+        let held = SetValue(weightKg: 0, reps: 5, durationSeconds: 15)
+        XCTAssertEqual(LiveWorkoutContent.target(held, unit: .kg), "5 × 15 s")
+    }
+
     func testAllDonePointsToFinish() {
         let state = LiveWorkoutContent.state([exercise("Row", [(60, 10, .normal)], done: [true])], unit: .kg, restStartedAt: nil, restEndsAt: nil)
         XCTAssertNil(state.exerciseName)

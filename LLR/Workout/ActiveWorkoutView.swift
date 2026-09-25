@@ -7,6 +7,7 @@ struct ActiveWorkoutView: View {
     @State private var model: ActiveWorkoutModel
     @State private var showingPicker = false
     @State private var confirmDiscard = false
+    @State private var showingKinetoCheckOut = false
 
     init(workout: Workout) {
         _model = State(initialValue: ActiveWorkoutModel(workout: workout))
@@ -48,7 +49,14 @@ struct ActiveWorkoutView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .sheet(isPresented: $showingPicker) {
-                ExercisePickerView { $0.forEach(model.add) }
+                if model.workout.section == .kineto {
+                    KinetoCatalogView(mode: .pick { exercise, level in model.add(exercise, level: level) })
+                } else {
+                    ExercisePickerView { $0.forEach(model.add) }
+                }
+            }
+            .sheet(isPresented: $showingKinetoCheckOut) {
+                PainCheckOutSheet(model: model) { dismiss() }
             }
             .confirmationDialog("Discard this workout?", isPresented: $confirmDiscard, titleVisibility: .visible) {
                 Button("Discard Workout", role: .destructive) {
@@ -91,8 +99,12 @@ struct ActiveWorkoutView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button("Finish") {
-                model.finish()
-                dismiss()
+                if model.workout.section == .kineto {
+                    showingKinetoCheckOut = true
+                } else {
+                    model.finish()
+                    dismiss()
+                }
             }
             .buttonStyle(.borderedProminent)
         }
