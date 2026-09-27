@@ -6,6 +6,7 @@ enum OnboardingStep: Hashable {
 
 struct OnboardingFlow: View {
     @AppStorage(StorageKey.hasOnboarded) private var hasOnboarded = false
+    @Environment(\.modelContext) private var context
     @State private var path: [OnboardingStep] = []
 
     var body: some View {
@@ -28,7 +29,10 @@ struct OnboardingFlow: View {
         case .height: HeightStep { path.append(.goal) }
         case .goal: GoalStep { path.append(.experience) }
         case .experience: ExperienceStep { path.append(.welcome) }
-        case .welcome: WelcomeCarousel { hasOnboarded = true }
+        case .welcome: WelcomeCarousel {
+                MeasurementSeeder.seedIfNeeded(in: context)
+                hasOnboarded = true
+            }
         }
     }
 }

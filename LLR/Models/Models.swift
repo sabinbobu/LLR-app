@@ -116,6 +116,16 @@ extension SetEntry {
 extension WorkoutExercise {
     var orderedSets: [SetEntry] { sets.sorted { $0.order < $1.order } }
     var completedSets: [SetEntry] { orderedSets.filter { $0.completedAt != nil } }
+    var recoveryEntries: [MuscleRecovery.Entry] {
+        guard let exercise else { return [] }
+        return completedSets.filter(\.kind.countsTowardProgress).compactMap { set in
+            guard let completedAt = set.completedAt else { return nil }
+            return MuscleRecovery.Entry(
+                exerciseName: exercise.name, muscle: exercise.muscleGroup,
+                secondaryMuscles: exercise.secondaryMuscles, completedAt: completedAt
+            )
+        }
+    }
     /// A card renders duration rows only once every set agrees, so a stray nil right after
     /// "Add Exercise" (before it inherits a value) never shows a mixed-up header.
     var isDurationBased: Bool { !sets.isEmpty && sets.allSatisfy { $0.durationSeconds != nil } }
@@ -141,6 +151,7 @@ extension WorkoutExercise {
 extension Workout {
     var orderedExercises: [WorkoutExercise] { exercises.sorted { $0.order < $1.order } }
     var completedSets: [SetEntry] { exercises.flatMap(\.completedSets) }
+    var recoveryEntries: [MuscleRecovery.Entry] { exercises.flatMap(\.recoveryEntries) }
     var volumeKg: Double { completedSets.reduce(0) { $0 + $1.weightKg * Double($1.reps) } }
     var duration: TimeInterval { (endedAt ?? .now).timeIntervalSince(startedAt) }
     var summary: WorkoutSummary {

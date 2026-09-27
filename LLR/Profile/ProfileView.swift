@@ -24,6 +24,7 @@ struct ProfileView: View {
                         Spacer()
                     }
 
+                    RecoveryCard(workouts: workouts)
                     WeeklyStatsCard(summaries: summaries)
 
                     Text("Dashboard").font(.title3).foregroundStyle(.secondary)
@@ -41,6 +42,15 @@ struct ProfileView: View {
                             MuscleSplitView(summaries: summaries)
                         } label: {
                             Label("Muscle Split", systemImage: "figure.strengthtraining.traditional")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                                .padding(.horizontal, 18)
+                        }
+                        .buttonStyle(CardButtonStyle())
+                        NavigationLink {
+                            MeasurementsView()
+                        } label: {
+                            Label("Measurements", systemImage: "ruler")
                                 .font(.title3)
                                 .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
                                 .padding(.horizontal, 18)
@@ -65,6 +75,11 @@ struct ProfileView: View {
             .navigationTitle("Profile")
             .navigationDestination(for: Workout.self) { WorkoutDetailView(workout: $0) }
             .toolbar {
+                NavigationLink {
+                    WorkoutCalendarView(workouts: workouts)
+                } label: {
+                    Image(systemName: "calendar")
+                }
                 Button {
                     showingSettings = true
                 } label: {

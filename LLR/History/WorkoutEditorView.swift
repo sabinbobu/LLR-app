@@ -55,6 +55,9 @@ struct WorkoutEditorView: View {
             Divider()
             DatePicker("Started", selection: startBinding, in: ...Date.now)
             DatePicker("Ended", selection: endBinding, in: workout.startedAt...max(workout.startedAt, .now))
+            Divider()
+            TextField("Add private notes", text: Binding(get: { workout.notes }, set: { workout.notes = $0 }), axis: .vertical)
+                .lineLimit(1...4)
         }
         .padding()
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 14))

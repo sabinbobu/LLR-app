@@ -7,6 +7,7 @@ struct LLRApp: App {
 
     init() {
         ExerciseLibrary.seedIfNeeded(container.mainContext)
+        MeasurementSeeder.seedIfNeeded(in: container.mainContext)
         WorkoutFactory.removeEmptyHistory(in: container.mainContext)
         // A relaunch empties the in-memory rest timer; the Lock Screen still shows the rest in progress.
         LiveWorkoutActivity.restoreRest()

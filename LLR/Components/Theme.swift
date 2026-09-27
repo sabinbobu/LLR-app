@@ -15,6 +15,15 @@ enum Theme {
     static let border = Color(.systemGray5)
     static let completedRow = Color.green.opacity(0.3)
     static let completedCheck = Color(red: 0.30, green: 0.78, blue: 0.35)
+
+    /// Traffic-light reading of a 0–100 recovery percent.
+    static func recoveryColor(_ percent: Double) -> Color {
+        switch percent {
+        case ..<40: .red
+        case ..<80: .orange
+        default: .green
+        }
+    }
 }
 
 struct PrimaryButtonStyle: ButtonStyle {

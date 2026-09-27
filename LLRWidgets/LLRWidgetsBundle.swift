@@ -5,6 +5,7 @@ import WidgetKit
 struct LLRWidgetsBundle: WidgetBundle {
     var body: some Widget {
         WorkoutLiveActivity()
+        StreakWidget()
     }
 }
 

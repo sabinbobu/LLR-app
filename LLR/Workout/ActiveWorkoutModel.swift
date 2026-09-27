@@ -2,6 +2,14 @@ import Foundation
 import Observation
 import SwiftData
 
+/// A record just set, for the live banner. `id` is fresh per event so re-triggering on the same
+/// exercise (e.g. two PR sets in a row) still restarts the auto-dismiss timer.
+struct RecordEvent: Equatable, Identifiable {
+    let id = UUID()
+    let exerciseName: String
+    let kinds: [PersonalRecords.Kind]
+}
+
 @MainActor
 @Observable
 final class ActiveWorkoutModel {
@@ -10,6 +18,8 @@ final class ActiveWorkoutModel {
     /// Editing a finished workout: no rest timer, and the Lock Screen is never touched —
     /// it only ever mirrors the workout in progress.
     let isHistory: Bool
+    /// Set by `toggle` when a completed set breaks a record; the view clears it after showing the banner.
+    var recordEvent: RecordEvent?
 
     init(workout: Workout, isHistory: Bool = false) {
         self.workout = workout
@@ -111,7 +121,20 @@ final class ActiveWorkoutModel {
         } else {
             restTimer.skip()
         }
+        announceRecord(for: set)
         return true
+    }
+
+    /// Gym only: PR hype has no place in a back-care session.
+    private func announceRecord(for set: SetEntry) {
+        guard workout.section == .gym,
+              let entry = set.workoutExercise,
+              let name = entry.exercise?.name,
+              let index = entry.orderedSets.firstIndex(where: { $0.persistentModelID == set.persistentModelID })
+        else { return }
+        let kinds = entry.recordKinds()[index]
+        guard !kinds.isEmpty else { return }
+        recordEvent = RecordEvent(exerciseName: name, kinds: kinds.sorted())
     }
 
     func delete(_ set: SetEntry) {
@@ -140,11 +163,15 @@ final class ActiveWorkoutModel {
         return keptAny
     }
 
-    func finish() {
-        guard let context else { return }
+    /// Returns whether the workout was kept (vs. dropped for having nothing worth saving) —
+    /// the caller uses this to decide whether a post-workout summary has anything to show.
+    @discardableResult
+    func finish() -> Bool {
+        guard let context else { return false }
         // A Kineto session that recorded pain is kept even with nothing ticked: stopping early
         // because it hurt is the most important thing it captured.
-        if dropUnticked() || workout.hasPainRecorded {
+        let keep = dropUnticked() || workout.hasPainRecorded
+        if keep {
             workout.endedAt = .now
         } else {
             context.delete(workout)
@@ -152,6 +179,9 @@ final class ActiveWorkoutModel {
         restTimer.skip()
         try? context.save()
         LiveWorkoutActivity.sync()
+        // Gym only: a Kineto streak would conflate back-care with lifting consistency.
+        if keep, workout.section == .gym { TrainingSnapshotSync.sync(context: context) }
+        return keep
     }
 
     func saveEdits() {

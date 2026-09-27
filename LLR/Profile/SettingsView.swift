@@ -35,6 +35,13 @@ struct SettingsView: View {
                         Label("Import & Export", systemImage: "arrow.up.arrow.down")
                     }
                 }
+                Section("About") {
+                    NavigationLink {
+                        AcknowledgementsView()
+                    } label: {
+                        Label("Acknowledgements", systemImage: "info.circle")
+                    }
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
