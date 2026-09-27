@@ -8,6 +8,7 @@ struct WorkoutDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var confirmDelete = false
     @State private var editing = false
+    @State private var showingShare = false
 
     // Precomputed rows keep `body` cheap to type-check; the inline version took 11s per build.
     private struct Row: Identifiable {
@@ -66,6 +67,11 @@ struct WorkoutDetailView: View {
                 LabeledContent("Duration", value: Format.duration(workout.duration))
                 LabeledContent("Volume", value: "\(unit.format(kg: workout.volumeKg)) \(unit.rawValue)")
             }
+            if !workout.notes.isEmpty {
+                Section("Notes") {
+                    Text(workout.notes)
+                }
+            }
             ForEach(workout.orderedExercises) { entry in
                 Section(entry.exercise?.name ?? "Exercise") {
                     ForEach(rows(for: entry)) { row in
@@ -77,6 +83,14 @@ struct WorkoutDetailView: View {
         .navigationTitle(workout.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            // Gym only: Kineto shares its own separate CSV log, not this card.
+            if workout.section == .gym {
+                Button {
+                    showingShare = true
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
             Button("Edit") { editing = true }
             Button(role: .destructive) {
                 confirmDelete = true
@@ -85,6 +99,10 @@ struct WorkoutDetailView: View {
             }
         }
         .fullScreenCover(isPresented: $editing) { WorkoutEditorView(workout: workout) }
+        .sheet(isPresented: $showingShare) {
+            WorkoutShareCard(workout: workout, recap: WorkoutRecap(workout), unit: unit)
+                .presentationDetents([.medium])
+        }
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Workout", role: .destructive) {
                 dismiss()

@@ -13,9 +13,31 @@ enum Stats {
     enum Metric: String, CaseIterable, Identifiable {
         case duration = "Duration"
         case volume = "Volume"
-        case reps = "Reps"
+        case workouts = "Workouts"
 
         var id: String { rawValue }
+    }
+
+    /// How far back `weekly` looks. `.all` needs the date of the first workout to know how many
+    /// weeks that actually is; callers without one yet (no history) fall back to a single week.
+    enum Range: String, CaseIterable, Identifiable {
+        case threeMonths = "3M", sixMonths = "6M", year = "Year", all = "All"
+        var id: String { rawValue }
+
+        func weeks(since firstWorkoutDate: Date?, now: Date = .now, calendar: Calendar = .current) -> Int {
+            switch self {
+            case .threeMonths: return 13
+            case .sixMonths: return 26
+            case .year: return 52
+            case .all: break
+            }
+            guard let firstWorkoutDate,
+                  let start = calendar.dateInterval(of: .weekOfYear, for: firstWorkoutDate)?.start,
+                  let current = calendar.dateInterval(of: .weekOfYear, for: now)?.start,
+                  let weeksBetween = calendar.dateComponents([.weekOfYear], from: start, to: current).weekOfYear
+            else { return 1 }
+            return max(1, weeksBetween + 1)
+        }
     }
 
     struct WeekPoint: Equatable, Identifiable {
@@ -55,11 +77,21 @@ enum Stats {
             .sorted { $0.sets == $1.sets ? $0.group < $1.group : $0.sets > $1.sets }
     }
 
+    /// The same primary-muscle sets as `muscleSplit`, regrouped onto the radar's 12 coarser axes.
+    static func radarSplit(_ workouts: [WorkoutSummary], since: Date) -> [MuscleGroup.RadarAxis: Int] {
+        var totals: [MuscleGroup.RadarAxis: Int] = [:]
+        for (group, sets) in muscleSplit(workouts, since: since) {
+            guard let muscle = MuscleGroup(rawValue: group), let axis = muscle.radarAxis else { continue }
+            totals[axis, default: 0] += sets
+        }
+        return totals
+    }
+
     private static func value(of workout: WorkoutSummary, _ metric: Metric) -> Double {
         switch metric {
         case .duration: workout.duration
         case .volume: workout.volumeKg
-        case .reps: Double(workout.reps)
+        case .workouts: 1
         }
     }
 }

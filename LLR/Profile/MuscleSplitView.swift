@@ -4,10 +4,9 @@ struct MuscleSplitView: View {
     let summaries: [WorkoutSummary]
     @State private var days = 30
 
-    private var split: [(group: String, sets: Int)] {
-        let since = Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .distantPast
-        return Stats.muscleSplit(summaries, since: since)
-    }
+    private var since: Date { Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .distantPast }
+    private var split: [(group: String, sets: Int)] { Stats.muscleSplit(summaries, since: since) }
+    private var radarValues: [MuscleGroup.RadarAxis: Int] { Stats.radarSplit(summaries, since: since) }
 
     var body: some View {
         let rows = split
@@ -20,6 +19,12 @@ struct MuscleSplitView: View {
             }
             .pickerStyle(.segmented)
             .listRowSeparator(.hidden)
+
+            if !rows.isEmpty {
+                RadarChart(values: radarValues)
+                    .padding(.vertical, 12)
+                    .listRowSeparator(.hidden)
+            }
 
             if rows.isEmpty {
                 Text("No working sets in this range").foregroundStyle(.secondary)

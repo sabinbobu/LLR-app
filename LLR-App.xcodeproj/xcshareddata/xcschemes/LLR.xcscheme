@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "117A24E3C957D71D81AB55CC"
+               BlueprintIdentifier = "37D5AF03D6E6E132324BE032"
                BuildableName = "LLR.app"
                BlueprintName = "LLR"
-               ReferencedContainer = "container:LLR.xcodeproj">
+               ReferencedContainer = "container:LLR-App.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,10 +29,10 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EDE0A7E4278F356E5BEF14C3"
+               BlueprintIdentifier = "6BB8E7313DDC3E5747D482F2"
                BuildableName = "LLRTests.xctest"
                BlueprintName = "LLRTests"
-               ReferencedContainer = "container:LLR.xcodeproj">
+               ReferencedContainer = "container:LLR-App.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +46,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "117A24E3C957D71D81AB55CC"
+            BlueprintIdentifier = "37D5AF03D6E6E132324BE032"
             BuildableName = "LLR.app"
             BlueprintName = "LLR"
-            ReferencedContainer = "container:LLR.xcodeproj">
+            ReferencedContainer = "container:LLR-App.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -58,10 +58,10 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EDE0A7E4278F356E5BEF14C3"
+               BlueprintIdentifier = "6BB8E7313DDC3E5747D482F2"
                BuildableName = "LLRTests.xctest"
                BlueprintName = "LLRTests"
-               ReferencedContainer = "container:LLR.xcodeproj">
+               ReferencedContainer = "container:LLR-App.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -82,10 +82,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "117A24E3C957D71D81AB55CC"
+            BlueprintIdentifier = "37D5AF03D6E6E132324BE032"
             BuildableName = "LLR.app"
             BlueprintName = "LLR"
-            ReferencedContainer = "container:LLR.xcodeproj">
+            ReferencedContainer = "container:LLR-App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -99,10 +99,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "117A24E3C957D71D81AB55CC"
+            BlueprintIdentifier = "37D5AF03D6E6E132324BE032"
             BuildableName = "LLR.app"
             BlueprintName = "LLR"
-            ReferencedContainer = "container:LLR.xcodeproj">
+            ReferencedContainer = "container:LLR-App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

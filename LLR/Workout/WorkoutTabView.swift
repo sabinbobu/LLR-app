@@ -13,6 +13,9 @@ struct WorkoutTabView: View {
     @State private var presented: Workout?
     @State private var buildingRoutine: Routine?
     @State private var loggingPast: Workout?
+    /// Set once the active-workout cover dismisses so the summary sheet doesn't fight it for presentation.
+    @State private var justFinished: Workout?
+    @State private var pendingSummary: Workout?
 
     var body: some View {
         NavigationStack {
@@ -81,16 +84,14 @@ struct WorkoutTabView: View {
                 .padding()
             }
             .navigationTitle("Workout")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Text("PRO")
-                        .font(.caption.weight(.bold))
-                        .padding(.horizontal, 10).padding(.vertical, 4)
-                        .background(.yellow.opacity(0.3), in: Capsule())
-                }
-            }
         }
-        .fullScreenCover(item: $presented) { ActiveWorkoutView(workout: $0) }
+        .fullScreenCover(item: $presented, onDismiss: {
+            justFinished = pendingSummary
+            pendingSummary = nil
+        }) { workout in
+            ActiveWorkoutView(workout: workout) { pendingSummary = $0 }
+        }
+        .sheet(item: $justFinished) { WorkoutSummaryView(workout: $0) }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
     }
 

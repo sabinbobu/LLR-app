@@ -5,11 +5,18 @@ struct WeeklyStatsCard: View {
     let summaries: [WorkoutSummary]
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
     @State private var metric: Stats.Metric = .duration
+    @State private var range: Stats.Range = .threeMonths
 
-    private var points: [Stats.WeekPoint] { Stats.weekly(summaries, metric: metric, weeks: 12) }
+    private var weeks: Int { range.weeks(since: summaries.map(\.date).min()) }
+    private var points: [Stats.WeekPoint] { Stats.weekly(summaries, metric: metric, weeks: weeks) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            Picker("Range", selection: $range) {
+                ForEach(Stats.Range.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
+
             if summaries.isEmpty {
                 EmptyStateCard(systemImage: "chart.bar", message: "No data yet")
             } else {
@@ -45,12 +52,14 @@ struct WeeklyStatsCard: View {
                 .cornerRadius(4)
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .month)) { _ in
+                // A full year-plus of weekly bars is too dense for a monthly axis to stay readable.
+                AxisMarks(values: .stride(by: range == .all ? .quarter : .month)) { _ in
                     AxisValueLabel(format: .dateTime.month(.abbreviated))
                 }
             }
             .frame(height: 180)
             .animation(.snappy, value: metric)
+            .animation(.snappy, value: range)
         }
     }
 
@@ -58,7 +67,7 @@ struct WeeklyStatsCard: View {
         switch metric {
         case .duration: raw / 3600
         case .volume: unit.fromKg(raw)
-        case .reps: raw
+        case .workouts: raw
         }
     }
 
@@ -66,7 +75,7 @@ struct WeeklyStatsCard: View {
         switch metric {
         case .duration: Format.duration(raw)
         case .volume: "\(unit.format(kg: raw)) \(unit.rawValue)"
-        case .reps: "\(Int(raw)) reps"
+        case .workouts: "\(Int(raw)) workout\(Int(raw) == 1 ? "" : "s")"
         }
     }
 }

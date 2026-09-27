@@ -1,4 +1,4 @@
-name: LLR
+name: LLR-App
 options:
   bundleIdPrefix: com.sabinbobu
   deploymentTarget:
@@ -28,6 +28,11 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
+    entitlements:
+      path: LLR/LLR.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.sabinbobu.llr
   LLRWidgets:
     type: app-extension
     platform: iOS
@@ -45,6 +50,11 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.sabinbobu.llr.widgets
         SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) WIDGET_EXTENSION
         TARGETED_DEVICE_FAMILY: "1"
+    entitlements:
+      path: LLRWidgets/LLRWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.sabinbobu.llr
   LLRTests:
     type: bundle.unit-test
     platform: iOS
