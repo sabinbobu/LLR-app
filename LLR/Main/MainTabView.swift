@@ -10,6 +10,7 @@ struct MainTabView: View {
             switch tab {
             case .home: HomeView()
             case .workout: WorkoutTabView()
+            case .fuel: FuelView()
             case .profile: ProfileView()
             }
         }

@@ -16,6 +16,13 @@ enum Theme {
     static let completedRow = Color.green.opacity(0.3)
     static let completedCheck = Color(red: 0.30, green: 0.78, blue: 0.35)
 
+    // One fixed hue per macro, used everywhere a macro appears, so colour alone identifies it.
+    static let kcal = Color(red: 1.0, green: 0.42, blue: 0.21)
+    static let protein = Color(red: 0.93, green: 0.27, blue: 0.45)
+    static let carbs = Color(red: 0.98, green: 0.72, blue: 0.13)
+    static let fat = Color(red: 0.25, green: 0.66, blue: 0.96)
+    static let over = Color.red
+
     /// Traffic-light reading of a 0–100 recovery percent.
     static func recoveryColor(_ percent: Double) -> Color {
         switch percent {
