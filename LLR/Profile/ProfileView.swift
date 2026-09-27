@@ -56,6 +56,15 @@ struct ProfileView: View {
                                 .padding(.horizontal, 18)
                         }
                         .buttonStyle(CardButtonStyle())
+                        NavigationLink {
+                            WeeklyVolumeView(entries: workouts.flatMap(\.recoveryEntries))
+                        } label: {
+                            Label("Weekly Volume", systemImage: "chart.bar.xaxis")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                                .padding(.horizontal, 18)
+                        }
+                        .buttonStyle(CardButtonStyle())
                     }
 
                     Text("Workouts").font(.title3).foregroundStyle(.secondary)
