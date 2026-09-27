@@ -5,6 +5,7 @@ struct ProfileView: View {
     @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
     @State private var showingSettings = false
+    @State private var avatar = AvatarStore.load()
 
     private var summaries: [WorkoutSummary] { workouts.map(\.summary) }
 
@@ -12,17 +13,12 @@ struct ProfileView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    HStack(spacing: 28) {
-                        Image(systemName: "person.crop.circle.fill")
-                            .resizable()
-                            .frame(width: 96, height: 96)
-                            .foregroundStyle(Color(.systemGray3))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Workouts").foregroundStyle(.secondary)
-                            Text("\(workouts.count)").font(.title2)
-                        }
-                        Spacer()
+                    NavigationLink {
+                        ProfileDetailsView(avatar: $avatar)
+                    } label: {
+                        ProfileHeaderCard(workoutCount: workouts.count, avatar: avatar)
                     }
+                    .buttonStyle(.plain)
 
                     RecoveryCard(workouts: workouts)
                     WeeklyStatsCard(summaries: summaries)
@@ -48,9 +44,9 @@ struct ProfileView: View {
                         }
                         .buttonStyle(CardButtonStyle())
                         NavigationLink {
-                            MeasurementsView()
+                            BodyView()
                         } label: {
-                            Label("Measurements", systemImage: "ruler")
+                            Label("Body", systemImage: "figure.stand")
                                 .font(.title3)
                                 .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
                                 .padding(.horizontal, 18)

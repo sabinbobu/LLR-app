@@ -19,6 +19,7 @@ enum StorageKey {
     static let kinetoClearedAt = "kinetoClearedAt"
     static let kinetoDirection = "kinetoDirection"
     static let kinetoPainRule = "kinetoPainRule"
+    static let displayName = "displayName"
     static let fuelModel = "fuelModel"
     static let fuelActivity = "fuelActivity"
     // 0 = no override; the auto target applies.
