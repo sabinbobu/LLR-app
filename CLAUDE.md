@@ -34,6 +34,7 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
   - Stats: date-range picker (3M/6M/Year/All), a muscle-split radar chart, a training calendar with a weekly streak
   - Body measurements (weight, body fat, tape sites, height) and progress photos
   - A Home Screen widget showing the training streak
+  - Weekly Volume: hard sets per muscle per week (secondary muscles count half) against a cited 10–20 set zone (`LLR/Logic/WeeklyVolume.swift`)
 
 ## Non-goals (do not build in v1)
 Accounts, cloud sync, social features (leaderboards, friend comparisons), AI coaching or AI-generated/auto-generated workouts, Apple Watch, subscriptions/paywalls, HealthKit write-back.
