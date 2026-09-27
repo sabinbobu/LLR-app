@@ -1,12 +1,13 @@
 import SwiftUI
 
 enum AppTab: CaseIterable {
-    case home, workout, profile
+    case home, workout, fuel, profile
 
     var title: String {
         switch self {
         case .home: "Home"
         case .workout: "Workout"
+        case .fuel: "Fuel"
         case .profile: "Profile"
         }
     }
@@ -15,6 +16,7 @@ enum AppTab: CaseIterable {
         switch self {
         case .home: "house"
         case .workout: "dumbbell"
+        case .fuel: "fork.knife"
         case .profile: "person"
         }
     }
@@ -34,7 +36,8 @@ struct FloatingTabBar: View {
                         Text(tab.title).font(.caption)
                     }
                     .foregroundStyle(selection == tab ? Theme.accent : Color.primary)
-                    .frame(width: 100, height: 60)
+                    // Four items at 100 pt overflow a 393 pt-wide iPhone once the bar's padding is added.
+                    .frame(width: 84, height: 60)
                     .background {
                         if selection == tab {
                             Capsule().fill(Color(.systemGray5))

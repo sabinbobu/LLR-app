@@ -19,6 +19,15 @@ enum StorageKey {
     static let kinetoClearedAt = "kinetoClearedAt"
     static let kinetoDirection = "kinetoDirection"
     static let kinetoPainRule = "kinetoPainRule"
+    static let fuelModel = "fuelModel"
+    static let fuelActivity = "fuelActivity"
+    // 0 = no override; the auto target applies.
+    static let fuelKcalOverride = "fuelKcalOverride"
+    static let fuelProteinOverride = "fuelProteinOverride"
+    static let fuelCarbsOverride = "fuelCarbsOverride"
+    static let fuelFatOverride = "fuelFatOverride"
+    /// Keychain account, not a UserDefaults key.
+    static let openRouterKey = "openRouterKey"
 }
 
 /// The direction the physiotherapist has identified as helpful, set once at the Kineto gate.

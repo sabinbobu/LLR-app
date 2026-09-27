@@ -23,6 +23,7 @@ targets:
         INFOPLIST_KEY_NSSupportsLiveActivities: YES
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: LLR
+        INFOPLIST_KEY_NSCameraUsageDescription: LLR uses the camera to photograph meals so it can estimate their macros.
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
