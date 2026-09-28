@@ -42,13 +42,18 @@ struct ExerciseEditorView: View {
                         ForEach(MuscleGroup.allCases) { Text($0.rawValue).tag($0.rawValue) }
                     }
                 } footer: {
-                    if problem == .duplicateName { Text(CustomExerciseDraft.Problem.duplicateName.message).foregroundStyle(.red) }
+                    // An empty name already shows as a disabled Save; the rest need saying.
+                    if let problem, problem != .emptyName { Text(problem.message).foregroundStyle(.red) }
                 }
+                MuscleEquipmentFields(draft: $draft)
                 switch draft.section {
                 case .gym: GymExerciseFields(draft: $draft)
                 case .kineto: KinetoExerciseFields(draft: $draft)
                 }
                 InstructionStepsEditor(steps: $draft.instructions)
+                if draft.section == .kineto {
+                    KinetoSourcesSection(sources: $draft.kinetoSources)
+                }
                 Section("Photos & videos") {
                     ExerciseMediaSection(items: $draft.media, editable: true)
                 }
@@ -66,8 +71,7 @@ struct ExerciseEditorView: View {
     }
 
     private func cancel() {
-        let kept = Set(original.media)
-        for item in draft.media where !kept.contains(item) { ExerciseMediaStore.delete(item.fileName) }
+        ExerciseMediaStore.discard(draft.media, keeping: original.media)
         dismiss()
     }
 
@@ -75,23 +79,8 @@ struct ExerciseEditorView: View {
         let exercise = editing ?? Exercise(name: draft.trimmedName, muscleGroup: draft.muscleGroup, isCustom: true)
         if editing == nil { context.insert(exercise) }
         draft.apply(to: exercise)
-        syncMedia(of: exercise)
+        exercise.syncMedia(to: draft.media, in: context)
         dismiss()
         onSave(exercise)
-    }
-
-    private func syncMedia(of exercise: Exercise) {
-        let wanted = Set(draft.media.map(\.fileName))
-        for row in exercise.media where !wanted.contains(row.fileName) {
-            ExerciseMediaStore.delete(row.fileName)
-            context.delete(row)
-        }
-        let existing = Set(exercise.media.map(\.fileName))
-        // Staggered timestamps keep the order the user added them in.
-        for (index, item) in draft.media.enumerated() where !existing.contains(item.fileName) {
-            let row = ExerciseMedia(kind: item.kind, fileName: item.fileName, createdAt: .now.addingTimeInterval(Double(index) / 1000))
-            context.insert(row)
-            row.exercise = exercise
-        }
     }
 }

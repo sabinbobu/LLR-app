@@ -23,7 +23,8 @@ final class KinetoCatalogTests: XCTestCase {
         for exercise in exercises {
             XCTAssertFalse(exercise.sources.isEmpty, "\(exercise.name) has no source")
             for source in exercise.sources {
-                XCTAssertTrue(source.url.hasPrefix("https://"), "\(exercise.name): \(source.url)")
+                let url = try XCTUnwrap(source.url, "\(exercise.name): every bundled source links somewhere")
+                XCTAssertTrue(KinetoCatalog.Source.isValidURL(url), "\(exercise.name): \(url)")
             }
             XCTAssertFalse(exercise.levels.isEmpty, "\(exercise.name) has no dosing levels")
         }
@@ -32,6 +33,34 @@ final class KinetoCatalogTests: XCTestCase {
         for entry in libraryEntries {
             XCTAssertFalse(entry.muscle.isEmpty, entry.name)
         }
+    }
+
+    func testParseReadsHowtoPrescribedOnlyAndNewCategories() throws {
+        let json = """
+        {"version": 2, "exercises": [
+          {"Name": "Test Slider", "Muscle": "Other", "Howto": ["Sit tall."], "Category": "Nerve mobility",
+           "Direction": "neutral", "PrescribedOnly": true,
+           "Levels": [{"Label": "Physio"}],
+           "Sources": [{"Title": "Leaflet", "Url": "https://example.org", "Kind": "patient-education"}]},
+          {"Name": "Plank", "Howto": ["Hold."], "Category": "Strength", "Direction": "neutral",
+           "Levels": [{"Label": "Standard", "Sets": 5, "DurationSeconds": 30}],
+           "Sources": [{"Title": "Leaflet", "Url": "https://example.org", "Kind": "trial"}]}
+        ]}
+        """
+        let (exercises, libraryEntries) = try KinetoCatalog.parse(Data(json.utf8))
+
+        XCTAssertEqual(exercises[0].category, .nerveMobility)
+        XCTAssertTrue(exercises[0].prescribedOnly)
+        XCTAssertEqual(exercises[0].howto, ["Sit tall."])
+        XCTAssertEqual(exercises[1].category, .strength)
+        XCTAssertFalse(exercises[1].prescribedOnly, "absent means not prescription-only")
+        XCTAssertEqual(exercises[1].howto, ["Hold."], "a ★ entry keeps its Kineto how-to for the Kineto page")
+        // …but a ★ entry never becomes a library entry, so it can't overwrite the gym row's how-to.
+        XCTAssertEqual(libraryEntries.map(\.name), ["Test Slider"])
+
+        // Custom exercises store the raw value, so renaming the title must not change it.
+        XCTAssertEqual(KinetoCatalog.Category.walking.rawValue, "Walking")
+        XCTAssertEqual(KinetoCatalog.Category.walking.title, "Aerobic")
     }
 
     func testBundledLibraryHasNoHighLoadExercises() throws {

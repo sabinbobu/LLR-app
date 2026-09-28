@@ -92,7 +92,7 @@ struct ExerciseLogCard: View {
         }
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                ExerciseInfoSheet(exercise: exercise, isDurationBased: entry.isDurationBased)
+                ExerciseInfoSheet(exercise: exercise, section: entry.workout?.section ?? .gym, isDurationBased: entry.isDurationBased)
             }
         }
     }

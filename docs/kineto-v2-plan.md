@@ -2,6 +2,12 @@
 
 Researched 2026-09-28. This covers the Kineto catalog (`LLR/Resources/kineto_exercises.json`, v1, 15 exercises) and the user-made exercise editor from #14.
 
+## Status (2026-09-28)
+
+- **Steps 3–5 are implemented, along with the code half of step 6.** That covers the new categories, `howto` on every catalog entry, `PrescribedOnly`, and category pills that hide when a category is empty. None of it has been built or tested yet, because the session that wrote it had no Xcode (Linux container). Run `xcodegen generate`, then build and test, before merging.
+- **The content half of step 6 has not started.** No exercises have been added and the catalog is still `version: 1`, because steps 1–2 are blocked (sources can't be opened; the physio hasn't reviewed the table). Once they're done, adding the exercises only means editing `kineto_exercises.json`.
+- `ExerciseInfoSheet` now also opens the Kineto page for anything logged in a Kineto workout or routine, not only for duration sets. That way a rep-based exercise like Pelvic Tilt shows your physio's video too.
+
 ## 0. Read this first
 
 1. **Custom Kineto exercises with photos and videos already exist.** PR #14 shipped `ExerciseEditorView` and `KinetoExerciseFields`, so v2 finishes that editor rather than building a new one. It still has 6 gaps, listed in §3.
@@ -112,7 +118,7 @@ Levels and sources are stored as JSON `Data` rather than an array of structs so 
 2. **The nerve slider is the one exercise that can directly irritate a compressed root.** Mitigations: prescribed-only confirmation, the existing `symptomsSpread` check-out question, and the red-flags screen. If the physio doesn't prescribe it, cut it.
 3. **Hamstring Stretch (Lying) doubles as a sciatic nerve tensioner** for anyone with leg symptoms. It's tier C. Cut it unless the physio wants it.
 4. **Name clash.** If you already made a custom exercise with one of the 13 new names, `sync` won't insert the built-in, and the catalog entry logs against your custom row. Check your custom Kineto names before shipping.
-5. **★ rows are shared with gym.** Media you add to Kineto Plank also shows on gym Plank. That's accepted, since it's the same movement.
+5. **★ rows are shared with gym.** Media you add to Kineto Plank is stored on the gym Plank row too. The gym detail page shows media only for custom exercises, so in practice it appears only on Kineto pages.
 6. **Storage.** Videos are kept at 720p (about 30 MB per minute, per `ExerciseMediaStore`), so 20 one-minute clips take about 600 MB on the phone.
 
 ## 7. Roadmap

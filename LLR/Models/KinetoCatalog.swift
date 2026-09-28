@@ -23,19 +23,24 @@ enum KinetoCatalog {
 
     enum Category: String, Decodable, Hashable, CaseIterable, Identifiable {
         case stability = "Stability & endurance"
+        case strength = "Strength"
         case mobility = "Mobility"
+        case nerveMobility = "Nerve mobility"
+        // Titled "Aerobic" (swimming and cycling belong here too), but the raw value stays
+        // "Walking": user-made exercises store it and the bundled JSON uses it.
         case walking = "Walking"
 
         var id: Self { self }
-        var title: String { rawValue }
+        var title: String { self == .walking ? "Aerobic" : rawValue }
     }
 
-    struct Level: Decodable, Hashable {
-        let label: String
-        let sets: Int?
-        let reps: Int?
-        let durationSeconds: Int?
-        let notes: String?
+    /// Codable and mutable so a user-made exercise can store and edit its own levels.
+    struct Level: Codable, Hashable {
+        var label: String
+        var sets: Int?
+        var reps: Int?
+        var durationSeconds: Int?
+        var notes: String?
 
         enum CodingKeys: String, CodingKey {
             case label = "Label", sets = "Sets", reps = "Reps", durationSeconds = "DurationSeconds", notes = "Notes"
@@ -54,17 +59,43 @@ enum KinetoCatalog {
         }
     }
 
-    struct Source: Decodable, Hashable {
-        let title: String
-        let url: String
-        let kind: String
+    struct Source: Codable, Hashable {
+        var title: String
+        /// Optional: a physiotherapist's own prescription has no page to link to. Every bundled
+        /// source has one (enforced by `KinetoCatalogTests`).
+        var url: String?
+        /// A string, not `SourceKind`, so the bundled JSON can use kinds the editor doesn't offer.
+        var kind: String
 
         enum CodingKeys: String, CodingKey {
             case title = "Title", url = "Url", kind = "Kind"
         }
     }
 
-    struct Exercise: Decodable, Identifiable, Hashable {
+    enum SourceKind: String, CaseIterable, Identifiable {
+        case physiotherapist
+        case patientEducation = "patient-education"
+        case guideline
+        case review
+        case trial
+        case labStudy = "lab-study"
+        case other
+
+        var id: Self { self }
+        var title: String {
+            switch self {
+            case .physiotherapist: "My physiotherapist"
+            case .patientEducation: "Patient leaflet"
+            case .guideline: "Clinical guideline"
+            case .review: "Systematic review"
+            case .trial: "Trial"
+            case .labStudy: "Lab study"
+            case .other: "Other"
+            }
+        }
+    }
+
+    struct Exercise: Identifiable, Hashable {
         let name: String
         let category: Category
         let direction: Direction
@@ -72,13 +103,12 @@ enum KinetoCatalog {
         let mistakes: String?
         let cautions: String?
         let sources: [Source]
+        /// Kineto's own how-to, never the gym library's, which can contradict a Kineto dose.
+        var howto: [String] = []
+        /// Nerve techniques: adding one first asks whether a physiotherapist prescribed it.
+        var prescribedOnly = false
 
         var id: String { name }
-
-        enum CodingKeys: String, CodingKey {
-            case name = "Name", category = "Category", direction = "Direction", levels = "Levels",
-                 mistakes = "Mistakes", cautions = "Cautions", sources = "Sources"
-        }
     }
 
     /// Matches the shape of a gym-library seed, but every base field is optional: a ★ name
@@ -96,6 +126,7 @@ enum KinetoCatalog {
         let Mistakes: String?
         let Cautions: String?
         let Sources: [Source]
+        let PrescribedOnly: Bool?
     }
 
     private struct File: Decodable {
@@ -108,7 +139,8 @@ enum KinetoCatalog {
         let exercises = file.exercises.map {
             Exercise(
                 name: $0.Name, category: $0.Category, direction: $0.Direction, levels: $0.Levels,
-                mistakes: $0.Mistakes, cautions: $0.Cautions, sources: $0.Sources
+                mistakes: $0.Mistakes, cautions: $0.Cautions, sources: $0.Sources,
+                howto: $0.Howto ?? [], prescribedOnly: $0.PrescribedOnly ?? false
             )
         }
         let libraryEntries = file.exercises.compactMap { seed -> LibraryExercise? in
@@ -138,4 +170,17 @@ enum KinetoCatalog {
     static func exercise(named name: String) -> Exercise? {
         exercises.first { $0.name == name }
     }
+}
+
+extension KinetoCatalog.Source {
+    /// Only https links: the detail page opens them straight in the browser.
+    static func isValidURL(_ text: String) -> Bool {
+        guard text.hasPrefix("https://"), let url = URL(string: text) else { return false }
+        return url.host() != nil
+    }
+
+    var hasValidURL: Bool { url.map(Self.isValidURL) ?? true }
+    var link: URL? { url.flatMap { Self.isValidURL($0) ? URL(string: $0) : nil } }
+    var isPrescription: Bool { kind == KinetoCatalog.SourceKind.physiotherapist.rawValue }
+    var kindTitle: String { KinetoCatalog.SourceKind(rawValue: kind)?.title ?? kind }
 }
