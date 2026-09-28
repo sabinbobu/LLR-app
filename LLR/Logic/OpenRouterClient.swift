@@ -8,6 +8,8 @@ enum OpenRouterClient {
     static let defaultModel = "google/gemma-4-31b-it:free"
     // The router picks any currently free image-capable model, so a retired default still gets an answer.
     static let fallbackModels = ["qwen/qwen3.8-27b:free", "openrouter/free"]
+    // Hand-picked: the live catalog has 100+ paid models, too many to offer in a picker.
+    static let paidModels = ["openai/gpt-5.6-terra", "anthropic/claude-sonnet-5"]
 
     enum ClientError: LocalizedError, Equatable {
         case missingKey, badKey, noCredits, rateLimited, server(Int), offline, timedOut, unreadable

@@ -27,13 +27,18 @@ struct FuelSettingsView: View {
                 keySection
                 Section {
                     Picker("Model", selection: $model) {
-                        ForEach(modelChoices, id: \.self) { Text($0).tag($0) }
+                        Section("Free") {
+                            ForEach(freeChoices, id: \.self) { Text($0).tag($0) }
+                        }
+                        Section("Paid (uses credits)") {
+                            ForEach(OpenRouterClient.paidModels, id: \.self) { Text($0).tag($0) }
+                        }
                     }
                     .pickerStyle(.navigationLink)
                 } header: {
                     Text("AI model")
                 } footer: {
-                    Text("Free vision models on OpenRouter right now. If one is retired, requests fall back to another free model automatically.")
+                    Text("Free vision models on OpenRouter right now, plus paid ones that charge your OpenRouter credits (about 1¢ per estimate). If a model fails or is retired, requests fall back to a free model automatically.")
                 }
                 Section {
                     Picker("Activity", selection: $activityRaw) {
@@ -64,8 +69,8 @@ struct FuelSettingsView: View {
     }
 
     /// The saved model stays selectable even if it has dropped off the live list or the list failed to load.
-    private var modelChoices: [String] {
-        Array(Set(availableModels + [model, OpenRouterClient.defaultModel])).sorted()
+    private var freeChoices: [String] {
+        Array(Set(availableModels + [model, OpenRouterClient.defaultModel]).subtracting(OpenRouterClient.paidModels)).sorted()
     }
 
     private var keySection: some View {
