@@ -43,13 +43,7 @@ struct RoutineExerciseEditorCard: View {
         .cardStyle()
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                NavigationStack {
-                    if entry.isDurationBased, let kinetoExercise = KinetoCatalog.exercise(named: exercise.name) {
-                        KinetoExerciseDetailView(exercise: kinetoExercise)
-                    } else {
-                        ExerciseDetailView(exercise: exercise, showsDoneButton: true)
-                    }
-                }
+                ExerciseInfoSheet(exercise: exercise, isDurationBased: entry.isDurationBased)
             }
         }
     }
