@@ -6,6 +6,7 @@ struct ExerciseDetailView: View {
     var showsDoneButton = false
     @Environment(\.dismiss) private var dismiss
     @State private var page: Page = .summary
+    @State private var editing = false
 
     private enum Page: String, CaseIterable, Identifiable {
         case summary = "Summary"
@@ -18,6 +19,9 @@ struct ExerciseDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 header
+                if exercise.isCustom && !exercise.media.isEmpty {
+                    ExerciseMediaSection(items: .constant(exercise.media.sorted { $0.createdAt < $1.createdAt }.map(\.item)))
+                }
                 Picker("Section", selection: $page) {
                     ForEach(Page.allCases) { Text($0.rawValue).tag($0) }
                 }
@@ -44,7 +48,11 @@ struct ExerciseDetailView: View {
                     Button("Done") { dismiss() }
                 }
             }
+            if exercise.isCustom {
+                ToolbarItem(placement: .primaryAction) { Button("Edit") { editing = true } }
+            }
         }
+        .sheet(isPresented: $editing) { ExerciseEditorView(editing: exercise) }
     }
 
     private var header: some View {

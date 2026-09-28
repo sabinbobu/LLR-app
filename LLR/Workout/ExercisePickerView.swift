@@ -3,7 +3,8 @@ import SwiftUI
 
 struct ExercisePickerView: View {
     @Environment(\.dismiss) private var dismiss
-    @Query(sort: \Exercise.name) private var exercises: [Exercise]
+    // User-made Kineto exercises belong to the Kineto catalog only.
+    @Query(filter: #Predicate<Exercise> { $0.sectionRaw == "gym" }, sort: \Exercise.name) private var exercises: [Exercise]
     @State private var search = ""
     @State private var muscle: String?
     @State private var equipment: String?
@@ -91,7 +92,7 @@ struct ExercisePickerView: View {
                 }
             }
             .sheet(isPresented: $creating) {
-                CreateExerciseView(initialName: search) { picked.append($0.id) }
+                ExerciseEditorView(section: .gym, initialName: search) { picked.append($0.id) }
             }
             .sheet(item: $inspecting) { exercise in
                 NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }

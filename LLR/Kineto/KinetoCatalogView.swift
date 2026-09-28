@@ -16,6 +16,10 @@ struct KinetoCatalogView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var category: KinetoCatalog.Category?
     @State private var inspecting: KinetoCatalog.Exercise?
+    @State private var inspectingCustom: Exercise?
+    @State private var creating = false
+    @Query(filter: #Predicate<Exercise> { $0.isCustom && $0.sectionRaw == "kineto" }, sort: \Exercise.name)
+    private var customExercises: [Exercise]
 
     private var isPicking: Bool {
         if case .pick = mode { return true }
@@ -33,6 +37,31 @@ struct KinetoCatalogView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     categoryPills
+                    let custom = customExercises.filter { category == nil || $0.customKinetoSpec?.category == category }
+                    if !custom.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Your exercises").sectionLabel()
+                            VStack(spacing: 0) {
+                                ForEach(Array(custom.enumerated()), id: \.element.id) { index, exercise in
+                                    if let spec = exercise.customKinetoSpec {
+                                        Button { inspectingCustom = exercise } label: { row(spec) }
+                                            .buttonStyle(.plain)
+                                            .contextMenu {
+                                                if exercise.canDelete {
+                                                    Button("Delete", systemImage: "trash", role: .destructive) {
+                                                        exercise.deleteWithMedia(from: context)
+                                                    }
+                                                }
+                                            }
+                                    }
+                                    if index < custom.count - 1 { Divider().padding(.leading, 16) }
+                                }
+                            }
+                            .background(Theme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
+                        }
+                    }
                     ForEach(KinetoCatalog.Category.allCases) { section in
                         let inSection = filtered.filter { $0.category == section }
                         if !inSection.isEmpty {
@@ -60,6 +89,27 @@ struct KinetoCatalogView: View {
             .toolbar {
                 if isPicking {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    // An HStack rather than a Label: iOS 26 toolbars collapse a Label to its icon alone.
+                    Button { creating = true } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus")
+                            Text("Custom")
+                        }
+                    }
+                    .accessibilityLabel("Create custom exercise")
+                }
+            }
+            .sheet(isPresented: $creating) {
+                // Not opened straight away: presenting a sheet while this one dismisses gets dropped.
+                ExerciseEditorView(section: .kineto) { _ in }
+            }
+            .sheet(item: $inspectingCustom) { exercise in
+                NavigationStack {
+                    if let spec = exercise.customKinetoSpec {
+                        KinetoExerciseDetailView(exercise: spec, custom: exercise, onAdd: onAdd(for: exercise))
+                    }
                 }
             }
             .sheet(item: $inspecting) { exercise in
@@ -107,6 +157,14 @@ struct KinetoCatalogView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
+    }
+
+    private func onAdd(for custom: Exercise) -> ((KinetoCatalog.Level) -> Void)? {
+        guard case .pick(let onPick) = mode else { return nil }
+        return { level in
+            onPick(custom, level)
+            dismiss()
+        }
     }
 
     private func onAdd(for exercise: KinetoCatalog.Exercise) -> ((KinetoCatalog.Level) -> Void)? {

@@ -9,7 +9,7 @@ enum Persistence {
             return try ModelContainer(
                 for: Exercise.self, Workout.self, WorkoutExercise.self, SetEntry.self,
                 Routine.self, RoutineExercise.self, RoutineSetPlan.self,
-                BodyMeasurement.self, ProgressPhoto.self, FoodEntry.self
+                BodyMeasurement.self, ProgressPhoto.self, FoodEntry.self, ExerciseMedia.self
             )
         } catch {
             // Without the store there is nothing to show; failing loudly beats silently losing history.

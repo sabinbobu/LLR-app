@@ -16,6 +16,18 @@ final class Exercise {
     /// Opt-in progression range; nil = prefill last session's values unchanged.
     var repRangeMin: Int?
     var repRangeMax: Int?
+    /// Which picker a custom exercise lives in. Built-ins stay "gym": Kineto's own entries resolve
+    /// through `KinetoCatalog` by name, so only user-made Kineto exercises need this.
+    var sectionRaw: String = "gym"
+    // A user-made Kineto exercise's single dose and notes; the bundled catalog keeps its own in JSON.
+    var kinetoCategoryRaw: String?
+    var kinetoDirectionRaw: String?
+    var kinetoSets: Int?
+    var kinetoReps: Int?
+    var kinetoDurationSeconds: Int?
+    var kinetoMistakes: String?
+    var kinetoCautions: String?
+    @Relationship(deleteRule: .cascade, inverse: \ExerciseMedia.exercise) var media: [ExerciseMedia] = []
     @Relationship(inverse: \WorkoutExercise.exercise) var usages: [WorkoutExercise] = []
 
     init(name: String, muscleGroup: String, isCustom: Bool = false) {

@@ -5,44 +5,73 @@ import SwiftUI
 /// only when this is opened from a picker, and adds the currently selected dosing level.
 struct KinetoExerciseDetailView: View {
     let exercise: KinetoCatalog.Exercise
+    /// Set for a user-made exercise: adds its how-to and media, and an Edit button.
+    var custom: Exercise? = nil
     var onAdd: ((KinetoCatalog.Level) -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
     @AppStorage(StorageKey.kinetoDirection) private var directionRaw = KinetoDirectionPreference.notAssessed.rawValue
     @State private var selectedLevel: KinetoCatalog.Level?
+    @State private var editing = false
 
-    private var level: KinetoCatalog.Level { selectedLevel ?? exercise.levels[0] }
+    /// Re-read from the model so an edit shows up without reopening the page.
+    private var shown: KinetoCatalog.Exercise { custom?.customKinetoSpec ?? exercise }
+
+    private var level: KinetoCatalog.Level { selectedLevel ?? shown.levels[0] }
     private var direction: KinetoDirectionPreference { KinetoDirectionPreference(rawValue: directionRaw) ?? .notAssessed }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 header
+                if let custom {
+                    infoCard(
+                        title: "Added by you",
+                        text: "Not from the cited catalog. Check the dose with your physiotherapist.",
+                        color: .secondary
+                    )
+                    if !custom.media.isEmpty {
+                        ExerciseMediaSection(items: .constant(custom.media.sorted { $0.createdAt < $1.createdAt }.map(\.item)))
+                    }
+                }
                 // Shown, never hiding the exercise: Long 2004 vs. Dettori 1995 disagree on how much
                 // this matters, so the app surfaces it and lets the physio's judgment decide.
-                if onAdd != nil, direction.warns(for: exercise.direction) {
+                if onAdd != nil, direction.warns(for: shown.direction) {
                     infoCard(
                         title: "Direction warning",
-                        text: "This is tagged \(exercise.direction.title.lowercased()), the opposite of what you set as helpful. You can still add it — check with your physiotherapist first.",
+                        text: "This is tagged \(shown.direction.title.lowercased()), the opposite of what you set as helpful. You can still add it — check with your physiotherapist first.",
                         color: .orange
                     )
                 }
                 dosing
-                if let mistakes = exercise.mistakes {
+                if let mistakes = shown.mistakes {
                     infoCard(title: "Common mistakes", text: mistakes, color: .secondary)
                 }
-                if let cautions = exercise.cautions {
+                if let cautions = shown.cautions {
                     infoCard(title: "Cautions", text: cautions, color: .orange)
                 }
-                sources
+                if let custom, !custom.instructions.isEmpty {
+                    ExerciseStepsView(steps: custom.instructions)
+                }
+                if !shown.sources.isEmpty { sources }
             }
             .padding(16)
             .padding(.bottom, onAdd == nil ? 8 : 80)
         }
         .background(Theme.background)
-        .navigationTitle(exercise.name)
+        .navigationTitle(shown.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+            if custom != nil {
+                ToolbarItem(placement: .topBarLeading) { Button("Edit") { editing = true } }
+            }
+        }
+        // A level picked before an edit would otherwise still add the old dose.
+        .onChange(of: editing) { selectedLevel = nil }
+        .sheet(isPresented: $editing) {
+            if let custom {
+                ExerciseEditorView(editing: custom)
+            }
         }
         .safeAreaInset(edge: .bottom) {
             if let onAdd {
@@ -55,9 +84,9 @@ struct KinetoExerciseDetailView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Text(exercise.category.title)
+            Text(shown.category.title)
             Text("·")
-            Text(exercise.direction.title)
+            Text(shown.direction.title)
         }
         .font(.subheadline.weight(.semibold))
         .foregroundStyle(.secondary)
@@ -67,11 +96,11 @@ struct KinetoExerciseDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Dosing").sectionLabel()
             VStack(spacing: 0) {
-                ForEach(Array(exercise.levels.enumerated()), id: \.offset) { index, lvl in
+                ForEach(Array(shown.levels.enumerated()), id: \.offset) { index, lvl in
                     Button { selectedLevel = lvl } label: { levelRow(lvl, isSelected: lvl == level) }
                         .buttonStyle(.plain)
                         .disabled(onAdd == nil)
-                    if index < exercise.levels.count - 1 { Divider().padding(.leading, 16) }
+                    if index < shown.levels.count - 1 { Divider().padding(.leading, 16) }
                 }
             }
             .background(Theme.surface)
@@ -114,7 +143,7 @@ struct KinetoExerciseDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Sources").sectionLabel()
             VStack(alignment: .leading, spacing: 12) {
-                ForEach(exercise.sources, id: \.url) { source in
+                ForEach(shown.sources, id: \.url) { source in
                     if let url = URL(string: source.url) {
                         Link(destination: url) {
                             VStack(alignment: .leading, spacing: 2) {

@@ -1,0 +1,97 @@
+import SwiftData
+import SwiftUI
+
+/// Creates or edits a user-made exercise for either section. Media files are written as they are
+/// added but only attached on Save; Cancel removes the ones this session added. Deleting lives in
+/// the lists instead: a detail page still showing a deleted model would read freed data.
+struct ExerciseEditorView: View {
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+    @Query private var exercises: [Exercise]
+    @State private var draft: CustomExerciseDraft
+    private let original: CustomExerciseDraft
+    private let editing: Exercise?
+    let onSave: (Exercise) -> Void
+
+    init(section: WorkoutSection, initialName: String = "", onSave: @escaping (Exercise) -> Void) {
+        let draft = CustomExerciseDraft(section: section, name: initialName)
+        _draft = State(initialValue: draft)
+        original = draft
+        editing = nil
+        self.onSave = onSave
+    }
+
+    init(editing exercise: Exercise, onSave: @escaping (Exercise) -> Void = { _ in }) {
+        let draft = CustomExerciseDraft(exercise)
+        _draft = State(initialValue: draft)
+        original = draft
+        editing = exercise
+        self.onSave = onSave
+    }
+
+    private var problem: CustomExerciseDraft.Problem? {
+        draft.problem(existingNames: exercises.map(\.name), originalName: editing?.name)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Exercise name", text: $draft.name)
+                    Picker("Muscle group", selection: $draft.muscleGroup) {
+                        ForEach(MuscleGroup.allCases) { Text($0.rawValue).tag($0.rawValue) }
+                    }
+                } footer: {
+                    if problem == .duplicateName { Text(CustomExerciseDraft.Problem.duplicateName.message).foregroundStyle(.red) }
+                }
+                switch draft.section {
+                case .gym: GymExerciseFields(draft: $draft)
+                case .kineto: KinetoExerciseFields(draft: $draft)
+                }
+                InstructionStepsEditor(steps: $draft.instructions)
+                Section("Photos & videos") {
+                    ExerciseMediaSection(items: $draft.media, editable: true)
+                }
+            }
+            .navigationTitle(editing == nil ? "New Exercise" : "Edit Exercise")
+            .navigationBarTitleDisplayMode(.inline)
+            .interactiveDismissDisabled(draft != original)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel", action: cancel) }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save).disabled(problem != nil)
+                }
+            }
+        }
+    }
+
+    private func cancel() {
+        let kept = Set(original.media)
+        for item in draft.media where !kept.contains(item) { ExerciseMediaStore.delete(item.fileName) }
+        dismiss()
+    }
+
+    private func save() {
+        let exercise = editing ?? Exercise(name: draft.trimmedName, muscleGroup: draft.muscleGroup, isCustom: true)
+        if editing == nil { context.insert(exercise) }
+        draft.apply(to: exercise)
+        syncMedia(of: exercise)
+        dismiss()
+        onSave(exercise)
+    }
+
+    private func syncMedia(of exercise: Exercise) {
+        let wanted = Set(draft.media.map(\.fileName))
+        for row in exercise.media where !wanted.contains(row.fileName) {
+            ExerciseMediaStore.delete(row.fileName)
+            context.delete(row)
+        }
+        let existing = Set(exercise.media.map(\.fileName))
+        // Staggered timestamps keep the order the user added them in.
+        for (index, item) in draft.media.enumerated() where !existing.contains(item.fileName) {
+            let row = ExerciseMedia(kind: item.kind, fileName: item.fileName, createdAt: .now.addingTimeInterval(Double(index) / 1000))
+            context.insert(row)
+            row.exercise = exercise
+        }
+    }
+}

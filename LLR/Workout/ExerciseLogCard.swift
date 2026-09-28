@@ -92,15 +92,7 @@ struct ExerciseLogCard: View {
         }
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                NavigationStack {
-                    // A gym how-to can contradict a Kineto dose (Plank: "hold as long as possible"
-                    // vs. the catalog's 5 × 30 s), so a duration entry always shows its own page.
-                    if entry.isDurationBased, let kinetoExercise = KinetoCatalog.exercise(named: exercise.name) {
-                        KinetoExerciseDetailView(exercise: kinetoExercise)
-                    } else {
-                        ExerciseDetailView(exercise: exercise, showsDoneButton: true)
-                    }
-                }
+                ExerciseInfoSheet(exercise: exercise, isDurationBased: entry.isDurationBased)
             }
         }
     }
