@@ -19,14 +19,20 @@ final class Exercise {
     /// Which picker a custom exercise lives in. Built-ins stay "gym": Kineto's own entries resolve
     /// through `KinetoCatalog` by name, so only user-made Kineto exercises need this.
     var sectionRaw: String = "gym"
-    // A user-made Kineto exercise's single dose and notes; the bundled catalog keeps its own in JSON.
+    // A user-made Kineto exercise's fields; the bundled catalog keeps its own in JSON.
     var kinetoCategoryRaw: String?
     var kinetoDirectionRaw: String?
+    /// The single dose rows had before levels existed; only read while `kinetoLevelsData` is nil.
     var kinetoSets: Int?
     var kinetoReps: Int?
     var kinetoDurationSeconds: Int?
     var kinetoMistakes: String?
     var kinetoCautions: String?
+    // JSON lists of small structs nothing ever queries into; see `kinetoLevels` / `kinetoSources`.
+    var kinetoLevelsData: Data?
+    var kinetoSourcesData: Data?
+    /// Your own cues on any exercise, e.g. what your physiotherapist corrected. Library sync never touches it.
+    var personalNotes: String = ""
     @Relationship(deleteRule: .cascade, inverse: \ExerciseMedia.exercise) var media: [ExerciseMedia] = []
     @Relationship(inverse: \WorkoutExercise.exercise) var usages: [WorkoutExercise] = []
 

@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CE734982A2AE16588EAD678 /* KinetoInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED26D1871834DA98DFCE4803 /* KinetoInfoCard.swift */; };
+		C2CB23F466FF573F59657761 /* KinetoPersonalEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1A1EFFC8FB4EA975A0F00 /* KinetoPersonalEditor.swift */; };
+		53E889FE08314A54B2563A2B /* KinetoSourcesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746F44C68BE572F45AE1B19B /* KinetoSourcesList.swift */; };
+		3C96CC5C2641CF83A244BDEE /* KinetoSourceEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79F947A4F297BF0592BAE42 /* KinetoSourceEditor.swift */; };
+		E684BB402E91002C46C2236C /* KinetoSourcesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E35A1599C1E5AC28592C26 /* KinetoSourcesSection.swift */; };
+		62418BB7B1345172566A092D /* KinetoLevelEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A7335196B0C271E7FA9158 /* KinetoLevelEditor.swift */; };
+		859C8A9C98DCACC34E98EC5F /* KinetoLevelsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1E2A58E35FD304A142AB5E /* KinetoLevelsSection.swift */; };
+		5EEF1264AA04C2BC1DE24A5A /* RestTimerPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45961F0E6E73049337DC9E43 /* RestTimerPicker.swift */; };
+		1690B9D43C30745DEB11646E /* MuscleEquipmentFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FC1E3B6E5B47A5EDC941E /* MuscleEquipmentFields.swift */; };
 		036CB2753A6E2D4A201E88D9 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4528CC83E493CDE58E1090 /* Models.swift */; };
 		06D8EF2F8C0A6C5D851B2C7B /* ProgramDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6EAFC577BC68357B7A0AA6 /* ProgramDayCard.swift */; };
 		0702D2736E8F7653251FAD05 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421E43896C5A603AEB63118 /* UserSettings.swift */; };
@@ -259,6 +268,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ED26D1871834DA98DFCE4803 /* KinetoInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoInfoCard.swift; sourceTree = "<group>"; };
+		B5F1A1EFFC8FB4EA975A0F00 /* KinetoPersonalEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoPersonalEditor.swift; sourceTree = "<group>"; };
+		746F44C68BE572F45AE1B19B /* KinetoSourcesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoSourcesList.swift; sourceTree = "<group>"; };
+		C79F947A4F297BF0592BAE42 /* KinetoSourceEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoSourceEditor.swift; sourceTree = "<group>"; };
+		18E35A1599C1E5AC28592C26 /* KinetoSourcesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoSourcesSection.swift; sourceTree = "<group>"; };
+		71A7335196B0C271E7FA9158 /* KinetoLevelEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoLevelEditor.swift; sourceTree = "<group>"; };
+		7E1E2A58E35FD304A142AB5E /* KinetoLevelsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoLevelsSection.swift; sourceTree = "<group>"; };
+		45961F0E6E73049337DC9E43 /* RestTimerPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerPicker.swift; sourceTree = "<group>"; };
+		6F9FC1E3B6E5B47A5EDC941E /* MuscleEquipmentFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleEquipmentFields.swift; sourceTree = "<group>"; };
 		0008C31819FB434DCDEA05F3 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
 		03519B8B190C56E606296705 /* InstructionStepsEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionStepsEditor.swift; sourceTree = "<group>"; };
 		04518448A938652FB5FFAB9F /* Equipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Equipment.swift; sourceTree = "<group>"; };
@@ -648,6 +666,7 @@
 				307F915FAF5A6E6BCD6952C7 /* SetRowView.swift */,
 				1A5C8B979EF38C35294C3D0C /* WorkoutFactory.swift */,
 				CB5C1E31BB0846C376579A7B /* WorkoutTabView.swift */,
+				6F9FC1E3B6E5B47A5EDC941E /* MuscleEquipmentFields.swift */,
 			);
 			path = Workout;
 			sourceTree = "<group>";
@@ -793,6 +812,13 @@
 				37E566A98B3EDDCF017D9F90 /* PainCheckOutSheet.swift */,
 				7806D5A0EC8D6C351FAE03B1 /* PainHistoryView.swift */,
 				86A37F37579E8642EE8C474A /* RedFlagsView.swift */,
+				7E1E2A58E35FD304A142AB5E /* KinetoLevelsSection.swift */,
+				71A7335196B0C271E7FA9158 /* KinetoLevelEditor.swift */,
+				18E35A1599C1E5AC28592C26 /* KinetoSourcesSection.swift */,
+				C79F947A4F297BF0592BAE42 /* KinetoSourceEditor.swift */,
+				746F44C68BE572F45AE1B19B /* KinetoSourcesList.swift */,
+				B5F1A1EFFC8FB4EA975A0F00 /* KinetoPersonalEditor.swift */,
+				ED26D1871834DA98DFCE4803 /* KinetoInfoCard.swift */,
 			);
 			path = Kineto;
 			sourceTree = "<group>";
@@ -843,6 +869,7 @@
 				7C8673F1EF058EE04D7C0F4D /* SelectableCard.swift */,
 				1201A477ABCEF26BF2C919F9 /* Theme.swift */,
 				95CE044E818C8B637C6C7EF8 /* BodyMap */,
+				45961F0E6E73049337DC9E43 /* RestTimerPicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1124,6 +1151,15 @@
 				3FB2C99A8CE92235F9534B1E /* KinetoEntryCard.swift in Sources */,
 				9249D75BA24D10E5B3D85ABA /* KinetoExerciseDetailView.swift in Sources */,
 				4676199F838D3FC6F2C8BA3A /* KinetoExerciseFields.swift in Sources */,
+				0CE734982A2AE16588EAD678 /* KinetoInfoCard.swift in Sources */,
+				C2CB23F466FF573F59657761 /* KinetoPersonalEditor.swift in Sources */,
+				53E889FE08314A54B2563A2B /* KinetoSourcesList.swift in Sources */,
+				3C96CC5C2641CF83A244BDEE /* KinetoSourceEditor.swift in Sources */,
+				E684BB402E91002C46C2236C /* KinetoSourcesSection.swift in Sources */,
+				62418BB7B1345172566A092D /* KinetoLevelEditor.swift in Sources */,
+				859C8A9C98DCACC34E98EC5F /* KinetoLevelsSection.swift in Sources */,
+				5EEF1264AA04C2BC1DE24A5A /* RestTimerPicker.swift in Sources */,
+				1690B9D43C30745DEB11646E /* MuscleEquipmentFields.swift in Sources */,
 				CCFBE9E25A7408B3D2E00883 /* KinetoGateView.swift in Sources */,
 				79ED99F2E435FAC4E54B0AC8 /* KinetoPain.swift in Sources */,
 				51133B842C66119F1F27DFA1 /* KinetoView.swift in Sources */,

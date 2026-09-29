@@ -43,7 +43,7 @@ struct RoutineExerciseEditorCard: View {
         .cardStyle()
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
-                ExerciseInfoSheet(exercise: exercise, isDurationBased: entry.isDurationBased)
+                ExerciseInfoSheet(exercise: exercise, section: entry.routine?.section ?? .gym, isDurationBased: entry.isDurationBased)
             }
         }
     }

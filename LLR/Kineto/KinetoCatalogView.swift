@@ -108,23 +108,29 @@ struct KinetoCatalogView: View {
             .sheet(item: $inspectingCustom) { exercise in
                 NavigationStack {
                     if let spec = exercise.customKinetoSpec {
-                        KinetoExerciseDetailView(exercise: spec, custom: exercise, onAdd: onAdd(for: exercise))
+                        KinetoExerciseDetailView(exercise: spec, row: exercise, onAdd: onAdd(for: exercise))
                     }
                 }
             }
             .sheet(item: $inspecting) { exercise in
                 NavigationStack {
-                    KinetoExerciseDetailView(exercise: exercise, onAdd: onAdd(for: exercise))
+                    KinetoExerciseDetailView(exercise: exercise, row: builtInRow(for: exercise), onAdd: onAdd(for: exercise))
                 }
             }
         }
+    }
+
+    /// A filter with nothing behind it is a dead end, and user-made exercises can use any category.
+    private var usedCategories: [KinetoCatalog.Category] {
+        let used = Set(KinetoCatalog.exercises.map(\.category) + customExercises.compactMap { $0.customKinetoSpec?.category })
+        return KinetoCatalog.Category.allCases.filter(used.contains)
     }
 
     private var categoryPills: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 pill("All", isSelected: category == nil) { category = nil }
-                ForEach(KinetoCatalog.Category.allCases) { option in
+                ForEach(usedCategories) { option in
                     pill(option.title, isSelected: category == option) { category = option }
                 }
             }
@@ -157,6 +163,12 @@ struct KinetoCatalogView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
+    }
+
+    /// Never a custom row: a user exercise that took a catalog name before the catalog shipped it
+    /// would otherwise show its own content under the cited entry.
+    private func builtInRow(for exercise: KinetoCatalog.Exercise) -> Exercise? {
+        byName[exercise.name].flatMap { $0.isCustom ? nil : $0 }
     }
 
     private func onAdd(for custom: Exercise) -> ((KinetoCatalog.Level) -> Void)? {

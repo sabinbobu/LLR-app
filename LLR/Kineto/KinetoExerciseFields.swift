@@ -16,27 +16,13 @@ struct KinetoExerciseFields: View {
         } footer: {
             Text("Direction drives the warning shown when it's the opposite of what your physiotherapist found helpful.")
         }
+        KinetoLevelsSection(levels: $draft.kinetoLevels)
         Section {
-            numberField("Sets", value: $draft.kinetoSets)
-            numberField("Reps", value: $draft.kinetoReps)
-            numberField("Hold (seconds)", value: $draft.kinetoDurationSeconds)
-        } header: {
-            Text("Dose")
-        } footer: {
-            Text("Leave a field empty if it doesn't apply, e.g. no reps for a timed hold.")
+            RestTimerPicker(selection: $draft.restSeconds)
         }
         Section("Notes") {
             TextField("Common mistakes", text: $draft.kinetoMistakes, axis: .vertical)
             TextField("Cautions", text: $draft.kinetoCautions, axis: .vertical)
-        }
-    }
-
-    private func numberField(_ title: String, value: Binding<Int?>) -> some View {
-        LabeledContent(title) {
-            TextField("—", value: value, format: .number)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.trailing)
-                .monospacedDigit()
         }
     }
 }
