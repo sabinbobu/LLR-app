@@ -25,7 +25,8 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
 - Import Hevy/Strong CSV exports; export a Strong-format CSV
 - Lock Screen Live Activity: complete the next set, adjust or skip rest
 - Rule-based progression targets inside a per-exercise rep range (double progression)
-- Kineto: a physiotherapist-gated section for logging cited, low-load back-care exercises and pain before/after each session (see `LLR/Kineto/`, `KinetoCatalog.swift`). Content still needs real clinical sign-off — see the roadmap in the plan this was built from.
+- Kineto: a physiotherapist-gated section for logging cited, low-load back-care exercises and pain before/after each session (see `LLR/Kineto/`, `LLR/Models/KinetoCatalog.swift`). Content still needs real clinical sign-off — see the roadmap in the plan this was built from.
+- Exercise photos and videos (PRs #14, #15, plan in `docs/kineto-v2-plan.md`): your own photos/videos and notes on custom exercises, and notes/media on built-in Kineto exercises. Files live in Application Support (`ExerciseMediaStore`); photos are downscaled and videos re-encoded to 720p.
 - Routines: a built-in library of 16 cited programs plus a routine builder (see `LLR/Models/RoutineLibrary.swift`, `docs/routine-library-research.md`).
 - PRO features (ungated, no paywall — see `/Users/bobus/.claude/plans/scalable-doodling-gray.md` for the full plan and phase breakdown):
   - Live "New PR!" banner during a workout, plus a Records count in the workout header
@@ -42,17 +43,23 @@ Accounts, cloud sync, social features (leaderboards, friend comparisons), AI coa
 
 ## Stack
 - Swift 5.9+, SwiftUI, iOS 17+ minimum
-- SwiftData for persistence (no backend). The only network call is Fuel's OpenRouter request (`LLR/Logic/OpenRouterClient.swift`), made with the user's own key and only when they ask for an estimate; nothing else leaves the device
+- SwiftData for persistence (no backend). The only network call is Fuel's OpenRouter request (`LLR/Logic/OpenRouterClient.swift`), made with the user's own key and only when they ask for an estimate; nothing else leaves the device. Device backup (iCloud/Finder) includes the SwiftData store and `ExerciseMedia` files alike (`Backend/ is a Cloudflare Worker + D1 exercise API the app does not call; see `Backend/README.md`)
 - Swift Charts for progress graphs
 - XCTest for logic; no UI tests until v1 is usable
 - No third-party dependencies unless unavoidable
 
 ## Data model (SwiftData)
-- `Exercise`: id, name, muscleGroup, isCustom
-- `Workout`: id, startedAt, endedAt?, notes
-- `WorkoutExercise`: workout, exercise, order
-- `SetEntry`: workoutExercise, order, weightKg, reps, completedAt
+All 11 `@Model` classes are listed in `LLR/Models/Persistence.swift`; a type missing there is not stored.
+- `Exercise` (`Exercise.swift`): id, name, muscleGroup, isCustom, restSeconds?, equipment, secondaryMuscles, instructions, repRangeMin/Max?, `sectionRaw` ("gym" | "kineto"), `kineto*` fields (all optional), personalNotes, `media` (cascade), `usages`
+- `Workout`: id, startedAt, endedAt?, notes, name, exercises (cascade)
+- `WorkoutExercise`: workout, exercise, order, sets (cascade)
+- `SetEntry`: workoutExercise, order, weightKg, reps, completedAt?, kindRaw, durationSeconds?
+- `Routine` / `RoutineExercise` / `RoutineSetPlan` (`RoutineModels.swift`): saved programs, cascade down the chain
+- `BodyMeasurement`, `ProgressPhoto` (`MeasurementModels.swift`)
+- `FoodEntry` (`FoodModels.swift`)
+- `ExerciseMedia` (`ExerciseMedia.swift`): kindRaw, fileName, createdAt, exercise; bytes are files, not store data
 - Store weight in kg internally; convert for display only.
+- Migration: there is no `VersionedSchema`; every change must be an added property with a default (or optional) or a new entity, so lightweight migration applies. `PersistenceRecoveryTests` opens a real store written before Fuel/media (`LLRTests/Fixtures/legacy-pre-fuel.store`, made from commit 1ba2d27) — add a fixture the same way before any non-additive change. If a store fails to open, `Persistence.open` sets it aside as `*.corrupt-<timestamp>` and starts empty rather than crashing.
 
 ## Conventions
 - One view per file; view logic that isn't trivial goes in an `@Observable` view model

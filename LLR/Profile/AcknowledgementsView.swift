@@ -14,6 +14,15 @@ struct AcknowledgementsView: View {
                 .font(.subheadline)
                 .padding(.vertical, 4)
             }
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("openGym").font(.headline)
+                    Text("The activity heatmap shading, favourites ordering and workout text export follow logic from openGym by Duarte Santos.")
+                    Text("github.com/DuarteSantos8/openGym").foregroundStyle(.secondary)
+                }
+                .font(.subheadline)
+                .padding(.vertical, 4)
+            }
         }
         .navigationTitle("Acknowledgements")
         .navigationBarTitleDisplayMode(.inline)

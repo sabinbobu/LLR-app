@@ -20,6 +20,8 @@ struct WorkoutCalendarView: View {
                     .foregroundStyle(streak > 0 ? .orange : .secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
+                ActivityHeatmapView(workouts: workouts)
+
                 monthHeader
                 weekdayHeader
                 grid

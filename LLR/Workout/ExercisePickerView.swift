@@ -40,7 +40,7 @@ struct ExercisePickerView: View {
     /// collapses to one section of matches.
     private var sections: [ListSection] {
         guard search.isEmpty, muscle == nil, equipment == nil else {
-            return [ListSection(title: muscle ?? "Results", rows: filtered)]
+            return [ListSection(title: muscle ?? "Results", rows: ExerciseFavourites.favouritesFirst(filtered, isFavourite: \.isFavourite))]
         }
         var builtIns: [String: Exercise] = [:]
         for exercise in exercises where !exercise.isCustom {
@@ -48,7 +48,11 @@ struct ExercisePickerView: View {
         }
         let popular = ExerciseLibrary.popular.compactMap { builtIns[$0] }
         let all = ListSection(title: "All exercises", rows: exercises)
-        return popular.isEmpty ? [all] : [ListSection(title: "Popular", rows: popular), all]
+        let favourites = exercises.filter(\.isFavourite)
+        var result: [ListSection] = []
+        if !favourites.isEmpty { result.append(ListSection(title: "Favourites", rows: favourites)) }
+        if !popular.isEmpty { result.append(ListSection(title: "Popular", rows: popular)) }
+        return result + [all]
     }
 
     var body: some View {

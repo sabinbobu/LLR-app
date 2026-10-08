@@ -29,7 +29,9 @@ struct CameraPicker: UIViewControllerRepresentable {
 
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             if let url = info[.mediaURL] as? URL {
-                parent.videoURL?.wrappedValue = url
+                // The picker's file is its own to clean up once it dismisses; take a copy the importer may delete.
+                let copy = URL.temporaryDirectory.appending(path: "\(UUID().uuidString).\(url.pathExtension)")
+                parent.videoURL?.wrappedValue = (try? FileManager.default.copyItem(at: url, to: copy)) != nil ? copy : url
             } else {
                 parent.image = info[.originalImage] as? UIImage
             }

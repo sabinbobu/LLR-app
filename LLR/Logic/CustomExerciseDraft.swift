@@ -106,9 +106,17 @@ extension Exercise {
     /// workouts with nameless entries.
     var canDelete: Bool { isCustom && usages.isEmpty }
 
+    /// Files go only after the rows are saved away: a failed save must not leave rows whose files are gone.
     func deleteWithMedia(from context: ModelContext) {
-        for item in media { ExerciseMediaStore.delete(item.fileName) }
+        let files = media.map(\.fileName)
         context.delete(self)
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            return
+        }
+        for file in files { ExerciseMediaStore.delete(file) }
     }
 
     /// A row saved before levels existed has just the single legacy dose, so it reads as one level.

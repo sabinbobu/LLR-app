@@ -8,7 +8,8 @@ struct ExerciseListView: View {
     @State private var search = ""
 
     private var filtered: [Exercise] {
-        search.isEmpty ? exercises : exercises.filter { $0.name.localizedCaseInsensitiveContains(search) }
+        let matches = search.isEmpty ? exercises : exercises.filter { $0.name.localizedCaseInsensitiveContains(search) }
+        return ExerciseFavourites.favouritesFirst(matches, isFavourite: \.isFavourite)
     }
 
     var body: some View {
@@ -16,10 +17,22 @@ struct ExerciseListView: View {
             NavigationLink {
                 ExerciseDetailView(exercise: exercise)
             } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(exercise.name)
-                    Text(exercise.detail).font(.caption).foregroundStyle(.secondary)
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(exercise.name)
+                        Text(exercise.detail).font(.caption).foregroundStyle(.secondary)
+                    }
+                    if exercise.isFavourite {
+                        Spacer()
+                        Image(systemName: "star.fill").foregroundStyle(.yellow).accessibilityLabel("Favourite")
+                    }
                 }
+            }
+            .swipeActions(edge: .leading) {
+                Button(exercise.isFavourite ? "Unfavourite" : "Favourite", systemImage: exercise.isFavourite ? "star.slash" : "star") {
+                    exercise.isFavourite.toggle()
+                }
+                .tint(.yellow)
             }
             .swipeActions {
                 if exercise.canDelete {

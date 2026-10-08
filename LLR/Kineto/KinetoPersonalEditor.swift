@@ -10,6 +10,7 @@ struct KinetoPersonalEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var notes: String
     @State private var media: [ExerciseMediaItem]
+    @State private var mediaSession = ExerciseMediaSession()
     private let originalNotes: String
     private let originalMedia: [ExerciseMediaItem]
 
@@ -30,16 +31,16 @@ struct KinetoPersonalEditor: View {
                     Text("My notes")
                 }
                 Section("Photos & videos") {
-                    ExerciseMediaSection(items: $media, editable: true)
+                    ExerciseMediaSection(items: $media, editable: true, session: mediaSession)
                 }
             }
             .navigationTitle(exercise.name)
             .navigationBarTitleDisplayMode(.inline)
-            .interactiveDismissDisabled(notes != originalNotes || media != originalMedia)
+            .interactiveDismissDisabled(notes != originalNotes || media != originalMedia || mediaSession.hasWritten)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        ExerciseMediaStore.discard(media, keeping: originalMedia)
+                        mediaSession.cancel()
                         dismiss()
                     }
                 }
@@ -47,6 +48,7 @@ struct KinetoPersonalEditor: View {
                     Button("Save") {
                         exercise.personalNotes = notes.nilIfBlank ?? ""
                         exercise.syncMedia(to: media, in: context)
+                        mediaSession.commit(keeping: media)
                         dismiss()
                     }
                 }

@@ -6,6 +6,7 @@ import SwiftUI
 struct ExerciseMediaSection: View {
     @Binding var items: [ExerciseMediaItem]
     var editable = false
+    var session: ExerciseMediaSession?
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var importing = 0
     @State private var showingCamera = false
@@ -44,7 +45,7 @@ struct ExerciseMediaSection: View {
         .onChange(of: cameraImage) { _, image in
             guard let image else { return }
             cameraImage = nil
-            run { try ExerciseMediaStore.savePhoto(image) }
+            run { try await Task.detached(priority: .userInitiated) { try ExerciseMediaStore.savePhoto(image) }.value }
         }
         .onChange(of: cameraVideo) { _, url in
             guard let url else { return }
@@ -82,7 +83,8 @@ struct ExerciseMediaSection: View {
             return try await ExerciseMediaStore.saveVideo(from: video.url)
         }
         guard let data = try await item.loadTransferable(type: Data.self) else { throw ExerciseMediaStore.StoreError.unreadableImage }
-        return try ExerciseMediaStore.savePhoto(data)
+        // Decoding, resizing and JPEG-encoding a camera-roll photo is too heavy for the main actor.
+        return try await Task.detached(priority: .userInitiated) { try ExerciseMediaStore.savePhoto(data) }.value
     }
 
     private func run(_ work: @escaping () async throws -> ExerciseMediaItem) {
@@ -91,7 +93,9 @@ struct ExerciseMediaSection: View {
         Task {
             defer { importing -= 1 }
             do {
-                items.append(try await work())
+                let item = try await work()
+                session?.record(item)
+                items.append(item)
             } catch {
                 failure = "Couldn't add that file. Try another photo or video."
             }
