@@ -101,7 +101,10 @@ final class ActiveWorkoutModel {
         }
         set.completedAt = .now
         let exercise = set.workoutExercise?.exercise
-        if let seconds = RestDuration.resolve(override: exercise?.restSeconds, defaultSeconds: defaultRestSeconds) {
+        // Mid-superset the next exercise follows straight on; the rest comes once the round is done.
+        if !endsRound(set) {
+            syncLockScreen()
+        } else if let seconds = RestDuration.resolve(override: exercise?.restSeconds, defaultSeconds: defaultRestSeconds) {
             restTimer.start(seconds: seconds, exerciseName: exercise?.name)
         } else {
             restTimer.skip()

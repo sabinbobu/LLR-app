@@ -46,6 +46,8 @@ final class WorkoutExercise {
     var workout: Workout?
     var exercise: Exercise?
     var order: Int
+    /// Exercises of one workout that share a number are a superset; nil = done on its own.
+    var supersetGroup: Int?
     @Relationship(deleteRule: .cascade, inverse: \SetEntry.workoutExercise) var sets: [SetEntry] = []
 
     init(order: Int) {

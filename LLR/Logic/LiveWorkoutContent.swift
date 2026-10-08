@@ -6,21 +6,15 @@ enum LiveWorkoutContent {
         let name: String
         let sets: [SetValue]
         let completed: [Bool]
+        var supersetGroup: Int? = nil
     }
 
-    struct Position: Equatable {
-        let exercise: Int
-        let set: Int
-    }
+    typealias Position = Superset.Position
 
-    /// The first unticked set in workout order — the one a lifter at the rack is about to do.
+    /// The first unticked set in workout order — the one a lifter at the rack is about to do —
+    /// alternating through a superset.
     static func next(in exercises: [Exercise]) -> Position? {
-        for (e, exercise) in exercises.enumerated() {
-            if let s = exercise.completed.firstIndex(of: false) {
-                return Position(exercise: e, set: s)
-            }
-        }
-        return nil
+        Superset.next(in: exercises.map { Superset.Member(group: $0.supersetGroup, completed: $0.completed) })
     }
 
     static func state(

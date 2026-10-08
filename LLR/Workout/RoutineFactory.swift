@@ -20,6 +20,7 @@ enum RoutineFactory {
             context.insert(item)
             item.exercise = exercise
             item.restSeconds = exercise.restSeconds
+            item.supersetGroup = entry.supersetGroup
             routine.exercises.append(item)
             for (index, set) in entry.completedSets.enumerated() {
                 let plan = RoutineSetPlan(order: index, reps: set.reps)

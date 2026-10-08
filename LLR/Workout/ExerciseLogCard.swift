@@ -28,6 +28,12 @@ struct ExerciseLogCard: View {
                         Button("Exercise Details", systemImage: "info.circle") { showingDetails = true }
                         Button(exercise.personalNotes.isEmpty ? "Add Note" : "Edit Note", systemImage: "note.text") { editingNote = true }
                     }
+                    if model.canPairWithNext(entry) {
+                        Button("Superset with Next", systemImage: "link") { model.pairWithNext(entry) }
+                    }
+                    if entry.supersetGroup != nil {
+                        Button("Remove from Superset", systemImage: "minus.circle") { model.unpair(entry) }
+                    }
                     Button("Remove Exercise", systemImage: "trash", role: .destructive) {
                         model.remove(entry)
                     }
@@ -35,6 +41,12 @@ struct ExerciseLogCard: View {
                     Image(systemName: "ellipsis")
                         .frame(width: 44, height: 44)
                 }
+            }
+
+            if let tag = model.supersetTag(for: entry) {
+                Label("Superset \(tag.letter) · \(tag.position) of \(tag.count)", systemImage: "link")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.orange)
             }
 
             if let note = entry.exercise?.personalNotes.nilIfBlank {
@@ -105,6 +117,12 @@ struct ExerciseLogCard: View {
                     .frame(maxWidth: .infinity, minHeight: 40)
             }
             .buttonStyle(CardButtonStyle())
+        }
+        // Sits in the screen margin, so the cards of one superset read as joined.
+        .overlay(alignment: .leading) {
+            if model.supersetTag(for: entry) != nil {
+                Capsule().fill(.orange).frame(width: 4).offset(x: -11)
+            }
         }
         .sheet(isPresented: showingPlates) {
             PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
