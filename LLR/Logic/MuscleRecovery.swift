@@ -8,6 +8,8 @@ enum MuscleRecovery {
         let muscle: String
         let secondaryMuscles: [String]
         let completedAt: Date
+        /// Reps in reserve, nil when the set was never rated; recovery ignores it, Weekly Volume filters on it.
+        var rir: Double? = nil
     }
 
     struct Status {

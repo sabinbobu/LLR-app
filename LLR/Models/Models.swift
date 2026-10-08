@@ -93,7 +93,7 @@ extension WorkoutExercise {
             guard let completedAt = set.completedAt else { return nil }
             return MuscleRecovery.Entry(
                 exerciseName: exercise.name, muscle: exercise.muscleGroup,
-                secondaryMuscles: exercise.secondaryMuscles, completedAt: completedAt
+                secondaryMuscles: exercise.secondaryMuscles, completedAt: completedAt, rir: set.rir
             )
         }
     }

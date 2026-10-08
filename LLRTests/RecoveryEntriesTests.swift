@@ -55,6 +55,12 @@ final class RecoveryEntriesTests: XCTestCase {
         XCTAssertEqual(recoveryEntry.exerciseName, "Bench Press (Barbell)")
     }
 
+    func testRecoveryEntryCarriesTheSetsEffortRating() {
+        let entry = entryWith([(80, 8, .normal, true), (80, 8, .normal, true)])
+        entry.orderedSets.first?.rir = 1.5
+        XCTAssertEqual(entry.recoveryEntries.map(\.rir), [1.5, nil])
+    }
+
     func testWorkoutRecoveryEntriesFlattenAcrossExercises() {
         let workout = Workout()
         context.insert(workout)
