@@ -57,6 +57,8 @@ final class PersistenceRecoveryTests: XCTestCase {
         XCTAssertEqual(legacy.sectionRaw, "gym", "new defaulted column must backfill")
         XCTAssertTrue(legacy.media.isEmpty)
         XCTAssertEqual(legacy.personalNotes, "")
+        XCTAssertEqual(legacy.progressionRuleRaw, "", "a row written before rules existed keeps the automatic one")
+        XCTAssertNil(legacy.progressionStepKg)
         let sets = try context.fetch(FetchDescriptor<SetEntry>(sortBy: [SortDescriptor(\.order)]))
         XCTAssertEqual(sets.map(\.weightKg), [100, 102.5, 105])
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<Routine>()), 1)

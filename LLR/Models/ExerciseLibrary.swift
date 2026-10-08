@@ -132,10 +132,24 @@ extension Exercise {
         }
     }
 
-    func progressionPrefill(index: Int, previous: [SetValue], currentLast: SetValue?) -> SetValue? {
-        Progression.prefill(
-            index: index, previous: previous, currentLast: currentLast, range: repRange,
-            incrementKg: Progression.incrementKg(equipment: equipment, unit: .stored)
-        )
+    /// nil = no progression: sets prefill with last session's values unchanged.
+    func progression(unit: WeightUnit) -> Progression.Config? {
+        let rule = Progression.Rule(rawValue: progressionRuleRaw) ?? .double
+        let step = progressionStepKg ?? Progression.incrementKg(equipment: equipment, unit: unit)
+        let assisted = ExerciseProgress.isAssisted(name: name)
+        if rule == .time { return Progression.Config(rule: .time, range: 1...1, incrementKg: step, assisted: assisted) }
+        guard let range = repRange else { return nil }
+        // The exercise editor can still write a range under a fixed-reps rule: its top is the target.
+        let reps = rule == .double ? range : range.upperBound...range.upperBound
+        return Progression.Config(rule: rule, range: reps, incrementKg: step, assisted: assisted)
+    }
+
+    func setProgression(_ rule: Progression.Rule?, range: ClosedRange<Int>?) {
+        progressionRuleRaw = rule?.rawValue ?? ""
+        repRange = range
+    }
+
+    func progressionPrefill(index: Int, history: [Session], currentLast: SetValue?) -> SetValue? {
+        Progression.prefill(index: index, history: history, currentLast: currentLast, config: progression(unit: .stored))
     }
 }

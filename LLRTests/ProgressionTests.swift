@@ -1,6 +1,28 @@
 import XCTest
 @testable import LLR
 
+/// The single-session shape these tests were written against, kept so they still pin double progression.
+private extension Progression {
+    static func config(_ range: ClosedRange<Int>, _ incrementKg: Double) -> Config {
+        Config(rule: .double, range: range, incrementKg: incrementKg)
+    }
+
+    static func plan(previous: [SetValue], range: ClosedRange<Int>, incrementKg: Double) -> Plan? {
+        plan(history: [Session(date: .distantPast, sets: previous)], config: config(range, incrementKg))
+    }
+
+    static func targets(previous: [SetValue], range: ClosedRange<Int>, incrementKg: Double) -> [SetValue]? {
+        targets(history: [Session(date: .distantPast, sets: previous)], config: config(range, incrementKg))
+    }
+
+    static func prefill(index: Int, previous: [SetValue], currentLast: SetValue?, range: ClosedRange<Int>?, incrementKg: Double) -> SetValue? {
+        prefill(
+            index: index, history: [Session(date: .distantPast, sets: previous)], currentLast: currentLast,
+            config: range.map { config($0, incrementKg) }
+        )
+    }
+}
+
 final class ProgressionTests: XCTestCase {
     private func set(_ kg: Double, _ reps: Int, _ kind: SetKind = .normal) -> SetValue {
         SetValue(weightKg: kg, reps: reps, kind: kind)
