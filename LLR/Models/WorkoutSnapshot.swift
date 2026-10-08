@@ -13,6 +13,7 @@ struct WorkoutSnapshot: Equatable {
         let kindRaw: String
         let durationSeconds: Int?
         let completedAt: Date?
+        let rir: Double?
     }
 
     struct EntryCopy: Equatable {
@@ -42,7 +43,7 @@ struct WorkoutSnapshot: Equatable {
             EntryCopy(exercise: entry.exercise, order: entry.order, sets: entry.orderedSets.map {
                 SetCopy(
                     order: $0.order, weightKg: $0.weightKg, reps: $0.reps, kindRaw: $0.kindRaw,
-                    durationSeconds: $0.durationSeconds, completedAt: $0.completedAt
+                    durationSeconds: $0.durationSeconds, completedAt: $0.completedAt, rir: $0.rir
                 )
             })
         }
@@ -68,6 +69,7 @@ struct WorkoutSnapshot: Equatable {
                 set.kindRaw = setCopy.kindRaw
                 set.durationSeconds = setCopy.durationSeconds
                 set.completedAt = setCopy.completedAt
+                set.rir = setCopy.rir
                 context.insert(set)
                 entry.sets.append(set)
             }

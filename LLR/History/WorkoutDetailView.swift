@@ -4,6 +4,7 @@ import SwiftUI
 struct WorkoutDetailView: View {
     let workout: Workout
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
+    @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var confirmDelete = false
@@ -38,7 +39,12 @@ struct WorkoutDetailView: View {
             trailing = nil
         } else {
             detail = "\(unit.format(kg: row.set.weightKg)) \(unit.rawValue) × \(row.set.reps)"
-            trailing = "1RM \(unit.format(kg: OneRepMax.epley(row.set.value)))"
+            let oneRepMax = "1RM \(unit.format(kg: OneRepMax.epley(row.set.value)))"
+            if let rir = row.set.rir, effortScale != .off {
+                trailing = "\(effortScale.title) \(Effort.text(rir: rir, scale: effortScale)) · \(oneRepMax)"
+            } else {
+                trailing = oneRepMax
+            }
         }
         return HStack {
             Text(row.label)

@@ -23,7 +23,8 @@ enum WorkoutExport {
                 for (set, label) in zip(sets, labels) {
                     lines.append(CSV.line([
                         date, workout.title, duration, exercise.name, label,
-                        unit.format(kg: set.weightKg), "\(set.reps)", "0", "\(set.durationSeconds ?? 0)", "", workout.notes, "",
+                        unit.format(kg: set.weightKg), "\(set.reps)", "0", "\(set.durationSeconds ?? 0)", "", workout.notes,
+                        set.rir.map { Effort.text(rir: $0, scale: .rpe) } ?? "",
                     ]))
                 }
             }

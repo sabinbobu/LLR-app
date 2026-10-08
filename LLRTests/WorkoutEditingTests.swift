@@ -86,6 +86,18 @@ final class WorkoutEditingTests: XCTestCase {
         XCTAssertEqual(workout.volumeKg, 80 * 8 * 2 + 60 * 10)
     }
 
+    func testCancelRestoresAnEffortRating() throws {
+        let workout = finishedWorkout()
+        let set = try XCTUnwrap(workout.orderedExercises.first?.orderedSets.first)
+        set.rir = 2
+        let original = WorkoutSnapshot(workout)
+
+        set.rir = 0
+        XCTAssertNotEqual(WorkoutSnapshot(workout), original, "a changed rating is an edit Cancel must undo")
+        original.restore(into: workout, in: context)
+        XCTAssertEqual(workout.orderedExercises.first?.orderedSets.first?.rir, 2)
+    }
+
     func testLaunchCleanupRemovesOnlyEmptyFinishedWorkouts() throws {
         let kept = finishedWorkout()
         let interrupted = Workout(startedAt: .now.addingTimeInterval(-3600))

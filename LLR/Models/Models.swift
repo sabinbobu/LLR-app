@@ -64,6 +64,9 @@ final class SetEntry {
     var kindRaw: String = "normal"
     /// Hold duration for a duration-based set (reps × seconds); nil = an ordinary weight/reps set.
     var durationSeconds: Int?
+    /// Reps in reserve; nil = not rated. RPE is only ever a display of this (10 − rir), so a history
+    /// that mixes both scales still averages on one.
+    var rir: Double?
 
     init(order: Int, weightKg: Double, reps: Int) {
         self.order = order

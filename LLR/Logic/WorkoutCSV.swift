@@ -5,6 +5,7 @@ struct ImportedSet: Equatable {
     let reps: Int
     let kind: SetKind
     var durationSeconds: Int? = nil
+    var rir: Double? = nil
 }
 
 struct ImportedExercise: Equatable {
@@ -67,7 +68,8 @@ enum WorkoutCSV {
                 exercise: table[row, "exercise_title"],
                 weightKg: unit.toKg(WeightUnit.parse(table[row, weightColumn]) ?? 0),
                 reps: Int(table[row, "reps"]) ?? 0,
-                kind: kind
+                kind: kind,
+                rir: WeightUnit.parse(table[row, "rpe"]).flatMap(Effort.rir(fromRPE:))
             )
         }
         return Parsed(source: .hevy, workouts: builder.workouts, skippedTimedSets: builder.skipped)
@@ -97,7 +99,8 @@ enum WorkoutCSV {
                 weightKg: unit.toKg(WeightUnit.parse(table[row, "Weight"]) ?? 0),
                 reps: Int(WeightUnit.parse(table[row, "Reps"]) ?? 0),
                 kind: kind,
-                durationSeconds: seconds
+                durationSeconds: seconds,
+                rir: WeightUnit.parse(table[row, "RPE"]).flatMap(Effort.rir(fromRPE:))
             )
         }
         return Parsed(source: .strong, workouts: builder.workouts, skippedTimedSets: builder.skipped)
@@ -164,7 +167,8 @@ private struct Builder {
         weightKg: Double,
         reps: Int,
         kind: SetKind,
-        durationSeconds: Int? = nil
+        durationSeconds: Int? = nil,
+        rir: Double? = nil
     ) {
         guard reps > 0, !exercise.isEmpty else {
             skipped += 1
@@ -178,7 +182,7 @@ private struct Builder {
                 notes: workout.notes, exercises: []
             ))
         }
-        let set = ImportedSet(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds)
+        let set = ImportedSet(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds, rir: rir)
         let last = workouts.count - 1
         if workouts[last].exercises.last?.name == exercise {
             workouts[last].exercises[workouts[last].exercises.count - 1].sets.append(set)
