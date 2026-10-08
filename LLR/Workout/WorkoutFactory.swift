@@ -90,11 +90,11 @@ enum WorkoutFactory {
                 exercise.restSeconds = restSeconds
             }
 
-            let previous = PreviousPerformance.latestSets(in: exercise.sessions(excluding: workout, section: section))
+            let history = exercise.sessions(excluding: workout, section: section)
             let count = max(planned.sets.count, 1)
             for index in 0..<count {
                 let plan = index < planned.sets.count ? planned.sets[index] : nil
-                let fallback = exercise.progressionPrefill(index: index, previous: previous, currentLast: nil)
+                let fallback = exercise.progressionPrefill(index: index, history: history, currentLast: nil)
                 let set = SetEntry(
                     order: index,
                     weightKg: plan?.weightKg ?? fallback?.weightKg ?? 0,

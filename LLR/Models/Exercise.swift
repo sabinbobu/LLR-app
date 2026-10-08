@@ -16,6 +16,10 @@ final class Exercise {
     /// Opt-in progression range; nil = prefill last session's values unchanged.
     var repRangeMin: Int?
     var repRangeMax: Int?
+    /// "" = automatic: double progression whenever a rep range is set, as it was before rules existed.
+    var progressionRuleRaw: String = ""
+    /// nil = the smallest step the kit usually offers.
+    var progressionStepKg: Double?
     /// Which picker a custom exercise lives in. Built-ins stay "gym": Kineto's own entries resolve
     /// through `KinetoCatalog` by name, so only user-made Kineto exercises need this.
     var sectionRaw: String = "gym"

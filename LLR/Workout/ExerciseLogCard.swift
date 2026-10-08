@@ -50,11 +50,13 @@ struct ExerciseLogCard: View {
                 .accessibilityHint("Edit note")
             }
 
-            // Rest and progression shape the next session, not one already done. A rep range is a
-            // weight/reps concept, so it's hidden for duration sets, which progress manually.
+            // Rest and progression shape the next session, not one already done. Holds only
+            // progress on their own in the gym: a Kineto dose is the physiotherapist's call.
             if let exercise = entry.exercise, !model.isHistory {
                 restMenu(for: exercise)
-                if !entry.isDurationBased { repRangeMenu(for: exercise) }
+                if !entry.isDurationBased || entry.workout?.section == .gym {
+                    ProgressionMenu(entry: entry, exercise: exercise, model: model, unit: unit)
+                }
             }
 
             VStack(spacing: 0) {
@@ -130,39 +132,6 @@ struct ExerciseLogCard: View {
         } label: {
             Label("Rest Timer: \(current)", systemImage: "timer")
                 .foregroundStyle(Theme.accent)
-        }
-    }
-
-    private func repRangeMenu(for exercise: Exercise) -> some View {
-        let range = exercise.repRange
-        return VStack(alignment: .leading, spacing: 4) {
-            Menu {
-                Button("Off") { model.setRepRange(nil, for: entry) }
-                ForEach(Progression.presets, id: \.self) { preset in
-                    Button("\(preset.lowerBound)–\(preset.upperBound) reps") { model.setRepRange(preset, for: entry) }
-                }
-            } label: {
-                Label("Rep Range: \(range.map { "\($0.lowerBound)–\($0.upperBound)" } ?? "Off")", systemImage: "chart.line.uptrend.xyaxis")
-                    .foregroundStyle(Theme.accent)
-            }
-            if let range, let hint = progressionHint(for: exercise, range: range) {
-                Text(hint)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
-
-    private func progressionHint(for exercise: Exercise, range: ClosedRange<Int>) -> String? {
-        let previous = model.previousSets(for: exercise)
-        let step = Progression.incrementKg(equipment: exercise.equipment, unit: unit)
-        switch Progression.plan(previous: previous, range: range, incrementKg: step) {
-        case .addLoad(let kg):
-            return "Every set hit \(range.upperBound) last time: +\(unit.format(kg: kg)) \(unit.rawValue), back to \(range.lowerBound) reps."
-        case .addReps:
-            return "Same weight, one more rep per set until each reaches \(range.upperBound)."
-        case nil:
-            return "No working sets logged yet — this session sets the baseline."
         }
     }
 

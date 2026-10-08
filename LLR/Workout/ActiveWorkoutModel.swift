@@ -32,8 +32,8 @@ final class ActiveWorkoutModel {
         UserDefaults.standard.object(forKey: StorageKey.restSeconds) as? Int ?? RestDuration.defaultSeconds
     }
 
-    func previousSets(for exercise: Exercise) -> [SetValue] {
-        PreviousPerformance.latestSets(in: exercise.sessions(excluding: workout, section: workout.section))
+    func history(for exercise: Exercise) -> [Session] {
+        exercise.sessions(excluding: workout, section: workout.section)
     }
 
     func add(_ exercise: Exercise) {
@@ -43,9 +43,9 @@ final class ActiveWorkoutModel {
         entry.exercise = exercise
         workout.exercises.append(entry)
         // Mirror last session's set count so a repeat day is pure check-tapping.
-        let previous = previousSets(for: exercise)
-        for index in 0..<max(previous.count, 1) {
-            appendSet(to: entry, prefill: exercise.progressionPrefill(index: index, previous: previous, currentLast: nil))
+        let history = history(for: exercise)
+        for index in 0..<max(PreviousPerformance.latestSets(in: history).count, 1) {
+            appendSet(to: entry, prefill: exercise.progressionPrefill(index: index, history: history, currentLast: nil))
         }
         syncLockScreen()
     }
@@ -65,12 +65,10 @@ final class ActiveWorkoutModel {
     }
 
     func addSet(to entry: WorkoutExercise) {
-        let previous = entry.exercise.map(previousSets(for:)) ?? []
-        let prefill = entry.exercise?.progressionPrefill(
-            index: entry.sets.count,
-            previous: previous,
-            currentLast: entry.orderedSets.last?.value
-        ) ?? PreviousPerformance.prefill(index: entry.sets.count, previous: previous, currentLast: entry.orderedSets.last?.value)
+        let history = entry.exercise.map(history(for:)) ?? []
+        let last = entry.orderedSets.last?.value
+        let prefill = entry.exercise?.progressionPrefill(index: entry.sets.count, history: history, currentLast: last)
+            ?? PreviousPerformance.prefill(index: entry.sets.count, previous: [], currentLast: last)
         appendSet(to: entry, prefill: prefill)
         syncLockScreen()
     }
@@ -86,19 +84,6 @@ final class ActiveWorkoutModel {
         set.durationSeconds = prefill?.durationSeconds
         context.insert(set)
         entry.sets.append(set)
-    }
-
-    /// Re-targets only unticked sets: logged sets are history, whatever the range says now.
-    func setRepRange(_ range: ClosedRange<Int>?, for entry: WorkoutExercise) {
-        guard let exercise = entry.exercise else { return }
-        exercise.repRange = range
-        let previous = previousSets(for: exercise)
-        for (index, set) in entry.orderedSets.enumerated() where set.completedAt == nil {
-            guard let target = exercise.progressionPrefill(index: index, previous: previous, currentLast: nil) else { continue }
-            set.weightKg = target.weightKg
-            set.reps = target.reps
-        }
-        syncLockScreen()
     }
 
     /// Returns false when the set can't be completed (no reps), so the row can signal it.
@@ -196,7 +181,7 @@ final class ActiveWorkoutModel {
         LiveWorkoutActivity.sync()
     }
 
-    private func syncLockScreen() {
+    func syncLockScreen() {
         if !isHistory { LiveWorkoutActivity.sync() }
     }
 }
