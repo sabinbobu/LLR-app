@@ -67,6 +67,14 @@ final class FoodAnalysisTests: XCTestCase {
         XCTAssertEqual(OpenRouterClient.models(primary: "x").count, 3)
     }
 
+    func testPaidPrimaryFallsBackToFreeModelsWithCappedOutput() throws {
+        let models = OpenRouterClient.models(primary: "anthropic/claude-sonnet-5")
+        XCTAssertEqual(models, ["anthropic/claude-sonnet-5", "qwen/qwen3.8-27b:free", "openrouter/free"])
+        let body = try FoodAnalysis.requestBody(for: .text("1 banana"), models: models)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["max_tokens"] as? Int, 2048)
+    }
+
     func testStatusCodesMapToPlainErrors() {
         XCTAssertNil(OpenRouterClient.error(forStatus: 200))
         XCTAssertEqual(OpenRouterClient.error(forStatus: 401), .badKey)

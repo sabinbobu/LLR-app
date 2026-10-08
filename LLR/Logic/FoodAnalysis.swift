@@ -75,6 +75,9 @@ enum FoodAnalysis {
             ],
             // Low temperature: the same plate should not give a different answer on every retry.
             "temperature": 0.2,
+            // Without a cap OpenRouter reserves the model's whole output budget against credits, so a
+            // low balance gets a 402 on paid models; 2048 still leaves room for reasoning tokens.
+            "max_tokens": 2048,
         ]
         return try JSONSerialization.data(withJSONObject: body)
     }
