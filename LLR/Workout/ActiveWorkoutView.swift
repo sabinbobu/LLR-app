@@ -39,9 +39,22 @@ struct ActiveWorkoutView: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom) {
-                if model.restTimer.isRunning {
-                    RestTimerBar(timer: model.restTimer)
+                VStack(spacing: 0) {
+                    if let removal = model.removal {
+                        UndoToast(title: removal.title) { model.undoRemoval() }
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                    if model.restTimer.isRunning {
+                        RestTimerBar(timer: model.restTimer)
+                    }
                 }
+            }
+            // Long enough to notice a slip, short enough not to sit over the next set.
+            .task(id: model.removal?.id) {
+                guard let id = model.removal?.id else { return }
+                try? await Task.sleep(for: .seconds(6))
+                guard !Task.isCancelled, model.removal?.id == id else { return }
+                model.removal = nil
             }
             .overlay(alignment: .top) {
                 if let event = model.recordEvent {
@@ -57,6 +70,7 @@ struct ActiveWorkoutView: View {
                 model.recordEvent = nil
             }
             .animation(.snappy, value: model.restTimer.isRunning)
+            .animation(.snappy, value: model.removal?.id)
             .animation(.bouncy, value: model.recordEvent)
             .onAppear { LiveWorkoutActivity.sync(startIfNeeded: true) }
             // Typed weight/reps change the Lock Screen target; leaving the app is when that matters.

@@ -88,6 +88,7 @@ struct ExerciseLogCard: View {
                             model.toggle(set)
                         }
                         .contextMenu {
+                            Button("Duplicate Set", systemImage: "plus.square.on.square") { model.duplicate(set) }
                             Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
                         }
                     } else {
@@ -103,6 +104,7 @@ struct ExerciseLogCard: View {
                         }
                         .contextMenu {
                             Button("Plate Calculator", systemImage: "circle.grid.2x1") { plateTargetKg = set.weightKg }
+                            Button("Duplicate Set", systemImage: "plus.square.on.square") { model.duplicate(set) }
                             Button("Delete Set", systemImage: "trash", role: .destructive) { model.delete(set) }
                         }
                     }
