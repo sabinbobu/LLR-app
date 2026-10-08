@@ -7,6 +7,7 @@ struct ExerciseLogCard: View {
     @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
     @State private var plateTargetKg: Double?
     @State private var showingDetails = false
+    @State private var editingNote = false
 
     private var showingPlates: Binding<Bool> {
         Binding(get: { plateTargetKg != nil }, set: { if !$0 { plateTargetKg = nil } })
@@ -23,8 +24,9 @@ struct ExerciseLogCard: View {
                     .foregroundStyle(Theme.accent)
                 Spacer()
                 Menu {
-                    if entry.exercise != nil {
+                    if let exercise = entry.exercise {
                         Button("Exercise Details", systemImage: "info.circle") { showingDetails = true }
+                        Button(exercise.personalNotes.isEmpty ? "Add Note" : "Edit Note", systemImage: "note.text") { editingNote = true }
                     }
                     Button("Remove Exercise", systemImage: "trash", role: .destructive) {
                         model.remove(entry)
@@ -33,6 +35,19 @@ struct ExerciseLogCard: View {
                     Image(systemName: "ellipsis")
                         .frame(width: 44, height: 44)
                 }
+            }
+
+            if let note = entry.exercise?.personalNotes.nilIfBlank {
+                Button { editingNote = true } label: {
+                    Label(note, systemImage: "note.text")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(3)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Edit note")
             }
 
             // Rest and progression shape the next session, not one already done. A rep range is a
@@ -91,6 +106,9 @@ struct ExerciseLogCard: View {
         }
         .sheet(isPresented: showingPlates) {
             PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
+        }
+        .sheet(isPresented: $editingNote) {
+            if let exercise = entry.exercise { ExerciseNoteEditor(exercise: exercise) }
         }
         .sheet(isPresented: $showingDetails) {
             if let exercise = entry.exercise {
