@@ -42,5 +42,13 @@ struct ExerciseListView: View {
         }
         .searchable(text: $search)
         .navigationTitle("Exercises")
+        .toolbar {
+            NavigationLink {
+                MuscleExplorerView()
+            } label: {
+                Image(systemName: "figure.arms.open")
+            }
+            .accessibilityLabel("Browse by muscle")
+        }
     }
 }
