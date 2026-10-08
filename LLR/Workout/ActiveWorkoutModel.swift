@@ -20,6 +20,8 @@ final class ActiveWorkoutModel {
     let isHistory: Bool
     /// Set by `toggle` when a completed set breaks a record; the view clears it after showing the banner.
     var recordEvent: RecordEvent?
+    /// Set by a delete; the view offers Undo for a few seconds, then clears it.
+    var removal: UndoableRemoval?
 
     init(workout: Workout, isHistory: Bool = false) {
         self.workout = workout
@@ -123,11 +125,6 @@ final class ActiveWorkoutModel {
         let kinds = entry.recordKinds()[index]
         guard !kinds.isEmpty else { return }
         recordEvent = RecordEvent(exerciseName: name, kinds: kinds.sorted())
-    }
-
-    func delete(_ set: SetEntry) {
-        context?.delete(set)
-        syncLockScreen()
     }
 
     func remove(_ entry: WorkoutExercise) {

@@ -14,6 +14,26 @@ struct WorkoutSnapshot: Equatable {
         let durationSeconds: Int?
         let completedAt: Date?
         let rir: Double?
+
+        init(_ set: SetEntry) {
+            order = set.order
+            weightKg = set.weightKg
+            reps = set.reps
+            kindRaw = set.kindRaw
+            durationSeconds = set.durationSeconds
+            completedAt = set.completedAt
+            rir = set.rir
+        }
+
+        /// Not inserted anywhere yet: the caller attaches it to a context and an exercise.
+        func make() -> SetEntry {
+            let set = SetEntry(order: order, weightKg: weightKg, reps: reps)
+            set.kindRaw = kindRaw
+            set.durationSeconds = durationSeconds
+            set.completedAt = completedAt
+            set.rir = rir
+            return set
+        }
     }
 
     struct EntryCopy: Equatable {
@@ -41,12 +61,10 @@ struct WorkoutSnapshot: Equatable {
         startedAt = workout.startedAt
         endedAt = workout.endedAt
         entries = workout.orderedExercises.map { entry in
-            EntryCopy(exercise: entry.exercise, order: entry.order, supersetGroup: entry.supersetGroup, sets: entry.orderedSets.map {
-                SetCopy(
-                    order: $0.order, weightKg: $0.weightKg, reps: $0.reps, kindRaw: $0.kindRaw,
-                    durationSeconds: $0.durationSeconds, completedAt: $0.completedAt, rir: $0.rir
-                )
-            })
+            EntryCopy(
+                exercise: entry.exercise, order: entry.order, supersetGroup: entry.supersetGroup,
+                sets: entry.orderedSets.map(SetCopy.init)
+            )
         }
     }
 
@@ -67,11 +85,7 @@ struct WorkoutSnapshot: Equatable {
             entry.supersetGroup = copy.supersetGroup
             workout.exercises.append(entry)
             for setCopy in copy.sets {
-                let set = SetEntry(order: setCopy.order, weightKg: setCopy.weightKg, reps: setCopy.reps)
-                set.kindRaw = setCopy.kindRaw
-                set.durationSeconds = setCopy.durationSeconds
-                set.completedAt = setCopy.completedAt
-                set.rir = setCopy.rir
+                let set = setCopy.make()
                 context.insert(set)
                 entry.sets.append(set)
             }
