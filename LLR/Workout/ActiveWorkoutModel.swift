@@ -75,7 +75,7 @@ final class ActiveWorkoutModel {
         syncLockScreen()
     }
 
-    private func appendSet(to entry: WorkoutExercise, prefill: SetValue?) {
+    func appendSet(to entry: WorkoutExercise, prefill: SetValue?) {
         guard let context else { return }
         let set = SetEntry(
             order: (entry.sets.map(\.order).max() ?? -1) + 1,
@@ -125,11 +125,6 @@ final class ActiveWorkoutModel {
         let kinds = entry.recordKinds()[index]
         guard !kinds.isEmpty else { return }
         recordEvent = RecordEvent(exerciseName: name, kinds: kinds.sorted())
-    }
-
-    func remove(_ entry: WorkoutExercise) {
-        context?.delete(entry)
-        syncLockScreen()
     }
 
     /// Unchecked sets are drafts, not history: drop them so they never pollute previous-value lookups.

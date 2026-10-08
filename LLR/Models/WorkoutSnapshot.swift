@@ -42,6 +42,28 @@ struct WorkoutSnapshot: Equatable {
         let supersetGroup: Int?
         let sets: [SetCopy]
 
+        @MainActor
+        init(_ entry: WorkoutExercise) {
+            exercise = entry.exercise
+            order = entry.order
+            supersetGroup = entry.supersetGroup
+            sets = entry.orderedSets.map(SetCopy.init)
+        }
+
+        @MainActor
+        func insert(into workout: Workout, in context: ModelContext) {
+            let entry = WorkoutExercise(order: order)
+            context.insert(entry)
+            entry.exercise = exercise
+            entry.supersetGroup = supersetGroup
+            workout.exercises.append(entry)
+            for copy in sets {
+                let set = copy.make()
+                context.insert(set)
+                entry.sets.append(set)
+            }
+        }
+
         static func == (lhs: EntryCopy, rhs: EntryCopy) -> Bool {
             lhs.exercise?.persistentModelID == rhs.exercise?.persistentModelID
                 && lhs.order == rhs.order && lhs.supersetGroup == rhs.supersetGroup && lhs.sets == rhs.sets
@@ -60,12 +82,7 @@ struct WorkoutSnapshot: Equatable {
         notes = workout.notes
         startedAt = workout.startedAt
         endedAt = workout.endedAt
-        entries = workout.orderedExercises.map { entry in
-            EntryCopy(
-                exercise: entry.exercise, order: entry.order, supersetGroup: entry.supersetGroup,
-                sets: entry.orderedSets.map(SetCopy.init)
-            )
-        }
+        entries = workout.orderedExercises.map(EntryCopy.init)
     }
 
     @MainActor
@@ -78,17 +95,6 @@ struct WorkoutSnapshot: Equatable {
         let current = workout.exercises
         workout.exercises.removeAll()
         current.forEach(context.delete)
-        for copy in entries {
-            let entry = WorkoutExercise(order: copy.order)
-            context.insert(entry)
-            entry.exercise = copy.exercise
-            entry.supersetGroup = copy.supersetGroup
-            workout.exercises.append(entry)
-            for setCopy in copy.sets {
-                let set = setCopy.make()
-                context.insert(set)
-                entry.sets.append(set)
-            }
-        }
+        entries.forEach { $0.insert(into: workout, in: context) }
     }
 }

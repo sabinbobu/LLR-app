@@ -12,6 +12,8 @@ struct ExercisePickerView: View {
     @State private var picked: [UUID] = []
     @State private var creating = false
     @State private var inspecting: Exercise?
+    /// Picking a stand-in for one exercise: a tap replaces the choice instead of adding to it.
+    var single = false
     let onAdd: ([Exercise]) -> Void
 
     private var muscleOptions: [String] { Array(Set(exercises.map(\.muscleGroup))).sorted() }
@@ -78,7 +80,7 @@ struct ExercisePickerView: View {
             .background(Theme.background)
             .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search exercises")
             .safeAreaInset(edge: .bottom) { addBar }
-            .navigationTitle("Add Exercise")
+            .navigationTitle(single ? "Swap Exercise" : "Add Exercise")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -108,7 +110,7 @@ struct ExercisePickerView: View {
         HStack(alignment: .firstTextBaseline) {
             Text(title).font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
             Spacer()
-            if showsSelection && !picked.isEmpty {
+            if showsSelection && !picked.isEmpty && !single {
                 Text("\(picked.count) selected")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(Theme.accent)
@@ -153,7 +155,9 @@ struct ExercisePickerView: View {
             dismiss()
         } label: {
             if picked.isEmpty {
-                Text("Select exercises to add")
+                Text(single ? "Select an exercise" : "Select exercises to add")
+            } else if single {
+                Text("Swap")
             } else {
                 Text("Add ^[\(picked.count) exercise](inflect: true)")
             }
@@ -167,7 +171,9 @@ struct ExercisePickerView: View {
     }
 
     private func toggle(_ exercise: Exercise) {
-        if let index = picked.firstIndex(of: exercise.id) {
+        if single {
+            picked = picked == [exercise.id] ? [] : [exercise.id]
+        } else if let index = picked.firstIndex(of: exercise.id) {
             picked.remove(at: index)
         } else {
             picked.append(exercise.id)
