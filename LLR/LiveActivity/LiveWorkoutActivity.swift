@@ -70,7 +70,10 @@ enum LiveWorkoutActivity {
 
     private static func content(_ entry: WorkoutExercise) -> LiveWorkoutContent.Exercise {
         let sets = entry.orderedSets
-        return .init(name: entry.exercise?.name ?? "", sets: sets.map(\.value), completed: sets.map { $0.completedAt != nil })
+        return .init(
+            name: entry.exercise?.name ?? "", sets: sets.map(\.value),
+            completed: sets.map { $0.completedAt != nil }, supersetGroup: entry.supersetGroup
+        )
     }
 }
 

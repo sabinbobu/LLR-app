@@ -31,6 +31,8 @@ final class RoutineExercise {
     var notes: String
     /// nil = no automatic rest for this exercise (the routine default from the reference screens).
     var restSeconds: Int?
+    /// Carried into the workout it starts, so a routine saved from one keeps its supersets.
+    var supersetGroup: Int?
     @Relationship(deleteRule: .cascade, inverse: \RoutineSetPlan.routineExercise) var sets: [RoutineSetPlan] = []
 
     init(order: Int) {

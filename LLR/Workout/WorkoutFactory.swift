@@ -24,6 +24,7 @@ enum WorkoutFactory {
             let entry = WorkoutExercise(order: index)
             context.insert(entry)
             entry.exercise = exercise
+            entry.supersetGroup = sourceEntry.supersetGroup
             workout.exercises.append(entry)
             for (setIndex, sourceSet) in sourceEntry.completedSets.enumerated() {
                 let set = SetEntry(order: setIndex, weightKg: sourceSet.weightKg, reps: sourceSet.reps)
@@ -42,6 +43,7 @@ enum WorkoutFactory {
         let exercise: Exercise
         let restSeconds: Int?
         let sets: [PlannedSet]
+        var supersetGroup: Int? = nil
     }
 
     static func start(routine: Routine, in context: ModelContext) -> Workout {
@@ -52,7 +54,8 @@ enum WorkoutFactory {
                     restSeconds: entry.restSeconds,
                     sets: entry.orderedSets.map {
                         PlannedSet(weightKg: $0.weightKg, reps: $0.reps, kind: $0.kind, durationSeconds: $0.durationSeconds)
-                    }
+                    },
+                    supersetGroup: entry.supersetGroup
                 )
             }
         }
@@ -83,6 +86,7 @@ enum WorkoutFactory {
             let entry = WorkoutExercise(order: order)
             context.insert(entry)
             entry.exercise = exercise
+            entry.supersetGroup = planned.supersetGroup
             workout.exercises.append(entry)
             // Only a gym plan's rest becomes the exercise's shared default; a Kineto routine's
             // rest must never leak into the same exercise's gym rest timer.

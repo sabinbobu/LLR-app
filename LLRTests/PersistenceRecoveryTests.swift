@@ -62,6 +62,8 @@ final class PersistenceRecoveryTests: XCTestCase {
         let sets = try context.fetch(FetchDescriptor<SetEntry>(sortBy: [SortDescriptor(\.order)]))
         XCTAssertEqual(sets.map(\.weightKg), [100, 102.5, 105])
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<Routine>()), 1)
+        XCTAssertTrue(try context.fetch(FetchDescriptor<WorkoutExercise>()).allSatisfy { $0.supersetGroup == nil })
+        XCTAssertTrue(try context.fetch(FetchDescriptor<RoutineExercise>()).allSatisfy { $0.supersetGroup == nil })
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<FoodEntry>()), 0)
 
         let leftovers = try FileManager.default.contentsOfDirectory(atPath: dir.path())

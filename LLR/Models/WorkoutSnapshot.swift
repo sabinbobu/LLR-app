@@ -19,11 +19,12 @@ struct WorkoutSnapshot: Equatable {
     struct EntryCopy: Equatable {
         let exercise: Exercise?
         let order: Int
+        let supersetGroup: Int?
         let sets: [SetCopy]
 
         static func == (lhs: EntryCopy, rhs: EntryCopy) -> Bool {
             lhs.exercise?.persistentModelID == rhs.exercise?.persistentModelID
-                && lhs.order == rhs.order && lhs.sets == rhs.sets
+                && lhs.order == rhs.order && lhs.supersetGroup == rhs.supersetGroup && lhs.sets == rhs.sets
         }
     }
 
@@ -40,7 +41,7 @@ struct WorkoutSnapshot: Equatable {
         startedAt = workout.startedAt
         endedAt = workout.endedAt
         entries = workout.orderedExercises.map { entry in
-            EntryCopy(exercise: entry.exercise, order: entry.order, sets: entry.orderedSets.map {
+            EntryCopy(exercise: entry.exercise, order: entry.order, supersetGroup: entry.supersetGroup, sets: entry.orderedSets.map {
                 SetCopy(
                     order: $0.order, weightKg: $0.weightKg, reps: $0.reps, kindRaw: $0.kindRaw,
                     durationSeconds: $0.durationSeconds, completedAt: $0.completedAt, rir: $0.rir
@@ -63,6 +64,7 @@ struct WorkoutSnapshot: Equatable {
             let entry = WorkoutExercise(order: copy.order)
             context.insert(entry)
             entry.exercise = copy.exercise
+            entry.supersetGroup = copy.supersetGroup
             workout.exercises.append(entry)
             for setCopy in copy.sets {
                 let set = SetEntry(order: setCopy.order, weightKg: setCopy.weightKg, reps: setCopy.reps)
