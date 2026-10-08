@@ -54,7 +54,7 @@ struct WeeklyVolumeView: View {
                 } footer: {
                     if hardOnly {
                         let coverage = WeeklyVolume.coverage(entries, week: week)
-                        Text("Counting sets rated \(hardRule). \(coverage.rated) of \(coverage.total) working sets this week have a rating; the rest are left out.")
+                        Text("Counting sets rated \(hardRule). \(coverage.rated) of \(coverage.total) working sets this week have a rating.\(coverage.rated < coverage.total ? " Unrated sets are left out." : "")")
                     }
                 }
             }

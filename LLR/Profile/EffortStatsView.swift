@@ -36,22 +36,17 @@ struct EffortStatsView: View {
                 Text("No rated sets in this period").foregroundStyle(.secondary)
             } else {
                 headline(summary)
+                // Notes are rows, not section footers: a plain list draws a footer at body size.
                 if weeks.count > 1 {
-                    Section {
+                    Section("Week by week") {
                         chart(weeks)
-                    } header: {
-                        Text("Week by week")
-                    } footer: {
-                        Text("Higher on the chart is harder.")
+                        note("Higher on the chart is harder.")
                     }
                 }
-                Section {
+                Section("Where the sets land") {
                     let most = max(buckets.map(\.count).max() ?? 1, 1)
                     ForEach(buckets) { bucketRow($0, most: most) }
-                } header: {
-                    Text("Where the sets land")
-                } footer: {
-                    Text("Most working sets belong close to failure, not at it. An average hides the spread: half at the floor and half at the top still reads as a healthy middle.")
+                    note("Most working sets belong close to failure, not at it. An average hides the spread: half at the floor and half at the top still reads as a healthy middle.")
                 }
             }
         }
@@ -86,6 +81,13 @@ struct EffortStatsView: View {
         .listRowSeparator(.hidden)
     }
 
+    private func note(_ text: String) -> some View {
+        Text(text)
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+    }
+
     private func value(_ rir: Double) -> Double { scale == .rpe ? 10 - rir : rir }
 
     private func chart(_ weeks: [EffortStats.Week]) -> some View {
@@ -98,6 +100,7 @@ struct EffortStatsView: View {
         .foregroundStyle(Theme.accent)
         .frame(height: 160)
         .padding(.vertical, 8)
+        .listRowSeparator(.hidden)
     }
 
     /// Buckets run hardest first in both scales: RIR 0 and RPE 10 are the same set.
