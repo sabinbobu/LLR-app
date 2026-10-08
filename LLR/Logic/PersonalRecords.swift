@@ -20,7 +20,7 @@ enum PersonalRecords {
     static func metric(_ kind: Kind, _ set: SetValue) -> Double {
         switch kind {
         case .weight: set.weightKg
-        case .oneRepMax: OneRepMax.epley(set)
+        case .oneRepMax: OneRepMax.estimate(set)
         case .setVolume: set.weightKg * Double(set.reps)
         }
     }

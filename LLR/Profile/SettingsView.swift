@@ -5,6 +5,7 @@ struct SettingsView: View {
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
     @AppStorage(StorageKey.restSeconds) private var restSeconds = 90
     @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
+    @AppStorage(StorageKey.oneRepMaxFormula) private var formula: OneRepMax.Formula = .epley
     @AppStorage(StorageKey.barKg) private var barKg = PlateCalculator.defaultBar(for: .kg)
     @AppStorage(StorageKey.barLbs) private var barLbs = PlateCalculator.defaultBar(for: .lbs)
 
@@ -32,6 +33,15 @@ struct SettingsView: View {
                     Text("Effort")
                 } footer: {
                     Text("Adds an optional column to each set. RIR is reps in reserve: how many more you could have done. RPE is the same rating on a 10-point scale, so RPE 8 is 2 in reserve.")
+                }
+                Section {
+                    Picker("Formula", selection: $formula) {
+                        ForEach(OneRepMax.Formula.allCases) { Text($0.title).tag($0) }
+                    }
+                } header: {
+                    Text("Estimated One Rep Max")
+                } footer: {
+                    Text("Used for records, progress charts and Structural Balance. Sets above \(OneRepMax.repCap) reps get no estimate: past that the formulas disagree too much to trust.")
                 }
                 Section("Plate Calculator") {
                     Stepper(value: bar, in: 0...60, step: unit == .kg ? 2.5 : 5) {

@@ -36,10 +36,13 @@ extension ExerciseProgress {
         }
     }
 
-    static func series(_ sessions: [Session], metric: Metric, assisted: Bool = false) -> [Point] {
-        points(sessions) { sets in
+    static func series(
+        _ sessions: [Session], metric: Metric, assisted: Bool = false, formula: OneRepMax.Formula = .stored
+    ) -> [Point] {
+        if metric == .oneRepMax { return oneRepMaxSeries(sessions, formula: formula) }
+        return points(sessions) { sets in
             switch metric {
-            case .oneRepMax: return sets.map(OneRepMax.epley).max()
+            case .oneRepMax: return nil
             // 0 on an assisted machine is a set with no load typed in, not an unassisted rep.
             case .topSet where assisted: return sets.map(\.weightKg).filter { $0 > 0 }.min()
             case .topSet: return sets.map(\.weightKg).max()
@@ -51,8 +54,8 @@ extension ExerciseProgress {
         }
     }
 
-    static func bestSet(in sessions: [Session], assisted: Bool) -> SetValue? {
-        guard assisted else { return bestSet(in: sessions) }
+    static func bestSet(in sessions: [Session], assisted: Bool, formula: OneRepMax.Formula = .stored) -> SetValue? {
+        guard assisted else { return bestSet(in: sessions, formula: formula) }
         return working(sessions).flatMap(\.sets)
             .filter { $0.weightKg > 0 && $0.reps > 0 }
             .min { a, b in a.weightKg == b.weightKg ? a.reps > b.reps : a.weightKg < b.weightKg }

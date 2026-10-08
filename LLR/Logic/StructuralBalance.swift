@@ -78,7 +78,7 @@ enum StructuralBalance {
             for set in history[exercise] ?? [] where set.kind.countsTowardProgress && set.durationSeconds == nil {
                 guard let moved = movedKg(set, exercise: exercise, includesBodyweight: lift.includesBodyweight, bodyweightKg: bodyweightKg)
                 else { continue }
-                let estimate = OneRepMax.epley(weightKg: moved, reps: set.reps)
+                let estimate = OneRepMax.estimate(weightKg: moved, reps: set.reps)
                 if estimate > (best?.kg ?? 0) { best = (estimate, exercise) }
             }
         }

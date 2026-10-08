@@ -46,9 +46,11 @@ struct WorkoutDetailView: View {
             trailing = nil
         } else {
             detail = "\(unit.format(kg: row.set.weightKg)) \(unit.rawValue) × \(row.set.reps)"
-            let oneRepMax = "1RM \(unit.format(kg: OneRepMax.epley(row.set.value)))"
+            // No estimate for a bodyweight set or one past the rep cap, so nothing to print for it.
+            let estimate = OneRepMax.estimate(row.set.value)
+            let oneRepMax = estimate > 0 ? "1RM \(unit.format(kg: estimate))" : nil
             if let rir = row.set.rir, effortScale != .off {
-                trailing = "\(effortScale.title) \(Effort.text(rir: rir, scale: effortScale)) · \(oneRepMax)"
+                trailing = ["\(effortScale.title) \(Effort.text(rir: rir, scale: effortScale))", oneRepMax].compactMap { $0 }.joined(separator: " · ")
             } else {
                 trailing = oneRepMax
             }

@@ -16,13 +16,43 @@ struct Session: Equatable {
 }
 
 enum OneRepMax {
+    /// The usual submaximal estimators. They agree closely at low reps and drift apart as reps rise.
+    enum Formula: String, CaseIterable, Identifiable {
+        case epley, brzycki, lombardi
+
+        var id: String { rawValue }
+        var title: String { rawValue.capitalized }
+
+        /// For code outside views, which can't use @AppStorage.
+        static var stored: Formula {
+            UserDefaults.standard.string(forKey: StorageKey.oneRepMaxFormula).flatMap(Formula.init(rawValue:)) ?? .epley
+        }
+    }
+
+    /// Past this many reps a set says more about work capacity than about maximal strength, and
+    /// the formulas disagree by double digits: no estimate beats a made-up one.
+    static let repCap = 12
+
     static func epley(weightKg: Double, reps: Int) -> Double {
         guard weightKg > 0, reps > 0 else { return 0 }
         // Epley inflates a single by 3.3%; a 1-rep set already is the max.
         return reps == 1 ? weightKg : weightKg * (1 + Double(reps) / 30)
     }
 
-    static func epley(_ set: SetValue) -> Double { epley(weightKg: set.weightKg, reps: set.reps) }
+    /// 0 when there is nothing honest to say: no load, no reps, or more reps than `repCap`.
+    static func estimate(weightKg: Double, reps: Int, formula: Formula = .stored) -> Double {
+        guard weightKg > 0, reps > 0, reps <= repCap else { return 0 }
+        guard reps > 1 else { return weightKg }
+        switch formula {
+        case .epley: return epley(weightKg: weightKg, reps: reps)
+        case .brzycki: return weightKg * 36 / (37 - Double(reps))
+        case .lombardi: return weightKg * pow(Double(reps), 0.1)
+        }
+    }
+
+    static func estimate(_ set: SetValue, formula: Formula = .stored) -> Double {
+        estimate(weightKg: set.weightKg, reps: set.reps, formula: formula)
+    }
 }
 
 enum PreviousPerformance {
@@ -47,18 +77,21 @@ enum ExerciseProgress {
         let value: Double
     }
 
-    static func bestSet(in sessions: [Session]) -> SetValue? {
-        sessions.flatMap(\.sets)
-            .filter { $0.kind.countsTowardProgress && OneRepMax.epley($0) > 0 }
-            .max { a, b in
-                let ea = OneRepMax.epley(a), eb = OneRepMax.epley(b)
-                // Tolerance: 100×3 and 110×1 are equal on paper but differ in the last float bit.
-                return abs(ea - eb) < 1e-6 ? a.weightKg < b.weightKg : ea < eb
-            }
+    static func bestSet(in sessions: [Session], formula: OneRepMax.Formula = .stored) -> SetValue? {
+        let sets = sessions.flatMap(\.sets).filter { $0.kind.countsTowardProgress && $0.weightKg > 0 && $0.reps > 0 }
+        let estimable = sets.filter { OneRepMax.estimate($0, formula: formula) > 0 }
+        // Only high-rep work logged: nothing to rank an estimate by, so the heaviest set stands in.
+        guard !estimable.isEmpty else { return sets.max { ($0.weightKg, $0.reps) < ($1.weightKg, $1.reps) } }
+        return estimable.max { a, b in
+            let ea = OneRepMax.estimate(a, formula: formula), eb = OneRepMax.estimate(b, formula: formula)
+            // Tolerance: 100×3 and 110×1 are equal on paper but differ in the last float bit.
+            return abs(ea - eb) < 1e-6 ? a.weightKg < b.weightKg : ea < eb
+        }
     }
 
-    static func oneRepMaxSeries(_ sessions: [Session]) -> [Point] {
-        points(sessions) { $0.map(OneRepMax.epley).max() }
+    /// A session with no set inside the rep cap has no estimate and is left off the chart.
+    static func oneRepMaxSeries(_ sessions: [Session], formula: OneRepMax.Formula = .stored) -> [Point] {
+        points(sessions) { $0.map { OneRepMax.estimate($0, formula: formula) }.filter { $0 > 0 }.max() }
     }
 
     static func heaviestWeightSeries(_ sessions: [Session]) -> [Point] {
