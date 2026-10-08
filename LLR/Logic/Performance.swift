@@ -6,6 +6,8 @@ struct SetValue: Equatable {
     var kind: SetKind = .normal
     /// Hold duration for a duration-based set (reps × seconds); nil = an ordinary weight/reps set.
     var durationSeconds: Int? = nil
+    /// Reps in reserve; nil = not rated. Never prefilled: a set that hasn't happened has no effort yet.
+    var rir: Double? = nil
 }
 
 struct Session: Equatable {
@@ -56,18 +58,24 @@ enum ExerciseProgress {
     }
 
     static func oneRepMaxSeries(_ sessions: [Session]) -> [Point] {
-        series(sessions) { $0.map(OneRepMax.epley).max() ?? 0 }
+        points(sessions) { $0.map(OneRepMax.epley).max() }
     }
 
     static func heaviestWeightSeries(_ sessions: [Session]) -> [Point] {
-        series(sessions) { $0.map(\.weightKg).max() ?? 0 }
+        points(sessions) { $0.map(\.weightKg).max() }
     }
 
-    private static func series(_ sessions: [Session], metric: ([SetValue]) -> Double) -> [Point] {
+    /// Oldest first, working sets only. A session `value` has nothing to say about is left out
+    /// rather than plotted as zero.
+    static func points(_ sessions: [Session], value: ([SetValue]) -> Double?) -> [Point] {
+        working(sessions)
+            .sorted { $0.date < $1.date }
+            .compactMap { session in value(session.sets).map { Point(date: session.date, value: $0) } }
+    }
+
+    static func working(_ sessions: [Session]) -> [Session] {
         sessions
             .map { Session(date: $0.date, sets: $0.sets.filter(\.kind.countsTowardProgress)) }
             .filter { !$0.sets.isEmpty }
-            .sorted { $0.date < $1.date }
-            .map { Point(date: $0.date, value: metric($0.sets)) }
     }
 }
