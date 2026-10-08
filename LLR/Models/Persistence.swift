@@ -1,19 +1,48 @@
+import Foundation
 import SwiftData
 
 /// One container per process: the UI and Lock Screen intents (which can run with no window open)
 /// must write to the same store and see each other's changes.
 @MainActor
 enum Persistence {
-    static let container: ModelContainer = {
+    static let container: ModelContainer = open(ModelConfiguration())
+
+    private static func make(_ configuration: ModelConfiguration) throws -> ModelContainer {
+        try ModelContainer(
+            for: Exercise.self, Workout.self, WorkoutExercise.self, SetEntry.self,
+            Routine.self, RoutineExercise.self, RoutineSetPlan.self,
+            BodyMeasurement.self, ProgressPhoto.self, FoodEntry.self, ExerciseMedia.self,
+            configurations: configuration
+        )
+    }
+
+    /// A store that won't open must not brick the app on every launch. The unreadable files are set
+    /// aside (not deleted) so history can still be recovered by hand, and the app starts empty.
+    static func open(_ configuration: ModelConfiguration) -> ModelContainer {
         do {
-            return try ModelContainer(
-                for: Exercise.self, Workout.self, WorkoutExercise.self, SetEntry.self,
-                Routine.self, RoutineExercise.self, RoutineSetPlan.self,
-                BodyMeasurement.self, ProgressPhoto.self, FoodEntry.self, ExerciseMedia.self
-            )
+            return try make(configuration)
         } catch {
-            // Without the store there is nothing to show; failing loudly beats silently losing history.
-            fatalError("SwiftData store failed to open: \(error)")
+            print("SwiftData store failed to open, setting it aside: \(error)")
+            quarantine(configuration.url)
         }
-    }()
+        do {
+            return try make(configuration)
+        } catch {
+            // Last resort so the app still launches; nothing written this run will persist.
+            do {
+                return try make(ModelConfiguration(isStoredInMemoryOnly: true))
+            } catch {
+                fatalError("SwiftData could not create even an in-memory store: \(error)")
+            }
+        }
+    }
+
+    static func quarantine(_ storeURL: URL) {
+        let stamp = Int(Date.now.timeIntervalSince1970)
+        for suffix in ["", "-wal", "-shm"] {
+            let source = URL(fileURLWithPath: storeURL.path() + suffix)
+            let target = URL(fileURLWithPath: storeURL.path() + suffix + ".corrupt-\(stamp)")
+            try? FileManager.default.moveItem(at: source, to: target)
+        }
+    }
 }

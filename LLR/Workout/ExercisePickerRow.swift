@@ -14,9 +14,15 @@ struct ExercisePickerRow: View {
                 HStack(spacing: 12) {
                     ExerciseIconTile(size: 40)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(exercise.name)
-                            .font(.callout.weight(.medium))
-                            .foregroundStyle(.primary)
+                        HStack(spacing: 4) {
+                            Text(exercise.name)
+                                .font(.callout.weight(.medium))
+                                .foregroundStyle(.primary)
+                            if exercise.isFavourite {
+                                Image(systemName: "star.fill").font(.caption).foregroundStyle(.yellow)
+                                    .accessibilityLabel("Favourite")
+                            }
+                        }
                         Text(exercise.isCustom ? "\(exercise.detail) · Custom" : exercise.detail)
                             .font(.footnote)
                             .foregroundStyle(.secondary)

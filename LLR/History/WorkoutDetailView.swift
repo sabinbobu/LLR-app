@@ -91,6 +91,10 @@ struct WorkoutDetailView: View {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
+            ShareLink(item: workout.plainText(unit: unit)) {
+                Image(systemName: "doc.on.doc")
+            }
+            .accessibilityLabel("Share workout as text")
             Button("Edit") { editing = true }
             Button(role: .destructive) {
                 confirmDelete = true

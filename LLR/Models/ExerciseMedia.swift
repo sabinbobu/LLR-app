@@ -32,11 +32,13 @@ extension ExerciseMedia {
 extension Exercise {
     var mediaItems: [ExerciseMediaItem] { media.sorted { $0.createdAt < $1.createdAt }.map(\.item) }
 
-    /// Makes `media` match `items`, which an editor built up: dropped rows lose their files too.
+    /// Makes `media` match `items`, which an editor built up: dropped rows lose their files too, but
+    /// only once the change is saved, so a failed save can't leave rows pointing at deleted files.
     func syncMedia(to items: [ExerciseMediaItem], in context: ModelContext) {
         let wanted = Set(items.map(\.fileName))
+        var droppedFiles: [String] = []
         for row in media where !wanted.contains(row.fileName) {
-            ExerciseMediaStore.delete(row.fileName)
+            droppedFiles.append(row.fileName)
             context.delete(row)
         }
         let existing = Set(media.map(\.fileName))
@@ -46,14 +48,43 @@ extension Exercise {
             context.insert(row)
             row.exercise = self
         }
+        if (try? context.save()) != nil {
+            for file in droppedFiles { ExerciseMediaStore.delete(file) }
+        }
     }
 }
 
-extension ExerciseMediaStore {
-    /// On Cancel: files an editor wrote for items added this session, which nothing will reference.
-    static func discard(_ items: [ExerciseMediaItem], keeping kept: [ExerciseMediaItem]) {
-        let keep = Set(kept)
-        for item in items where !keep.contains(item) { delete(item.fileName) }
+/// Every file an editor wrote this session. An item can be added and removed again before Save, so
+/// the draft alone can't say which files are garbage; this ledger can. Once closed, a late-finishing
+/// import (the editor dismissed mid-copy) deletes its own file instead of leaking it.
+final class ExerciseMediaSession {
+    private let root: URL
+    private var written: [ExerciseMediaItem] = []
+    private var closed = false
+
+    init(root: URL = ExerciseMediaStore.defaultRoot) { self.root = root }
+
+    var hasWritten: Bool { !written.isEmpty }
+
+    func record(_ item: ExerciseMediaItem) {
+        if closed {
+            ExerciseMediaStore.delete(item.fileName, root: root)
+        } else {
+            written.append(item)
+        }
+    }
+
+    /// Cancel: nothing written this session will ever be referenced.
+    func cancel() { close(keeping: []) }
+
+    /// Save: keep what the draft still holds, drop the rest.
+    func commit(keeping items: [ExerciseMediaItem]) { close(keeping: items) }
+
+    private func close(keeping items: [ExerciseMediaItem]) {
+        guard !closed else { return }
+        closed = true
+        let keep = Set(items)
+        for item in written where !keep.contains(item) { ExerciseMediaStore.delete(item.fileName, root: root) }
     }
 }
 

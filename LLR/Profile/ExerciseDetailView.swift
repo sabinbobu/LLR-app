@@ -48,6 +48,14 @@ struct ExerciseDetailView: View {
                     Button("Done") { dismiss() }
                 }
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    exercise.isFavourite.toggle()
+                } label: {
+                    Image(systemName: exercise.isFavourite ? "star.fill" : "star")
+                }
+                .accessibilityLabel(exercise.isFavourite ? "Remove from favourites" : "Add to favourites")
+            }
             if exercise.isCustom {
                 ToolbarItem(placement: .primaryAction) { Button("Edit") { editing = true } }
             }

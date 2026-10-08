@@ -42,13 +42,19 @@ enum ExerciseMediaStore {
         guard let session = AVAssetExportSession(asset: AVURLAsset(url: source), presetName: AVAssetExportPreset1280x720) else {
             throw StoreError.exportFailed
         }
-        if #available(iOS 18, *) {
-            try await session.export(to: destination, as: .mp4)
-        } else {
-            session.outputURL = destination
-            session.outputFileType = .mp4
-            await session.export()
-            guard session.status == .completed else { throw session.error ?? StoreError.exportFailed }
+        do {
+            if #available(iOS 18, *) {
+                try await session.export(to: destination, as: .mp4)
+            } else {
+                session.outputURL = destination
+                session.outputFileType = .mp4
+                await session.export()
+                guard session.status == .completed else { throw session.error ?? StoreError.exportFailed }
+            }
+        } catch {
+            // A failed export can leave a partial file that no row will ever point at.
+            try? FileManager.default.removeItem(at: destination)
+            throw error
         }
         return item
     }

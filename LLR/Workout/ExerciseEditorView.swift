@@ -9,6 +9,7 @@ struct ExerciseEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var exercises: [Exercise]
     @State private var draft: CustomExerciseDraft
+    @State private var mediaSession = ExerciseMediaSession()
     private let original: CustomExerciseDraft
     private let editing: Exercise?
     let onSave: (Exercise) -> Void
@@ -55,12 +56,12 @@ struct ExerciseEditorView: View {
                     KinetoSourcesSection(sources: $draft.kinetoSources)
                 }
                 Section("Photos & videos") {
-                    ExerciseMediaSection(items: $draft.media, editable: true)
+                    ExerciseMediaSection(items: $draft.media, editable: true, session: mediaSession)
                 }
             }
             .navigationTitle(editing == nil ? "New Exercise" : "Edit Exercise")
             .navigationBarTitleDisplayMode(.inline)
-            .interactiveDismissDisabled(draft != original)
+            .interactiveDismissDisabled(draft != original || mediaSession.hasWritten)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel", action: cancel) }
                 ToolbarItem(placement: .confirmationAction) {
@@ -71,7 +72,7 @@ struct ExerciseEditorView: View {
     }
 
     private func cancel() {
-        ExerciseMediaStore.discard(draft.media, keeping: original.media)
+        mediaSession.cancel()
         dismiss()
     }
 
@@ -80,6 +81,7 @@ struct ExerciseEditorView: View {
         if editing == nil { context.insert(exercise) }
         draft.apply(to: exercise)
         exercise.syncMedia(to: draft.media, in: context)
+        mediaSession.commit(keeping: draft.media)
         dismiss()
         onSave(exercise)
     }
