@@ -6,6 +6,7 @@ struct SetRowView: View {
     let entry: SetEntry
     let label: String
     let unit: WeightUnit
+    var effortScale: EffortScale = .off
     let isStriped: Bool
     let isRecord: Bool
     let onToggle: () -> Bool
@@ -45,6 +46,9 @@ struct SetRowView: View {
             TextField(entry.reps > 0 ? "\(entry.reps)" : "-", text: $repsText)
                 .keyboardType(.numberPad)
                 .frame(maxWidth: .infinity)
+            if effortScale != .off {
+                EffortChip(rir: Binding(get: { entry.rir }, set: { entry.rir = $0 }), scale: effortScale)
+            }
             Button {
                 if onToggle() {
                     if isDone { fillTextFromModel() }

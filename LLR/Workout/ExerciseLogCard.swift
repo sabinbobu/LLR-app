@@ -4,6 +4,7 @@ struct ExerciseLogCard: View {
     let entry: WorkoutExercise
     let model: ActiveWorkoutModel
     let unit: WeightUnit
+    @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
     @State private var plateTargetKg: Double?
     @State private var showingDetails = false
 
@@ -65,6 +66,7 @@ struct ExerciseLogCard: View {
                             entry: set,
                             label: labels[index],
                             unit: unit,
+                            effortScale: effortScale,
                             isStriped: index.isMultiple(of: 2),
                             isRecord: !records[index].isEmpty
                         ) {
@@ -155,6 +157,9 @@ struct ExerciseLogCard: View {
             } else {
                 Text(unit.rawValue.uppercased()).frame(maxWidth: .infinity)
                 Text("REPS").frame(maxWidth: .infinity)
+                if effortScale != .off {
+                    Text(effortScale.title).frame(width: EffortChip.width)
+                }
             }
             Image(systemName: "checkmark").frame(width: 64)
         }

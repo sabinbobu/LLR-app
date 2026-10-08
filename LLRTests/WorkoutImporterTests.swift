@@ -68,6 +68,24 @@ final class WorkoutImporterTests: XCTestCase {
         XCTAssertEqual(reparsed.workouts, original.workouts)
     }
 
+    func testEffortSurvivesImportAndExportAsRPE() throws {
+        let context = try makeContext()
+        let text = """
+        Date,Workout Name,Duration,Exercise Name,Set Order,Weight,Reps,Distance,Seconds,Notes,Workout Notes,RPE
+        2021-01-02 09:00:00,"Push",45m,"Bench Press (Barbell)",1,80.0,8,0,0,,,8.5
+        2021-01-02 09:00:00,"Push",45m,"Bench Press (Barbell)",2,80.0,7,0,0,,,10
+        2021-01-02 09:00:00,"Push",45m,"Bench Press (Barbell)",3,80.0,6,0,0,,,
+        """
+        _ = WorkoutImporter.apply(try WorkoutCSV.parse(text, strongUnit: .kg), into: context)
+        let workout = try XCTUnwrap(context.fetch(FetchDescriptor<Workout>()).first)
+        XCTAssertEqual(workout.orderedExercises.first?.orderedSets.map(\.rir), [1.5, 0, nil])
+
+        let csv = WorkoutExport.strongCSV([workout], unit: .kg)
+        let rpeColumn = CSV.parse(csv, delimiter: ",").dropFirst().map { $0.last ?? "" }
+        XCTAssertEqual(Array(rpeColumn), ["8.5", "10", ""])
+        XCTAssertEqual(try WorkoutCSV.parse(csv, strongUnit: .kg).workouts, try WorkoutCSV.parse(text, strongUnit: .kg).workouts)
+    }
+
     func testExportRoundTripsDurationSets() throws {
         let context = try makeContext()
         let text = """

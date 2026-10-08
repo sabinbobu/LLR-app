@@ -27,7 +27,7 @@ final class WorkoutCSVTests: XCTestCase {
         XCTAssertEqual(workout.exercises.map(\.name), ["Bench Press (Barbell)", "Push Up"])
         XCTAssertEqual(workout.exercises[0].sets, [
             ImportedSet(weightKg: 40, reps: 10, kind: .warmup),
-            ImportedSet(weightKg: 80, reps: 8, kind: .normal),
+            ImportedSet(weightKg: 80, reps: 8, kind: .normal, rir: 2),
             ImportedSet(weightKg: 60, reps: 12, kind: .drop),
         ])
         XCTAssertEqual(workout.exercises[1].sets, [ImportedSet(weightKg: 0, reps: 25, kind: .failure)])
