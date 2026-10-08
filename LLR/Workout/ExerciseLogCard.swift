@@ -8,6 +8,7 @@ struct ExerciseLogCard: View {
     @State private var plateTargetKg: Double?
     @State private var showingDetails = false
     @State private var editingNote = false
+    @State private var swapping = false
 
     private var showingPlates: Binding<Bool> {
         Binding(get: { plateTargetKg != nil }, set: { if !$0 { plateTargetKg = nil } })
@@ -27,6 +28,16 @@ struct ExerciseLogCard: View {
                     if let exercise = entry.exercise {
                         Button("Exercise Details", systemImage: "info.circle") { showingDetails = true }
                         Button(exercise.personalNotes.isEmpty ? "Add Note" : "Edit Note", systemImage: "note.text") { editingNote = true }
+                    }
+                    // Kineto picks come with a dose level, so a plain swap doesn't fit there.
+                    if model.workout.section == .gym {
+                        Button("Swap Exercise", systemImage: "arrow.triangle.2.circlepath") { swapping = true }
+                    }
+                    if model.canMove(entry, by: -1) {
+                        Button("Move Up", systemImage: "arrow.up") { model.move(entry, by: -1) }
+                    }
+                    if model.canMove(entry, by: 1) {
+                        Button("Move Down", systemImage: "arrow.down") { model.move(entry, by: 1) }
                     }
                     if model.canPairWithNext(entry) {
                         Button("Superset with Next", systemImage: "link") { model.pairWithNext(entry) }
@@ -128,6 +139,11 @@ struct ExerciseLogCard: View {
         }
         .sheet(isPresented: showingPlates) {
             PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
+        }
+        .sheet(isPresented: $swapping) {
+            ExercisePickerView(single: true) { picked in
+                if let exercise = picked.first { model.swap(entry, to: exercise) }
+            }
         }
         .sheet(isPresented: $editingNote) {
             if let exercise = entry.exercise { ExerciseNoteEditor(exercise: exercise) }
