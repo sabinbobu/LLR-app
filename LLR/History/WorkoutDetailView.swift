@@ -10,6 +10,13 @@ struct WorkoutDetailView: View {
     @State private var confirmDelete = false
     @State private var editing = false
     @State private var showingShare = false
+    // Section-agnostic, as on the Workout tab: only one workout can be in progress at a time.
+    @Query(filter: #Predicate<Workout> { $0.endedAt == nil }) private var unfinished: [Workout]
+    @State private var repeating: Workout?
+    @State private var savedRoutine: Routine?
+    /// Set once the active-workout cover dismisses so the summary sheet doesn't fight it for presentation.
+    @State private var justFinished: Workout?
+    @State private var pendingSummary: Workout?
 
     // Precomputed rows keep `body` cheap to type-check; the inline version took 11s per build.
     private struct Row: Identifiable {
@@ -102,13 +109,33 @@ struct WorkoutDetailView: View {
             }
             .accessibilityLabel("Share workout as text")
             Button("Edit") { editing = true }
-            Button(role: .destructive) {
-                confirmDelete = true
+            Menu {
+                // Gym only: a Kineto session starts through its own pain check-in.
+                if workout.section == .gym {
+                    Button("Repeat Workout", systemImage: "arrow.clockwise") {
+                        repeating = WorkoutFactory.start(copying: workout, in: context)
+                    }
+                    .disabled(!unfinished.isEmpty)
+                    Button("Save as Routine", systemImage: "list.clipboard") {
+                        savedRoutine = RoutineFactory.save(workout, in: context)
+                    }
+                }
+                Button("Delete Workout", systemImage: "trash", role: .destructive) { confirmDelete = true }
             } label: {
-                Image(systemName: "trash")
+                Image(systemName: "ellipsis.circle")
             }
+            .accessibilityLabel("More")
         }
         .fullScreenCover(isPresented: $editing) { WorkoutEditorView(workout: workout) }
+        .fullScreenCover(item: $repeating, onDismiss: {
+            justFinished = pendingSummary
+            pendingSummary = nil
+        }) { started in
+            ActiveWorkoutView(workout: started) { pendingSummary = $0 }
+        }
+        .sheet(item: $justFinished) { WorkoutSummaryView(workout: $0) }
+        // Opens the new routine straight away, so it can be renamed or trimmed while it's in mind.
+        .sheet(item: $savedRoutine) { RoutineBuilderView(routine: $0) }
         .sheet(isPresented: $showingShare) {
             WorkoutShareCard(workout: workout, recap: WorkoutRecap(workout), unit: unit)
                 .presentationDetents([.medium])

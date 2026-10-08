@@ -40,6 +40,7 @@
 		21D94760F55B1C0FA3B5F3C2 /* FuelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAFCCD3BE62B71FE625EF40 /* FuelView.swift */; };
 		21E683724C9D600A4B3CE167 /* SetTableMockup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972A8FFFE72EDD7A5F6104D3 /* SetTableMockup.swift */; };
 		23B052374F557054913E8CF5 /* WelcomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10648D56488D04F84A936C1C /* WelcomePage.swift */; };
+		24F41C94134E8BDC534057D1 /* RoutineFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7029B4D92D34FC0F9BC4A3 /* RoutineFactoryTests.swift */; };
 		26481B65A74A942CC37E08ED /* EffortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DD90A8AA07D382F8FE0FB9 /* EffortTests.swift */; };
 		26BFFABD99BC34DB21F80007 /* ProfileDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8B76C156977A0C6025D21 /* ProfileDetailsView.swift */; };
 		26FC68A6521694500C3E32B9 /* DailyNutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA634C045BA1EDA95AEC78A6 /* DailyNutrition.swift */; };
@@ -129,6 +130,7 @@
 		7A8DEC59F284D1FF701D6DF8 /* ImageDownscale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5341E70C1FC5F4DF95A7E9F5 /* ImageDownscale.swift */; };
 		7B2189D24AFA1034951C4022 /* RestDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502FE595D319115C1412C00C /* RestDuration.swift */; };
 		7BBE000D02094C1D27D8BE0C /* PillToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA84B87E12BB1DBE43ADFC0 /* PillToggle.swift */; };
+		7C9F15069442234634C62CE5 /* RoutineFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D7899107A55596E8BDF4E6 /* RoutineFactory.swift */; };
 		7CBE9B69CD3C8EEDE807F1A2 /* BarbellDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7518BD4ABE67368A989FC6D /* BarbellDiagram.swift */; };
 		7D94FE480FB4B12154C6044D /* WeeklyStatsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78A816BA7B5E9BC27961DA4 /* WeeklyStatsCard.swift */; };
 		7E43E70DE69E2DA4A122947E /* RoutineLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729414FC312446058AB87655 /* RoutineLibraryTests.swift */; };
@@ -358,6 +360,7 @@
 		3DD2037E54A50251B6156DF8 /* MeasurementKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementKind.swift; sourceTree = "<group>"; };
 		3DE0895383468C057E349997 /* ExerciseMediaSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseMediaSection.swift; sourceTree = "<group>"; };
 		3DEB96AF13D786549621F252 /* PersistenceRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceRecoveryTests.swift; sourceTree = "<group>"; };
+		3E7029B4D92D34FC0F9BC4A3 /* RoutineFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFactoryTests.swift; sourceTree = "<group>"; };
 		3F2A79EF1A639365EE0917CC /* WeeklyVolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyVolumeView.swift; sourceTree = "<group>"; };
 		41E408B9E28A8B49459C7CD8 /* body_map.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = body_map.json; sourceTree = "<group>"; };
 		42C2C948D95A0F3AD9A2E607 /* BirthdayStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStep.swift; sourceTree = "<group>"; };
@@ -393,6 +396,7 @@
 		614753E0B004FE8A7CEFF05D /* PlateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateCalculator.swift; sourceTree = "<group>"; };
 		629E02FBC06F91341928A52C /* LLR.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LLR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63008AC997A76538CFCF76F9 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		63D7899107A55596E8BDF4E6 /* RoutineFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFactory.swift; sourceTree = "<group>"; };
 		656BA6DBB503A08BDC0371A9 /* MuscleExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleExplorerView.swift; sourceTree = "<group>"; };
 		68213B36329B451A5B73301B /* ExerciseLogCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLogCard.swift; sourceTree = "<group>"; };
 		693866EEC13D1BFD9124BE28 /* BodyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyMapView.swift; sourceTree = "<group>"; };
@@ -708,6 +712,7 @@
 				C47936F2755ED13B32885913 /* RestTimerBar.swift */,
 				32818D7795BF4B2537F9AAC2 /* RoutineBuilderView.swift */,
 				588044D9F14AB050F4BCC5A0 /* RoutineExerciseEditorCard.swift */,
+				63D7899107A55596E8BDF4E6 /* RoutineFactory.swift */,
 				A6D534F4976E26B891AFF245 /* RoutineHelpView.swift */,
 				DE3E80FDE5AA008EDB453204 /* RoutineListView.swift */,
 				15493B25D258D4A81E70E827 /* RoutinePlanMockup.swift */,
@@ -772,6 +777,7 @@
 				55E4834E54A641B078E2944F /* RecordEventTests.swift */,
 				9CC5EDBDA5272BA60254E066 /* RecoveryEntriesTests.swift */,
 				915EE03F62D07D4242C8EC53 /* RestDurationTests.swift */,
+				3E7029B4D92D34FC0F9BC4A3 /* RoutineFactoryTests.swift */,
 				729414FC312446058AB87655 /* RoutineLibraryTests.swift */,
 				39B7EBC214598F3279DFF8CC /* SetKindTests.swift */,
 				779208A275FACDA6405F40FD /* StatsTests.swift */,
@@ -1130,6 +1136,7 @@
 				8C17C6CABA9C98F68B7CF7F7 /* RecordEventTests.swift in Sources */,
 				300AC9F71891AA150165752F /* RecoveryEntriesTests.swift in Sources */,
 				AE35AE891BEA40E551F3B427 /* RestDurationTests.swift in Sources */,
+				24F41C94134E8BDC534057D1 /* RoutineFactoryTests.swift in Sources */,
 				7E43E70DE69E2DA4A122947E /* RoutineLibraryTests.swift in Sources */,
 				BFECAFBEBE7A5CCB7198E3E8 /* SetKindTests.swift in Sources */,
 				162AA2A26185AF908F9EA5A3 /* StatsTests.swift in Sources */,
@@ -1309,6 +1316,7 @@
 				1F2B5E9774AB38C2DF9FA072 /* RootView.swift in Sources */,
 				EC3A3B9DD0130465CC6A7055 /* RoutineBuilderView.swift in Sources */,
 				2AF4D28E54371EC25A76CC8B /* RoutineExerciseEditorCard.swift in Sources */,
+				7C9F15069442234634C62CE5 /* RoutineFactory.swift in Sources */,
 				C09EEC73706A665D32186413 /* RoutineHelpView.swift in Sources */,
 				1139DD83EAED7C1CC1589306 /* RoutineLibrary.swift in Sources */,
 				DF2206A7FE04D5C48187A2F4 /* RoutineListView.swift in Sources */,
