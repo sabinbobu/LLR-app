@@ -4,6 +4,7 @@ import SwiftUI
 struct ProfileView: View {
     @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
+    @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
     @State private var showingSettings = false
     @State private var avatar = AvatarStore.load()
 
@@ -61,6 +62,20 @@ struct ProfileView: View {
                                 .padding(.horizontal, 18)
                         }
                         .buttonStyle(CardButtonStyle())
+                        // Only once sets are being rated: an empty effort screen is noise for everyone else.
+                        if effortScale != .off {
+                            NavigationLink {
+                                EffortStatsView(samples: workouts.flatMap(\.recoveryEntries).map {
+                                    EffortStats.Sample(date: $0.completedAt, rir: $0.rir)
+                                })
+                            } label: {
+                                Label("Effort", systemImage: "flame")
+                                    .font(.title3)
+                                    .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                                    .padding(.horizontal, 18)
+                            }
+                            .buttonStyle(CardButtonStyle())
+                        }
                     }
 
                     Text("Workouts").font(.title3).foregroundStyle(.secondary)
