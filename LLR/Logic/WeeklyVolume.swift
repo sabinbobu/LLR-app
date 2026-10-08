@@ -26,14 +26,18 @@ enum WeeklyVolume {
         }
     }
 
+    /// `hardOnly` keeps just the sets rated at `Effort.hardRir` or closer to failure. An unrated set
+    /// is left out rather than guessed at, so pair it with `coverage` to show how much was rated.
     static func sets(
         _ entries: [MuscleRecovery.Entry],
         week: Date,
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        hardOnly: Bool = false
     ) -> [MuscleGroup.RadarAxis: Double] {
         guard let interval = calendar.dateInterval(of: .weekOfYear, for: week) else { return [:] }
         var totals: [MuscleGroup.RadarAxis: Double] = [:]
         for entry in entries where interval.start <= entry.completedAt && entry.completedAt < interval.end {
+            if hardOnly && !Effort.isHard(entry.rir) { continue }
             // Several muscles fold into one axis (lats + upper back → Back), so one set can reach the
             // same axis twice. It is still one set: keep the larger credit instead of summing.
             var credit: [MuscleGroup.RadarAxis: Double] = [:]
@@ -46,5 +50,17 @@ enum WeeklyVolume {
             totals.merge(credit, uniquingKeysWith: +)
         }
         return totals
+    }
+
+    /// How many of the week's working sets carry an effort rating: the denominator that keeps a
+    /// hard-set count from quietly speaking for sets nobody rated.
+    static func coverage(
+        _ entries: [MuscleRecovery.Entry],
+        week: Date,
+        calendar: Calendar = .current
+    ) -> (rated: Int, total: Int) {
+        guard let interval = calendar.dateInterval(of: .weekOfYear, for: week) else { return (0, 0) }
+        let inWeek = entries.filter { interval.start <= $0.completedAt && $0.completedAt < interval.end }
+        return (inWeek.filter { $0.rir != nil }.count, inWeek.count)
     }
 }

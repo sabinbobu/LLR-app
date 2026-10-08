@@ -4,6 +4,8 @@ struct WeeklyVolumeView: View {
     let entries: [MuscleRecovery.Entry]
     @State private var weeksBack = 0
     @State private var showingInfo = false
+    @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
+    @AppStorage(StorageKey.volumeHardOnly) private var hardOnlyChosen = false
 
     private static let maxWeeksBack = 11
     // Past 25 the bar would just be "a lot"; capping keeps the 10–20 zone wide enough to read.
@@ -13,7 +15,17 @@ struct WeeklyVolumeView: View {
         Calendar.current.date(byAdding: .weekOfYear, value: -weeksBack, to: .now) ?? .now
     }
 
-    private var sets: [MuscleGroup.RadarAxis: Double] { WeeklyVolume.sets(entries, week: week) }
+    /// Offered once there is anything to filter on: effort is switched on, or an import brought ratings in.
+    private var canFilterByEffort: Bool { effortScale != .off || entries.contains { $0.rir != nil } }
+    private var hardOnly: Bool { hardOnlyChosen && canFilterByEffort }
+
+    private var sets: [MuscleGroup.RadarAxis: Double] { WeeklyVolume.sets(entries, week: week, hardOnly: hardOnly) }
+
+    /// The cut-off in the scale the user reads: "RIR 3 or less" is "RPE 7 or more".
+    private var hardRule: String {
+        let limit = Effort.text(rir: Effort.hardRir, scale: effortScale)
+        return effortScale == .rpe ? "RPE \(limit) or more" : "RIR \(limit) or less"
+    }
 
     private var weekTitle: String {
         switch weeksBack {
@@ -36,12 +48,22 @@ struct WeeklyVolumeView: View {
                     .frame(maxWidth: .infinity)
                     .listRowSeparator(.hidden)
             }
+            if canFilterByEffort {
+                Section {
+                    Toggle("Hard sets only", isOn: $hardOnlyChosen)
+                } footer: {
+                    if hardOnly {
+                        let coverage = WeeklyVolume.coverage(entries, week: week)
+                        Text("Counting sets rated \(hardRule). \(coverage.rated) of \(coverage.total) working sets this week have a rating; the rest are left out.")
+                    }
+                }
+            }
             if sets.isEmpty {
-                EmptyStateCard(systemImage: "chart.bar.xaxis", message: "No working sets this week")
+                EmptyStateCard(systemImage: "chart.bar.xaxis", message: hardOnly ? "No hard sets rated this week" : "No working sets this week")
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
             } else {
-                Section("Hard sets") {
+                Section(hardOnly ? "Hard sets · \(hardRule)" : "Hard sets") {
                     ForEach(MuscleGroup.RadarAxis.allCases) { axis in
                         row(axis, sets: sets[axis] ?? 0)
                     }

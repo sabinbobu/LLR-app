@@ -12,6 +12,7 @@ enum StorageKey {
     static let experience = "experience"
     static let restSeconds = "restSeconds"
     static let effortScale = "effortScale"
+    static let volumeHardOnly = "volumeHardOnly"
     // One per unit: a 45 lb bar is not 20 kg, so converting a single stored value would be wrong.
     static let barKg = "barKg"
     static let barLbs = "barLbs"
