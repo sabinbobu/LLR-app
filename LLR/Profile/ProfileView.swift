@@ -62,6 +62,15 @@ struct ProfileView: View {
                                 .padding(.horizontal, 18)
                         }
                         .buttonStyle(CardButtonStyle())
+                        NavigationLink {
+                            StructuralBalanceView(workouts: workouts)
+                        } label: {
+                            Label("Balance", systemImage: "scalemass")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                                .padding(.horizontal, 18)
+                        }
+                        .buttonStyle(CardButtonStyle())
                         // Only once sets are being rated: an empty effort screen is noise for everyone else.
                         if effortScale != .off {
                             NavigationLink {
