@@ -5,6 +5,7 @@ struct ExerciseProgressView: View {
     let exercise: Exercise
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
     @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
+    @AppStorage(StorageKey.oneRepMaxFormula) private var formula: OneRepMax.Formula = .epley
     @State private var picked: ExerciseProgress.Metric = .oneRepMax
 
     private var sessions: [Session] { exercise.sessions() }
@@ -19,11 +20,13 @@ struct ExerciseProgressView: View {
     private var metric: ExerciseProgress.Metric { metrics.contains(picked) ? picked : metrics[0] }
 
     private var points: [ExerciseProgress.Point] {
-        ExerciseProgress.series(sessions, metric: metric, assisted: assisted)
+        ExerciseProgress.series(sessions, metric: metric, assisted: assisted, formula: formula)
     }
 
     var body: some View {
-        let best = ExerciseProgress.bestSet(in: sessions, assisted: assisted)
+        let best = ExerciseProgress.bestSet(in: sessions, assisted: assisted, formula: formula)
+        // Nil when the best set is past the rep cap: there is no estimate to show for it.
+        let estimate = best.map { OneRepMax.estimate($0, formula: formula) }.flatMap { $0 > 0 ? $0 : nil }
         let recent = ExerciseProgress.recent(sessions)
         VStack(alignment: .leading, spacing: 8) {
             Text("Progress").sectionLabel()
@@ -37,7 +40,7 @@ struct ExerciseProgressView: View {
                 recordRow("Best set", value: best.map { "\(unit.format(kg: $0.weightKg)) \(unit.rawValue) × \($0.reps)" })
                 if !assisted {
                     Divider().padding(.horizontal, 16)
-                    recordRow("Estimated 1RM", value: best.map { "\(unit.format(kg: OneRepMax.epley($0))) \(unit.rawValue)" })
+                    recordRow("Estimated 1RM", value: estimate.map { "\(unit.format(kg: $0)) \(unit.rawValue)" })
                 }
             }
             .cardStyle()

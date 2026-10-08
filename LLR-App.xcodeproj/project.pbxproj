@@ -158,6 +158,7 @@
 		86EB2D731531FEC87BB1CDCB /* BodyMapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99669C5C4D5B043CB16A327A /* BodyMapData.swift */; };
 		8791505D481D39EA216BEB6B /* DataTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7267869BD5CCEF718EF407 /* DataTransferView.swift */; };
 		88E3BCC076C01CC1ADDA5860 /* MeasurementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8720290B0DF4CCC736AC64 /* MeasurementDetailView.swift */; };
+		8990945BFBA6E993DCA74376 /* OneRepMaxFormulaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FE5E944C7B9CDD69D0D34D /* OneRepMaxFormulaTests.swift */; };
 		89CB76B1FB886DE1CA402EA6 /* BodyComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD97450DD33F527BB84B372 /* BodyComposition.swift */; };
 		8B2851D2E3A25E7F257A85E5 /* PainCheckInSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2D9F2C52242FC63C2AA8A7 /* PainCheckInSheet.swift */; };
 		8BB5D6E0D83A62B2EC852412 /* FoodEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6293CA5A344B3EC6A4AA70 /* FoodEditView.swift */; };
@@ -343,6 +344,7 @@
 		246ED9C547F7F3D5B7E9567E /* MeasurementSeederTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSeederTests.swift; sourceTree = "<group>"; };
 		25068E311D01EBA5EC9E375E /* KinetoCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoCatalogView.swift; sourceTree = "<group>"; };
 		27E35546D3FBBABC96847613 /* ExerciseLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLibrary.swift; sourceTree = "<group>"; };
+		28FE5E944C7B9CDD69D0D34D /* OneRepMaxFormulaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneRepMaxFormulaTests.swift; sourceTree = "<group>"; };
 		292C01BA49543306671E903B /* WorkoutRecap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRecap.swift; sourceTree = "<group>"; };
 		2A3EAEF17CA729AC8733AB5F /* CSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSV.swift; sourceTree = "<group>"; };
 		2A5468F7FB35E2F86D17541A /* ActivityHeatmap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHeatmap.swift; sourceTree = "<group>"; };
@@ -813,6 +815,7 @@
 				534592EAED0F1CD4A99F157E /* MuscleExplorerTests.swift */,
 				8D815B1C68165AFB8BA98457 /* MuscleRecoveryTests.swift */,
 				9F77E32596F2721CA407AFA7 /* NutritionTargetsTests.swift */,
+				28FE5E944C7B9CDD69D0D34D /* OneRepMaxFormulaTests.swift */,
 				022D96219F2D5C60F1B3A823 /* OpenGymPortTests.swift */,
 				B9C8681531E356468FE90878 /* PerformanceTests.swift */,
 				3DEB96AF13D786549621F252 /* PersistenceRecoveryTests.swift */,
@@ -1176,6 +1179,7 @@
 				9C4CF5F58DC115FFB67B9715 /* MuscleExplorerTests.swift in Sources */,
 				6A6685B58B6141A694E5FCEF /* MuscleRecoveryTests.swift in Sources */,
 				43D1501567037B96D5A4CDA5 /* NutritionTargetsTests.swift in Sources */,
+				8990945BFBA6E993DCA74376 /* OneRepMaxFormulaTests.swift in Sources */,
 				15B48508269887F8A0392D27 /* OpenGymPortTests.swift in Sources */,
 				BEA2CFD51708DA4059AEF106 /* PerformanceTests.swift in Sources */,
 				9A56121706E884C8BF88441E /* PersistenceRecoveryTests.swift in Sources */,
