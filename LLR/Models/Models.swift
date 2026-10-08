@@ -81,7 +81,7 @@ extension SetEntry {
         set { kindRaw = newValue.rawValue }
     }
 
-    var value: SetValue { SetValue(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds) }
+    var value: SetValue { SetValue(weightKg: weightKg, reps: reps, kind: kind, durationSeconds: durationSeconds, rir: rir) }
 }
 
 extension WorkoutExercise {
