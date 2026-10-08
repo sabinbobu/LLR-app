@@ -20,6 +20,7 @@ struct WorkoutSummaryView: View {
                     if !recap.records.isEmpty {
                         recordsCard
                     }
+                    WorkoutInsightsCard(workout: workout, boxed: true)
                 }
                 .padding()
             }

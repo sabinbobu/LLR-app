@@ -87,6 +87,10 @@ struct WorkoutDetailView: View {
                     Text(workout.notes)
                 }
             }
+            // Gym only: a back-care session is not a lift to beat.
+            if workout.section == .gym {
+                WorkoutInsightsCard(workout: workout)
+            }
             ForEach(workout.orderedExercises) { entry in
                 Section(entry.exercise?.name ?? "Exercise") {
                     ForEach(rows(for: entry)) { row in
