@@ -1,6 +1,6 @@
 # LLR Implementation Plan
 
-Specs for the open items from the owner's notes (originally two raw bullet lists, Gym and Fuel). Each item is verified against the code as of branch `feat/longer-rest-and-rest-pause` (HEAD `e77ae1f`). Code claims cite `path:line`.
+Specs for the open items from the owner's notes (originally two raw bullet lists, Gym and Fuel). G10 was added later from a direct request. Each item is verified against the code as of branch `feat/longer-rest-and-rest-pause` (HEAD `e77ae1f`). Code claims cite `path:line`.
 
 ## Status at a glance
 
@@ -15,6 +15,7 @@ Specs for the open items from the owner's notes (originally two raw bullet lists
 | G7 | Colour-coded sessions: push / pull / legs / yoga | Open, **beyond approved scope** | M | **additive** |
 | G8 | Stretching session after push / pull / legs | Open, **beyond approved scope**, depends on G6 + G7 | L | none |
 | G9 | Study weekly exercise loading for maximum progress | Research only, no code | S | none |
+| G10 | Restart or delete a recorded workout from the history lists | **Partly shipped** (detail screen only); list access open, depends on G5 | S | none |
 | F1 | Fuel: macro accuracy | Open, measure first | M | none |
 | F2 | Fuel: ingredients from photo, user corrects, then AI analysis | Open | L | none |
 
@@ -25,13 +26,14 @@ Specs for the open items from the owner's notes (originally two raw bullet lists
 ```
 G4 ──────────────────────────────┐   independent, ship first (smallest)
 G5 ──────────────────────────────┤   independent
+G5 ──> G10                       │   G10 reuses G5's shared workout presentation
 F1 (eval harness) ──> F2         │   F2 is judged against the F1 baseline
 G6 ──┐
 G7 ──┴──> G8                     │   G8 needs timed warm-up/stretch rows and a category to attach to
 G9 ──────────────────────────────┘   research doc, any time
 ```
 
-Why this order: G4 and G5 are the cheapest wins and touch no model. F1 comes before F2 because without a baseline error number nobody can say whether the two-step flow is better. G8 reuses G6's timed rows and G7's category, so it goes last.
+Why this order: G4 and G5 are the cheapest wins and touch no model. F1 comes before F2 because without a baseline error number nobody can say whether the two-step flow is better. G8 reuses G6's timed rows and G7's category, so it goes last. G10 follows G5 because once the active workout is presented from `MainTabView`, "Repeat" from any list can use it; before that, every list would need its own full-screen cover.
 
 ---
 
@@ -244,6 +246,52 @@ Why this order: G4 and G5 are the cheapest wins and touch no model. F1 comes bef
 3. No code or schema edited.
 
 **Effort:** 3–4 h.
+
+---
+
+## G10. Restart or delete a recorded workout
+
+**Scope:** within approved v1 (item 1 "copy of a previous one", item 5 "history list"). No scope flag.
+
+**Why:** the owner wants to restart or delete a recorded training without hunting for it.
+
+**Interpretation chosen:** "restart" means *start a new workout from a past one* (today's "Repeat"). Rejected alternative: reopen the finished workout (`endedAt = nil`) and keep logging in it. That rewrites the recorded duration and the "sessions that started earlier" basis for its records (`Models.swift:106-108`), and Edit already corrects a finished workout (`WorkoutDetailView.swift:117`). If the owner meant reopening, say so and this item changes.
+
+**Current state**
+- Both actions already exist, but only in the workout detail screen's `…` menu: Repeat at `WorkoutDetailView.swift:121-124` (gym only, disabled while a workout is unfinished, no reason shown), Delete at `:129` with a confirmation dialog at `:149-154`.
+- Repeat is also offered on the Workout tab for the 10 most recent gym workouts (`WorkoutTabView.swift:64-66`, `:171`).
+- The history lists are `LazyVStack`s of `NavigationLink`s: Home (`HomeView.swift:14-19`) and Profile (`ProfileView.swift:94-98`). Neither has a context menu or swipe actions, so reaching Delete takes open workout, `…`, Delete, confirm. `swipeActions` would not work here without converting to `List`; a context menu does.
+- Repeat copies exercises, order, superset groups and the *completed* sets' weight, reps, kind and duration into a new workout (`WorkoutFactory.swift:18-40`). The source is never modified.
+- Delete is `context.delete(workout)` with no explicit save and no widget sync. Sets and exercises go with it by cascade (`Models.swift:21`). The streak widget only refreshes when the app next backgrounds (`MainTabView.swift:21`).
+- Derived data needs no cleanup: progression, PRs and recovery are recomputed from the log on every read (`Progression.swift:5-7`).
+
+**Change**
+- New shared modifier `workoutActions(_ workout:)` in a new file, applied to `WorkoutCard` in Home and Profile and used by `WorkoutDetailView`'s menu, so the repeat and delete logic exists once.
+- Long-press menu: "Repeat Workout" (gym only) and "Delete Workout" (destructive). Repeat starts the workout via the presentation action from G5.
+- When Repeat is disabled because a workout is in progress, the label says why: "Repeat Workout (finish current first)".
+- Delete keeps the confirmation. For a workout with recorded pain (`Workout.hasPainRecorded`, `Models.swift:39`), the confirmation text says the pain log is deleted too.
+- After delete: `try? context.save()` then `TrainingSnapshotSync.sync(context:)`, so the widget streak is correct immediately.
+
+**Decision:** no undo for workout delete. Strongest rejected alternative: an Undo toast like sets and exercises have (`ActiveWorkoutModel+Undo.swift:11`). `WorkoutSnapshot` (`WorkoutSnapshot.swift:7`) copies name, notes, dates and entries but not `sectionRaw` or the four Kineto pain fields (`Models.swift:14-17`), and the toast host exists only in the active workout screen. Undo would need a snapshot extension plus a host in two list screens, for an action that already asks for confirmation.
+
+**Files:** `LLR/History/WorkoutDetailView.swift`, `LLR/Home/HomeView.swift`, `LLR/Profile/ProfileView.swift`, new `LLR/History/WorkoutActions.swift`. 4 files: plan approval before editing. Requires G5 for the shared presentation.
+
+**Acceptance**
+1. Long-pressing a workout card in Home and in Profile shows Delete; gym workouts also show Repeat.
+2. Repeat creates a new unfinished workout with the source's exercises, order, superset groups and completed sets (weight, reps, kind, duration), `startedAt` of now, and opens it full-screen. The source workout is unchanged.
+3. With a workout already in progress, Repeat is disabled and its label states why. Kineto workouts show no Repeat, as today.
+4. Delete asks for confirmation; confirming removes the workout, its exercises and its sets, and it disappears from Home, Profile, the calendar and the heatmap.
+5. After delete, that workout no longer counts in exercise history and prefill, PRs, Weekly Volume, muscle recovery or the streak, and the widget snapshot is regenerated in the same action.
+6. Deleting a Kineto workout with recorded pain shows a confirmation that mentions the pain log.
+7. Delete never removes an `Exercise`, custom exercise, exercise media or routine.
+8. The detail screen's `…` menu behaves as before (same actions, same confirmation).
+9. No path deletes an unfinished workout; that stays Discard (`ActiveWorkoutView.swift:35`).
+
+**Tests:** +3 unit in `WorkoutEditingTests`: delete cascades to sets and exercises entries but keeps the `Exercise`; delete removes the session from `Exercise.sessions(...)`; repeat copies structure and completed sets and leaves the source untouched. `TrainingSnapshotTests` already covers the sync output. Context menu and confirmation are checked by hand.
+
+**Out of scope:** reopening a finished workout; multi-select bulk delete; undo (see Decision); repeating a Kineto session (it starts through its pain check-in, `WorkoutDetailView.swift:119`).
+
+**Effort:** 1 h shared modifier + 1 h wiring both lists + 1 h detail refactor + 1 h tests. Plus G5.
 
 ---
 
