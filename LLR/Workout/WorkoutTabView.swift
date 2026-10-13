@@ -10,12 +10,9 @@ struct WorkoutTabView: View {
     private var past: [Workout]
     @Query(filter: #Predicate<Routine> { $0.sectionRaw == "gym" }, sort: \Routine.createdAt, order: .reverse)
     private var routines: [Routine]
-    @State private var presented: Workout?
+    @Environment(ActiveWorkoutPresenter.self) private var presenter
     @State private var buildingRoutine: Routine?
     @State private var loggingPast: Workout?
-    /// Set once the active-workout cover dismisses so the summary sheet doesn't fight it for presentation.
-    @State private var justFinished: Workout?
-    @State private var pendingSummary: Workout?
 
     var body: some View {
         NavigationStack {
@@ -40,7 +37,7 @@ struct WorkoutTabView: View {
                     }
 
                     NavigationLink {
-                        KinetoView(canStart: unfinished.isEmpty) { presented = $0 }
+                        KinetoView(canStart: unfinished.isEmpty) { presenter.present($0) }
                     } label: {
                         KinetoEntryCard()
                     }
@@ -85,13 +82,6 @@ struct WorkoutTabView: View {
             }
             .navigationTitle("Workout")
         }
-        .fullScreenCover(item: $presented, onDismiss: {
-            justFinished = pendingSummary
-            pendingSummary = nil
-        }) { workout in
-            ActiveWorkoutView(workout: workout) { pendingSummary = $0 }
-        }
-        .sheet(item: $justFinished) { WorkoutSummaryView(workout: $0) }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
     }
 
@@ -99,11 +89,11 @@ struct WorkoutTabView: View {
         Group {
             if let current = unfinished.first {
                 actionRow(icon: "play.fill", title: "Resume Workout", detail: current.title) {
-                    presented = current
+                    presenter.present(current)
                 }
             } else {
                 actionRow(icon: "plus", title: "Start Empty Workout") {
-                    presented = WorkoutFactory.start(copying: nil, in: context)
+                    presenter.present(WorkoutFactory.start(copying: nil, in: context))
                 }
             }
         }
@@ -176,7 +166,7 @@ struct WorkoutTabView: View {
             }
             Spacer()
             Button("Repeat") {
-                presented = WorkoutFactory.start(copying: workout, in: context)
+                presenter.present(WorkoutFactory.start(copying: workout, in: context))
             }
             .buttonStyle(.borderedProminent)
             .disabled(!unfinished.isEmpty)
@@ -201,11 +191,11 @@ struct WorkoutTabView: View {
     }
 
     private func start(routine: Routine) {
-        presented = WorkoutFactory.start(routine: routine, in: context)
+        presenter.present(WorkoutFactory.start(routine: routine, in: context))
     }
 
     private func start(program: ProgramTemplate, day: ProgramTemplate.Day) {
         let plan = RoutineLibrary.plan(for: day, in: context)
-        presented = WorkoutFactory.start(plan, named: RoutineLibrary.routineName(program, day), in: context)
+        presenter.present(WorkoutFactory.start(plan, named: RoutineLibrary.routineName(program, day), in: context))
     }
 }
