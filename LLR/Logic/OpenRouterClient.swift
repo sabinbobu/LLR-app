@@ -64,6 +64,23 @@ enum OpenRouterClient {
         }
     }
 
+    /// Stage 1: names foods and guesses grams from a photo; no macros are requested.
+    static func identify(jpeg: Data, note: String, key: String, model: String) async throws -> [FoodAnalysis.Ingredient] {
+        guard !key.isEmpty else { throw ClientError.missingKey }
+        let body = try FoodAnalysis.identifyRequestBody(jpeg: jpeg, note: note, models: models(primary: model))
+        let data = try await send(request(body: body, key: key))
+        do {
+            return try FoodAnalysis.parseIdentify(data)
+        } catch {
+            throw ClientError.unreadable
+        }
+    }
+
+    /// Stage 3: macros for a list the user has already corrected; text only, no image.
+    static func analyze(_ ingredients: [FoodAnalysis.Ingredient], key: String, model: String) async throws -> FoodAnalysis.Result {
+        try await analyze(FoodAnalysis.analysisInput(for: ingredients), key: key, model: model)
+    }
+
     /// Free vision models that exist right now, from OpenRouter's public list; IDs come and go too
     /// often to hard-code more than a default.
     static func freeVisionModels() async throws -> [String] {

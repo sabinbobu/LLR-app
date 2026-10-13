@@ -36,14 +36,14 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
   - Body measurements (weight, body fat, tape sites, height) and progress photos
   - A Home Screen widget showing the training streak
   - Weekly Volume: hard sets per muscle per week (secondary muscles count half) against a cited 10–20 set zone (`LLR/Logic/WeeklyVolume.swift`)
-- Fuel (4th tab, `LLR/Fuel/`): food logging with daily calorie/macro targets (Mifflin-St Jeor + goal, protein 1.6 g/kg, all overridable). Optional AI estimates from a photo or description via free OpenRouter vision models, using the user's own key (Keychain). AI output is always an editable draft; nothing saves without review.
+- Fuel (4th tab, `LLR/Fuel/`): food logging with daily calorie/macro targets (Mifflin-St Jeor + goal, protein 1.6 g/kg, all overridable). Optional AI estimates from a photo or description via free OpenRouter vision models, using the user's own key (Keychain). Photo estimates go through an ingredient-correction step first. AI output is always an editable draft; nothing saves without review.
 
 ## Non-goals (do not build in v1)
 Accounts, cloud sync, social features (leaderboards, friend comparisons), AI coaching or AI-generated/auto-generated workouts, Apple Watch, subscriptions/paywalls, HealthKit write-back.
 
 ## Stack
 - Swift 5.9+, SwiftUI, iOS 17+ minimum
-- SwiftData for persistence (no backend). The only network call is Fuel's OpenRouter request (`LLR/Logic/OpenRouterClient.swift`), made with the user's own key and only when they ask for an estimate; nothing else leaves the device. Device backup (iCloud/Finder) includes the SwiftData store and `ExerciseMedia` files alike (`Backend/ is a Cloudflare Worker + D1 exercise API the app does not call; see `Backend/README.md`)
+- SwiftData for persistence (no backend). The only network calls are Fuel's OpenRouter requests (`LLR/Logic/OpenRouterClient.swift`), made with the user's own key and only when they tap: one request for a text estimate, two for a photo (vision identifies ingredients, the user corrects them, then a text-only request returns macros; the second carries no image); nothing else leaves the device. Device backup (iCloud/Finder) includes the SwiftData store and `ExerciseMedia` files alike (`Backend/ is a Cloudflare Worker + D1 exercise API the app does not call; see `Backend/README.md`)
 - Swift Charts for progress graphs
 - XCTest for logic; no UI tests until v1 is usable
 - No third-party dependencies unless unavoidable
