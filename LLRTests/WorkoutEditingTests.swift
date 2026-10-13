@@ -230,4 +230,36 @@ final class WorkoutEditingTests: XCTestCase {
         entry.sets.append(lift)
         XCTAssertFalse(entry.isDurationBased, "a mixed card falls back to the weight/reps header")
     }
+
+    func testDeletingAWorkoutCascadesButKeepsTheExerciseAndItsOtherSessions() throws {
+        let doomed = finishedWorkout()
+        let kept = finishedWorkout()
+        kept.startedAt = doomed.startedAt.addingTimeInterval(86_400)
+        XCTAssertEqual(bench.sessions().count, 2)
+
+        WorkoutActions.delete(doomed, in: context)
+
+        let sets = try context.fetch(FetchDescriptor<SetEntry>())
+        XCTAssertEqual(sets.count, 3, "only the surviving workout's sets remain")
+        XCTAssertEqual(try context.fetch(FetchDescriptor<Exercise>()).count, 2)
+        XCTAssertEqual(bench.sessions().count, 1, "history and prefill no longer see the deleted session")
+    }
+
+    func testRepeatCopiesCompletedSetsAndLeavesTheSourceUntouched() throws {
+        let source = finishedWorkout()
+        let started = WorkoutFactory.start(copying: source, in: context)
+
+        XCTAssertNil(started.endedAt)
+        XCTAssertEqual(started.orderedExercises.compactMap { $0.exercise?.name }, ["Bench Press (Barbell)", "Bent Over Row (Barbell)"])
+        XCTAssertEqual(started.orderedExercises.first?.orderedSets.map(\.reps), [8, 8])
+        XCTAssertEqual(source.orderedExercises.count, 2)
+        XCTAssertNotNil(source.endedAt)
+        XCTAssertEqual(source.orderedExercises.first?.orderedSets.count, 2)
+    }
+
+    func testDeleteMessageMentionsPainOnlyWhenRecorded() {
+        let workout = finishedWorkout()
+        XCTAssertFalse(WorkoutActions.deleteMessage(for: workout).contains("pain"))
+        XCTAssertTrue(WorkoutActions.repeatLabel(canStart: false).contains("finish current first"))
+    }
 }

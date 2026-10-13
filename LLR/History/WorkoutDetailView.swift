@@ -12,11 +12,8 @@ struct WorkoutDetailView: View {
     @State private var showingShare = false
     // Section-agnostic, as on the Workout tab: only one workout can be in progress at a time.
     @Query(filter: #Predicate<Workout> { $0.endedAt == nil }) private var unfinished: [Workout]
-    @State private var repeating: Workout?
+    @Environment(ActiveWorkoutPresenter.self) private var presenter
     @State private var savedRoutine: Routine?
-    /// Set once the active-workout cover dismisses so the summary sheet doesn't fight it for presentation.
-    @State private var justFinished: Workout?
-    @State private var pendingSummary: Workout?
 
     // Precomputed rows keep `body` cheap to type-check; the inline version took 11s per build.
     private struct Row: Identifiable {
@@ -118,8 +115,8 @@ struct WorkoutDetailView: View {
             Menu {
                 // Gym only: a Kineto session starts through its own pain check-in.
                 if workout.section == .gym {
-                    Button("Repeat Workout", systemImage: "arrow.clockwise") {
-                        repeating = WorkoutFactory.start(copying: workout, in: context)
+                    Button(WorkoutActions.repeatLabel(canStart: unfinished.isEmpty), systemImage: "arrow.clockwise") {
+                        presenter.present(WorkoutFactory.start(copying: workout, in: context))
                     }
                     .disabled(!unfinished.isEmpty)
                     Button("Save as Routine", systemImage: "list.clipboard") {
@@ -133,13 +130,6 @@ struct WorkoutDetailView: View {
             .accessibilityLabel("More")
         }
         .fullScreenCover(isPresented: $editing) { WorkoutEditorView(workout: workout) }
-        .fullScreenCover(item: $repeating, onDismiss: {
-            justFinished = pendingSummary
-            pendingSummary = nil
-        }) { started in
-            ActiveWorkoutView(workout: started) { pendingSummary = $0 }
-        }
-        .sheet(item: $justFinished) { WorkoutSummaryView(workout: $0) }
         // Opens the new routine straight away, so it can be renamed or trimmed while it's in mind.
         .sheet(item: $savedRoutine) { RoutineBuilderView(routine: $0) }
         .sheet(isPresented: $showingShare) {
@@ -149,8 +139,10 @@ struct WorkoutDetailView: View {
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Workout", role: .destructive) {
                 dismiss()
-                context.delete(workout)
+                WorkoutActions.delete(workout, in: context)
             }
+        } message: {
+            Text(WorkoutActions.deleteMessage(for: workout))
         }
     }
 }

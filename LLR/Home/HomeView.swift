@@ -17,6 +17,7 @@ struct HomeView: View {
                                 WorkoutCard(workout: workout)
                             }
                             .buttonStyle(.plain)
+                            .workoutActions(workout)
                         }
                     }
                 }

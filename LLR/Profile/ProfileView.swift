@@ -95,6 +95,7 @@ struct ProfileView: View {
                             ForEach(workouts) { workout in
                                 NavigationLink(value: workout) { WorkoutCard(workout: workout) }
                                     .buttonStyle(.plain)
+                                    .workoutActions(workout)
                             }
                         }
                     }
