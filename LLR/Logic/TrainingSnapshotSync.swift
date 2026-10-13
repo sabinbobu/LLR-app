@@ -7,7 +7,7 @@ import WidgetKit
 enum TrainingSnapshotSync {
     @MainActor
     static func sync(context: ModelContext) {
-        let descriptor = FetchDescriptor<Workout>(predicate: #Predicate { $0.endedAt != nil && $0.sectionRaw == "gym" })
+        let descriptor = FetchDescriptor<Workout>(predicate: #Predicate { $0.endedAt != nil && ($0.sectionRaw == "gym" || $0.sectionRaw == "run") })
         let starts = (try? context.fetch(descriptor))?.map(\.startedAt) ?? []
         TrainingSnapshot(
             streak: TrainingCalendar.weekStreak(workouts: starts),

@@ -8,7 +8,7 @@ enum WorkoutFactory {
     /// is the most important thing that session captured.
     static func removeEmptyHistory(in context: ModelContext) {
         let finished = (try? context.fetch(FetchDescriptor<Workout>(predicate: #Predicate { $0.endedAt != nil }))) ?? []
-        for workout in finished where workout.completedSets.isEmpty && !workout.hasPainRecorded {
+        for workout in finished where workout.completedSets.isEmpty && !workout.hasPainRecorded && !workout.isRun {
             context.delete(workout)
         }
         try? context.save()

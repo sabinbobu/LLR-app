@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "gym" }, sort: \Workout.startedAt, order: .reverse)
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && ($0.sectionRaw == "gym" || $0.sectionRaw == "run") }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
 
     var body: some View {
@@ -14,7 +14,7 @@ struct HomeView: View {
                     } else {
                         ForEach(workouts) { workout in
                             NavigationLink(value: workout) {
-                                WorkoutCard(workout: workout)
+                                HistoryCard(workout: workout)
                             }
                             .buttonStyle(.plain)
                             .workoutActions(workout)
@@ -24,7 +24,7 @@ struct HomeView: View {
                 .padding()
             }
             .navigationTitle("Home")
-            .navigationDestination(for: Workout.self) { WorkoutDetailView(workout: $0) }
+            .navigationDestination(for: Workout.self) { HistoryDestination(workout: $0) }
         }
     }
 }
