@@ -8,6 +8,9 @@ struct WorkoutCalendarView: View {
     private var trainedDays: Set<Date> {
         TrainingCalendar.trainedDays(in: month, workouts: workouts.map(\.startedAt), calendar: calendar)
     }
+    private var categories: [Date: SessionCategory] {
+        TrainingCalendar.categoryByDay(in: month, workouts: workouts.map { ($0.startedAt, $0.category) }, calendar: calendar)
+    }
     private var streak: Int {
         TrainingCalendar.weekStreak(workouts: workouts.map(\.startedAt), calendar: calendar)
     }
@@ -56,12 +59,14 @@ struct WorkoutCalendarView: View {
         return LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
             ForEach(days.indices, id: \.self) { index in
                 if let day = days[index] {
-                    let trained = trainedDays.contains(calendar.startOfDay(for: day))
+                    let start = calendar.startOfDay(for: day)
+                    let trained = trainedDays.contains(start)
+                    let tint = categories[start]?.color ?? Theme.accent
                     Text("\(calendar.component(.day, from: day))")
                         .font(.subheadline)
                         .monospacedDigit()
                         .frame(maxWidth: .infinity, minHeight: 36)
-                        .background(trained ? Theme.accent : Color.clear, in: Circle())
+                        .background(trained ? tint : Color.clear, in: Circle())
                         .foregroundStyle(trained ? Color.white : Color.primary)
                 } else {
                     Color.clear.frame(minHeight: 36)

@@ -97,6 +97,8 @@ final class ActiveWorkoutModel {
     /// Returns false when the set can't be completed (no reps), so the row can signal it.
     @discardableResult
     func toggle(_ set: SetEntry) -> Bool {
+        // Autosave timing isn't guaranteed at an arbitrary kill; a ticked set must survive force-quit.
+        defer { try? context?.save() }
         if set.completedAt != nil {
             set.completedAt = nil
             return true

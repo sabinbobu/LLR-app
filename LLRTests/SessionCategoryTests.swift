@@ -37,4 +37,16 @@ final class SessionCategoryTests: XCTestCase {
         XCTAssertEqual(Workout().category, .none, "existing rows default to uncategorised")
         XCTAssertEqual(repeated.section, .gym, "category never touches the history section")
     }
+
+    func testCalendarColoursDaysByTheirLatestCategorisedWorkout() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        let day = Date(timeIntervalSince1970: 1_700_000_000)
+        let result = TrainingCalendar.categoryByDay(in: day, workouts: [
+            (day, .push), (day.addingTimeInterval(3600), .legs),
+            (day.addingTimeInterval(86_400), .none),
+            (day.addingTimeInterval(86_400 * 60), .pull),
+        ], calendar: cal)
+        XCTAssertEqual(result, [cal.startOfDay(for: day): .legs])
+    }
 }
