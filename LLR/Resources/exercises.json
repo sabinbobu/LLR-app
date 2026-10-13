@@ -8264,5 +8264,33 @@
       "As you reach the top position, rotate your wrists 180 degrees and lower the dumbbells to the starting position with your palms facing down. Breathe in on the way down.",
       "Rotate your wrists again and repeat."
     ]
+  },
+  {
+    "Name": "Easy Cardio Warm-up",
+    "Muscle": "Cardio",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Cardio",
+    "Secondary": [],
+    "Howto": [
+      "Pick any low-effort machine or a brisk walk.",
+      "Keep a pace where you could hold a conversation.",
+      "Build up slowly and stop when you feel warm and loose."
+    ]
+  },
+{
+    "Name": "Dynamic Mobility Warm-up",
+    "Muscle": "Full Body",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Full Body",
+    "Secondary": [],
+    "Howto": [
+      "Move through arm circles, hip circles and bodyweight squats.",
+      "Keep every movement smooth and within a comfortable range.",
+      "Spend longer on the joints you are about to load."
+    ]
   }
 ]
