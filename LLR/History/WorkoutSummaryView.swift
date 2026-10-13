@@ -5,6 +5,8 @@ struct WorkoutSummaryView: View {
     let workout: Workout
     @AppStorage(StorageKey.weightUnit) private var unit: WeightUnit = .kg
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+    @Environment(ActiveWorkoutPresenter.self) private var presenter
     @State private var showingShare = false
 
     private var recap: WorkoutRecap { WorkoutRecap(workout) }
@@ -40,9 +42,18 @@ struct WorkoutSummaryView: View {
                     .presentationDetents([.medium])
             }
             .safeAreaInset(edge: .bottom) {
-                Button("Done") { dismiss() }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .padding()
+                VStack(spacing: 8) {
+                    if StretchRoutines.offersCooldown(after: workout) {
+                        Button("Add \(workout.category.title) Cooldown", systemImage: "figure.cooldown") {
+                            presenter.cooldown = StretchRoutines.startCooldown(after: workout, in: context)
+                            dismiss()
+                        }
+                        .font(.subheadline.weight(.semibold))
+                    }
+                    Button("Done") { dismiss() }
+                        .buttonStyle(PrimaryButtonStyle())
+                }
+                .padding()
             }
         }
         .interactiveDismissDisabled()

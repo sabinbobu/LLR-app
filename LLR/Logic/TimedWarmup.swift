@@ -7,7 +7,7 @@ enum TimedWarmup {
     private static let timedNames: Set<String> = ["Stretching", "Dynamic Mobility Warm-up"]
 
     static func isTimedByDefault(muscleGroup: String, name: String) -> Bool {
-        muscleGroup == MuscleGroup.cardio.rawValue || timedNames.contains(name)
+        muscleGroup == MuscleGroup.cardio.rawValue || timedNames.contains(name) || name.hasSuffix(" Stretch")
     }
 
     /// nil = log it the ordinary way. Past weight/reps history wins so nobody's old Cycling log flips format.
