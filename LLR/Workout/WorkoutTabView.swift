@@ -12,6 +12,7 @@ struct WorkoutTabView: View {
     private var routines: [Routine]
     @Environment(ActiveWorkoutPresenter.self) private var presenter
     @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw == "run" }) private var runs: [Workout]
+    @State private var addingRun = false
     @State private var buildingRoutine: Routine?
     @State private var loggingPast: Workout?
 
@@ -20,11 +21,7 @@ struct WorkoutTabView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     startRow
-                    // One session at a time: a run can't start while a workout is open.
-                    actionRow(icon: "figure.run", title: "Start Run") {
-                        presenter.present(WorkoutFactory.startRun(in: context))
-                    }
-                    .disabled(!unfinished.isEmpty)
+                    actionRow(icon: "figure.run", title: "Add Run") { addingRun = true }
                     if !runs.isEmpty { RunSummaryCard(runs: runs) }
                     Button("Log a Past Workout", systemImage: "clock.arrow.circlepath", action: logPastWorkout)
                         .font(.subheadline.weight(.medium))
@@ -90,6 +87,7 @@ struct WorkoutTabView: View {
             .navigationTitle("Workout")
         }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
+        .sheet(isPresented: $addingRun) { AddRunSheet() }
     }
 
     private var startRow: some View {

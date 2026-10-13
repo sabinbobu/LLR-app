@@ -9,7 +9,7 @@ struct RecoveryCard: View {
         MuscleRecoveryInput.statuses(for: workouts)
     }
 
-    private var overall: Double { MuscleRecovery.overallPercent(statuses) }
+    private var overall: Double { MuscleRecoveryInput.overall(for: workouts) }
 
     private var leastRecovered: [MuscleRecovery.Status] {
         Array(statuses.values.sorted { $0.percent < $1.percent }.prefix(4))
@@ -69,9 +69,28 @@ struct RecoveryRing: View {
 /// recovery window (72h) with a day's buffer, and it's cheap to recompute since a session rarely
 /// holds more than a handful of finished workouts in that span.
 enum MuscleRecoveryInput {
-    static func statuses(for workouts: [Workout], now: Date = .now) -> [MuscleGroup: MuscleRecovery.Status] {
+    private static func recent(_ workouts: [Workout], now: Date) -> [Workout] {
         let cutoff = Calendar.current.date(byAdding: .day, value: -4, to: now) ?? .distantPast
-        let entries = workouts.filter { $0.startedAt >= cutoff }.flatMap(\.recoveryEntries)
+        return workouts.filter { $0.startedAt >= cutoff }
+    }
+
+    static func statuses(for workouts: [Workout], now: Date = .now) -> [MuscleGroup: MuscleRecovery.Status] {
+        let entries = recent(workouts, now: now).flatMap(\.exhaustionEntries)
         return MuscleRecovery.statuses(for: entries, now: now)
+    }
+
+    /// Whole-body exhaustion (0–100) still left from recent runs.
+    static func systemicExhaustion(for workouts: [Workout], now: Date = .now) -> Double {
+        let total = recent(workouts, now: now).reduce(0.0) { sum, workout in
+            guard let percent = workout.runExhaustionPercent, let finished = workout.endedAt else { return sum }
+            let hours = now.timeIntervalSince(finished) / 3600
+            return sum + RunLoad.remainingExhaustion(percent, hoursSince: hours)
+        }
+        return min(100, total)
+    }
+
+    static func overall(for workouts: [Workout], now: Date = .now) -> Double {
+        MuscleRecovery.overallPercent(statuses(for: workouts, now: now),
+                                      systemicExhaustion: systemicExhaustion(for: workouts, now: now))
     }
 }

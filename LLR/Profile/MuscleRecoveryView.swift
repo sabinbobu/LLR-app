@@ -8,7 +8,8 @@ struct MuscleRecoveryView: View {
         MuscleRecoveryInput.statuses(for: workouts)
     }
 
-    private var overall: Double { MuscleRecovery.overallPercent(statuses) }
+    private var overall: Double { MuscleRecoveryInput.overall(for: workouts) }
+    private var systemic: Double { MuscleRecoveryInput.systemicExhaustion(for: workouts) }
 
     private func rows(for region: MuscleGroup.Region) -> [MuscleRecovery.Status] {
         statuses.values
@@ -21,7 +22,14 @@ struct MuscleRecoveryView: View {
             Section {
                 HStack {
                     Spacer()
-                    RecoveryRing(percent: overall).frame(width: 100, height: 100)
+                    VStack(spacing: 8) {
+                        RecoveryRing(percent: overall).frame(width: 100, height: 100)
+                        if systemic >= 1 {
+                            Label("Body \(Int(systemic))% exhausted from recent runs", systemImage: "figure.run")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                     Spacer()
                 }
                 .padding(.vertical, 8)
@@ -83,7 +91,7 @@ struct MuscleRecoveryView: View {
         NavigationStack {
             ScrollView {
                 Text("""
-                Recovery is an estimate, not a measurement. It fades a muscle's working-set load down \
+                Recovery is an estimate, not a measurement. It fades a muscle's working-set and running load down \
                 to zero over roughly 2–3 days, based on how much you trained it and how recently. It \
                 doesn't know your sleep, nutrition, or how sore you actually feel — use it as a rough \
                 guide for what to train next, not a hard rule.

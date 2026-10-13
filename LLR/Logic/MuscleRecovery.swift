@@ -10,6 +10,8 @@ enum MuscleRecovery {
         let completedAt: Date
         /// Reps in reserve, nil when the set was never rated; recovery ignores it, Weekly Volume filters on it.
         var rir: Double? = nil
+        /// Fatigue points this entry is worth on its primary muscle: 1 for a working set, more for a run.
+        var load: Double = 1.0
     }
 
     struct Status {
@@ -48,8 +50,8 @@ enum MuscleRecovery {
         }
 
         for entry in entries {
-            apply(entry.muscle, load: 1.0, entry: entry)
-            for secondary in entry.secondaryMuscles { apply(secondary, load: 0.5, entry: entry) }
+            apply(entry.muscle, load: entry.load, entry: entry)
+            for secondary in entry.secondaryMuscles { apply(secondary, load: 0.5 * entry.load, entry: entry) }
         }
 
         return Dictionary(uniqueKeysWithValues: MuscleGroup.allCases.filter(\.isTrainable).map { group in
@@ -58,8 +60,11 @@ enum MuscleRecovery {
         })
     }
 
-    static func overallPercent(_ statuses: [MuscleGroup: Status]) -> Double {
+    /// `systemicExhaustion` (0–100, from recent runs) scales the muscle average down: a hard run
+    /// tires the whole body, not just the legs the muscle rows show.
+    static func overallPercent(_ statuses: [MuscleGroup: Status], systemicExhaustion: Double = 0) -> Double {
         guard !statuses.isEmpty else { return 100 }
-        return statuses.values.reduce(0) { $0 + $1.percent } / Double(statuses.count)
+        let average = statuses.values.reduce(0) { $0 + $1.percent } / Double(statuses.count)
+        return average * (1 - min(max(systemicExhaustion, 0), 100) / 100)
     }
 }
