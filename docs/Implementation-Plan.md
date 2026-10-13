@@ -22,6 +22,7 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | S1 | Rest-timer end sound | Shipped | #50 |
 | R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
 | K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
+| U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -143,6 +144,43 @@ Original two-note tick (`LLR/Resources/rest-tick.wav`, 0.75 s, mono 16-bit PCM).
 **Out of scope.** Changing clinical content, red-flag text, or the physiotherapist gate rules (they still need real clinical sign-off).
 
 **Process.** This is a bug-fix item: reproduce first, one root cause per commit, and report anything found that was not in this list.
+
+### U1. Swipe left to delete a routine
+
+**Request.** On the Workout tab, replace the three-dots menu on each "My Routines" row with a modern, smooth swipe-left-to-delete gesture.
+
+**What exists today (so the change is scoped correctly)**
+- The three-dots menu on a Workout-tab routine row contains only **Edit** (added in G4). It does not delete.
+- Delete exists only in *See All → My Routines* (`RoutineListView`), as a native `List` swipe action that calls `context.delete(routine)` immediately: no confirmation and no undo.
+- The Workout tab is a `ScrollView` of custom bordered cards, not a `List`, so the native `.swipeActions` is not available there.
+
+**Migration impact.** None. Deleting a routine cascades to its exercises and set plans (existing rule) and never touches finished workouts.
+
+**Design**
+1. A reusable `SwipeToDelete` modifier (one file) for a routine card. Dragging left slides the card and reveals a red **Delete** button behind it; dragging past about 60% of the width (a full swipe) deletes it. Releasing earlier snaps open or closed by drag velocity and position.
+2. Smoothness is the acceptance bar, not an extra: the card follows the finger 1:1 with no lag, rubber-bands past the end, and settles with a spring (no abrupt jumps); the row below slides up when a row is removed; one light haptic when the delete threshold is crossed and one when it fires.
+3. The gesture must never fight vertical scrolling: it only starts when the drag is clearly horizontal, and a swipe that begins on the **Start** button still swipes. Only one row can be open at a time; opening another closes the first; scrolling closes it.
+4. **Undo instead of a confirmation dialog.** Delete removes the routine at once and shows an Undo bar (6 s), the same pattern as deleted sets and exercises (`UndoToast`). This needs a `RoutineSnapshot` (name, section, category, exercises, rest, notes, superset, set plans) that can recreate the routine exactly, like `WorkoutSnapshot` does for workouts.
+5. **Edit moves to a place that still works without the dots.** Tapping the card body (outside **Start**) opens the editor, and swiping right on a card reveals **Edit**. If neither is wanted, keep a single small edit icon; the owner decides.
+6. Remove the ellipsis menu from the Workout-tab rows. Apply the same undo behaviour to the *See All* list so both places agree.
+7. Accessibility: VoiceOver gets custom actions **Edit** and **Delete** on each row (the swipe is not discoverable otherwise); Reduce Motion replaces the slide with a fade.
+
+**Decision.** A custom gesture, not a `List`. Strongest rejected alternative: convert the routines section (or the whole Workout tab) to a `List` to get the native swipe, which is the smoothest and most accessible option for free. It was rejected because the tab mixes tiles, navigation cards and bordered rows in one scroll, and nesting a `List` inside a `ScrollView` breaks scrolling; converting the whole tab changes its look and behaviour. Revisit if the custom gesture cannot reach native smoothness on a device.
+
+**Files.** New `LLR/Components/SwipeToDelete.swift`, `LLR/Models/RoutineSnapshot.swift`; edited `LLR/Workout/WorkoutTabView.swift` and `LLR/Workout/RoutineListView.swift`.
+
+**Acceptance**
+1. Swiping a routine card left slides it with the finger and reveals Delete; a full swipe deletes it, a short swipe snaps back or open.
+2. The gesture never blocks or hijacks vertical scrolling; **Start** still works; only one row is open at a time.
+3. Deleting shows an Undo bar; Undo restores the routine with the same name, category, exercises, order, rest, notes, superset groups and set plans.
+4. Deleting a routine never changes finished workouts, exercises, or history.
+5. The three-dots menu is gone from Workout-tab rows and Edit is still one tap or swipe away.
+6. VoiceOver can edit and delete; Reduce Motion is respected.
+7. Judged on a device: no dropped frames or visible jumps while dragging, opening, deleting, or undoing.
+
+**Tests.** `RoutineSnapshotTests` (snapshot then restore equals the original, including nested plans, delete cascades, finished workouts untouched). The gesture itself is checked by hand on a device.
+
+**Effort.** About half a day for the gesture and its tuning, plus the snapshot and tests.
 
 ## Possible later
 
