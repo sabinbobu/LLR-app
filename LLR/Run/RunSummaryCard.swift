@@ -5,7 +5,7 @@ struct RunSummaryCard: View {
     let runs: [Workout]
 
     var body: some View {
-        let summary = RunStats.summary(runs.compactMap { run in run.endedAt.map { (run.startedAt, $0) } })
+        let summary = RunStats.summary(runs.compactMap { run in run.endedAt.map { (start: run.startedAt, end: $0) } })
         VStack(alignment: .leading, spacing: 12) {
             Label("Runs", systemImage: "figure.run").font(.headline)
             HStack(spacing: 28) {
