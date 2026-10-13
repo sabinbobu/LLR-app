@@ -21,7 +21,7 @@ Specs for the open items from the owner's notes (originally two raw bullet lists
 
 **Scope flags.** `LLR-app/CLAUDE.md` approves a closed list of features beyond v1. G7 (workout categories, yoga) and G8 (stretch sessions) are not on it. Add them to "Approved beyond v1" before building, or drop them. G6 and G5 are refinements of approved features.
 
-**Verification status.** All of G4–G10, F1 and F2 were written in a Linux container with no Xcode: none has been built or tested. Run `xcodegen generate` then the test command in CLAUDE.md, and the manual device checks listed per item, before relying on them.
+**Verification status.** The full XCTest suite (384 tests, including the new tests for G4–G10, F1 and F2) was built and run on a macOS runner via `.github/workflows/tests.yml`: 0 failures, 1 skipped (the live OpenRouter accuracy report, which needs `OPENROUTER_KEY`). Run 38380254951, PR #45. Still unverified: F1 baselines and F2 acceptance 6 (need an OpenRouter key), G5 force-quit persistence and all UI behaviour (need a device), and the G8/G9 source quotes.
 
 ## Build order
 
