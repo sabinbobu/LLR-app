@@ -30,7 +30,7 @@ struct MainTabView: View {
         .fullScreenCover(item: $presenter.presented, onDismiss: presenter.coverDismissed) { workout in
             ActiveWorkoutView(workout: workout) { presenter.pendingSummary = $0 }
         }
-        .sheet(item: $presenter.summary) { WorkoutSummaryView(workout: $0) }
+        .sheet(item: $presenter.summary, onDismiss: presenter.summaryDismissed) { WorkoutSummaryView(workout: $0) }
         // Catches anything Finish's own sync could have missed (e.g. a Lock Screen set logged
         // right before backgrounding) so the widget is never more than one background away from fresh.
         .onChange(of: scenePhase) { _, phase in

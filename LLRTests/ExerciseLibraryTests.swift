@@ -43,7 +43,7 @@ final class ExerciseLibraryTests: XCTestCase {
     func testBundledLibraryHasAllFieldsForEveryExercise() throws {
         let url = try XCTUnwrap(Bundle(for: Exercise.self).url(forResource: "exercises", withExtension: "json"))
         let seeds = try ExerciseLibrary.parseSeeds(Data(contentsOf: url))
-        XCTAssertEqual(seeds.count, 453)
+        XCTAssertEqual(seeds.count, 466)
         XCTAssertEqual(Set(seeds.map(\.name)).count, seeds.count, "names are the sync key, so they must be unique")
         let bench = try XCTUnwrap(seeds.first { $0.name == "Bench Press (Barbell)" })
         XCTAssertEqual(bench.equipment, ["Barbell"])

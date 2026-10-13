@@ -8292,5 +8292,208 @@
       "Keep every movement smooth and within a comfortable range.",
       "Spend longer on the joints you are about to load."
     ]
+  },
+  {
+    "Name": "Chest Doorway Stretch",
+    "Muscle": "Chest",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Chest",
+    "Secondary": [
+      "Shoulders"
+    ],
+    "Howto": [
+      "Stand in a doorway with a forearm on each side of the frame, elbows near shoulder height.",
+      "Step one foot forward until you feel a gentle pull across the chest.",
+      "Breathe slowly and keep your ribs down."
+    ]
+  },
+{
+    "Name": "Cross-Body Shoulder Stretch",
+    "Muscle": "Shoulders",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Shoulders",
+    "Secondary": [
+      "Upper Back"
+    ],
+    "Howto": [
+      "Bring one arm across your chest at shoulder height.",
+      "Hold it in place with the other forearm, without pulling on the elbow joint.",
+      "Keep your shoulders relaxed and switch sides."
+    ]
+  },
+{
+    "Name": "Overhead Triceps Stretch",
+    "Muscle": "Triceps",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Triceps",
+    "Secondary": [
+      "Shoulders"
+    ],
+    "Howto": [
+      "Raise one arm and bend the elbow so the hand drops behind your head.",
+      "Press gently on that elbow with the other hand.",
+      "Keep your ribs down and switch sides."
+    ]
+  },
+{
+    "Name": "Wrist Flexor Stretch",
+    "Muscle": "Forearms",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Forearms",
+    "Secondary": [],
+    "Howto": [
+      "Extend one arm in front of you with the palm up.",
+      "Use the other hand to ease the fingers back toward the floor.",
+      "Stop at a mild stretch and switch sides."
+    ]
+  },
+{
+    "Name": "Lat Side Reach Stretch",
+    "Muscle": "Lats",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Lats",
+    "Secondary": [
+      "Upper Back"
+    ],
+    "Howto": [
+      "Reach one arm overhead and grip a fixed post or the other wrist.",
+      "Lean away from the reaching side until you feel a stretch along your side.",
+      "Breathe into the stretch and switch sides."
+    ]
+  },
+{
+    "Name": "Biceps Wall Stretch",
+    "Muscle": "Biceps",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Biceps",
+    "Secondary": [
+      "Forearms"
+    ],
+    "Howto": [
+      "Place one palm flat on a wall at shoulder height, fingers pointing back.",
+      "Turn your body slowly away until you feel a stretch at the front of the arm.",
+      "Keep the elbow straight and switch sides."
+    ]
+  },
+{
+    "Name": "Child's Pose Stretch",
+    "Muscle": "Upper Back",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Upper Back",
+    "Secondary": [
+      "Lats",
+      "Lower Back"
+    ],
+    "Howto": [
+      "Kneel and sit your hips back toward your heels.",
+      "Reach your arms forward along the floor and let your chest sink.",
+      "Breathe slowly into your back."
+    ]
+  },
+{
+    "Name": "Upper Trap Neck Stretch",
+    "Muscle": "Traps",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Traps",
+    "Secondary": [
+      "Neck"
+    ],
+    "Howto": [
+      "Sit or stand tall and let one ear drop toward the same shoulder.",
+      "Rest the same-side hand lightly on your head without pulling.",
+      "Keep the opposite shoulder down and switch sides."
+    ]
+  },
+{
+    "Name": "Standing Quad Stretch",
+    "Muscle": "Quadriceps",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Quadriceps",
+    "Secondary": [],
+    "Howto": [
+      "Stand tall, holding a support if needed.",
+      "Bend one knee and hold the foot behind you, keeping your knees together.",
+      "Tuck the pelvis slightly and switch sides."
+    ]
+  },
+{
+    "Name": "Seated Hamstring Stretch",
+    "Muscle": "Hamstrings",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Hamstrings",
+    "Secondary": [
+      "Calves"
+    ],
+    "Howto": [
+      "Sit with one leg straight and the other foot against the inner thigh.",
+      "Hinge forward from the hips with a long back until you feel the back of the thigh.",
+      "Switch sides."
+    ]
+  },
+{
+    "Name": "Standing Calf Stretch",
+    "Muscle": "Calves",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Calves",
+    "Secondary": [],
+    "Howto": [
+      "Place both hands on a wall and step one foot back, heel down.",
+      "Keep the back knee straight and lean forward until the calf stretches.",
+      "Switch sides."
+    ]
+  },
+{
+    "Name": "Kneeling Hip Flexor Stretch",
+    "Muscle": "Quadriceps",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Quadriceps",
+    "Secondary": [
+      "Glutes"
+    ],
+    "Howto": [
+      "Kneel on one knee with the other foot in front, on a pad if needed.",
+      "Tuck the pelvis and shift forward until the front of the back hip stretches.",
+      "Stay upright and switch sides."
+    ]
+  },
+{
+    "Name": "Figure-Four Glute Stretch",
+    "Muscle": "Glutes",
+    "Equipment": [
+      "None"
+    ],
+    "Primary": "Glutes",
+    "Secondary": [
+      "Abductors"
+    ],
+    "Howto": [
+      "Lie on your back with knees bent and cross one ankle over the opposite knee.",
+      "Pull the supporting thigh toward your chest until the outer hip stretches.",
+      "Keep your head down and switch sides."
+    ]
   }
 ]
