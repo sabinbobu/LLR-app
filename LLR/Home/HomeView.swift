@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && ($0.sectionRaw == "gym" || $0.sectionRaw == "run") }, sort: \Workout.startedAt, order: .reverse)
+    // Everything but Kineto: lifts and runs share the timeline. An OR of two sections is too slow for the type checker.
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw != "kineto" }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
 
     var body: some View {

@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct ProfileView: View {
-    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && ($0.sectionRaw == "gym" || $0.sectionRaw == "run") }, sort: \Workout.startedAt, order: .reverse)
+    @Query(filter: #Predicate<Workout> { $0.endedAt != nil && $0.sectionRaw != "kineto" }, sort: \Workout.startedAt, order: .reverse)
     private var workouts: [Workout]
     @AppStorage(StorageKey.effortScale) private var effortScale: EffortScale = .off
     @State private var showingSettings = false
