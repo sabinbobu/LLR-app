@@ -1,0 +1,37 @@
+name: Fuel accuracy
+# Manual only: calls OpenRouter with the repo secret OPENROUTER_KEY and prints the per-meal and MEAN error lines.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: OpenRouter model id (blank = app default)
+        required: false
+        default: ""
+
+jobs:
+  accuracy:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Pick an iPhone simulator
+        run: |
+          NAME=$(xcrun simctl list devices available | grep -Eo 'iPhone [0-9A-Za-z ]+ \(' | head -1 | sed 's/ ($//')
+          echo "SIM_NAME=$NAME" >> "$GITHUB_ENV"
+      - name: Run live report
+        env:
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_KEY }}
+          OPENROUTER_MODEL: ${{ inputs.model }}
+        run: |
+          test -n "$OPENROUTER_KEY" || { echo "Add the OPENROUTER_KEY repository secret first"; exit 1; }
+          set -o pipefail
+          # TEST_RUNNER_ passes the vars into the simulator-hosted test process.
+          TEST_RUNNER_OPENROUTER_KEY="$OPENROUTER_KEY" TEST_RUNNER_OPENROUTER_MODEL="$OPENROUTER_MODEL" \
+          xcodebuild -scheme LLR -destination "platform=iOS Simulator,name=$SIM_NAME" CODE_SIGNING_ALLOWED=NO \
+            test -only-testing:LLRTests/FoodAccuracyTests/testLiveAccuracyReport | tee report.log | grep -E "==|MEAN|kcal|TEST"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fuel-accuracy-report
+          path: report.log
