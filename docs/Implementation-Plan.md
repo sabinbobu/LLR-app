@@ -9,17 +9,19 @@ Specs for the open items from the owner's notes (originally two raw bullet lists
 | G1 | Reorder exercises mid-workout (listed twice in the notes) | **Shipped** (#32) | — | none |
 | G2 | Replace an exercise from the library | **Shipped** (#32) | — | none |
 | G3 | Pre-fill last session's weights | **Shipped**, one question open (see G3) | — | none |
-| G4 | Edit button for routines | Open | S | none |
-| G5 | Minimised workout stays on screen like a video card | Open | M | none |
-| G6 | Warm-up measured by time | Open | M | none |
-| G7 | Colour-coded sessions: push / pull / legs / yoga | Open, **beyond approved scope** | M | **additive** |
-| G8 | Stretching session after push / pull / legs | Open, **beyond approved scope**, depends on G6 + G7 | L | none |
-| G9 | Study weekly exercise loading for maximum progress | Research only, no code | S | none |
-| G10 | Restart or delete a recorded workout from the history lists | **Partly shipped** (detail screen only); list access open, depends on G5 | S | none |
-| F1 | Fuel: macro accuracy | Open, measure first | M | none |
-| F2 | Fuel: ingredients from photo, user corrects, then AI analysis | Open | L | none |
+| G4 | Edit button for routines | **Shipped** (#34) | S | none |
+| G5 | Minimised workout stays on screen like a video card | **Shipped** (#35), device checks pending | M | none |
+| G6 | Warm-up measured by time | **Shipped** (#39) | M | none |
+| G7 | Colour-coded sessions: push / pull / legs / yoga | **Shipped** (#40), approved in CLAUDE.md; calendar colouring deferred | M | **additive** |
+| G8 | Stretching session after push / pull / legs | **Shipped** (#41), research unverified | L | none |
+| G9 | Study weekly exercise loading for maximum progress | **Delivered** (#42), sources unverified | S | none |
+| G10 | Restart or delete a recorded workout from the history lists | **Shipped** (#36) | S | none |
+| F1 | Fuel: macro accuracy | **Harness shipped** (#37); baselines not yet recorded | M | none |
+| F2 | Fuel: ingredients from photo, user corrects, then AI analysis | **Shipped** (#38); acceptance 6 unmeasured | L | none |
 
 **Scope flags.** `LLR-app/CLAUDE.md` approves a closed list of features beyond v1. G7 (workout categories, yoga) and G8 (stretch sessions) are not on it. Add them to "Approved beyond v1" before building, or drop them. G6 and G5 are refinements of approved features.
+
+**Verification status.** All of G4–G10, F1 and F2 were written in a Linux container with no Xcode: none has been built or tested. Run `xcodegen generate` then the test command in CLAUDE.md, and the manual device checks listed per item, before relying on them.
 
 ## Build order
 
