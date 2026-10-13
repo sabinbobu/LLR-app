@@ -20,7 +20,8 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | F2 | Fuel: ingredients from photo, user corrects, then analysis | Shipped; acceptance 6 not yet measured | #38 |
 | R1 | Run tracking: stopwatch, time-only stats | Shipped; the stopwatch is replaced by R2 | #49 |
 | S1 | Rest-timer end sound | Shipped | #50 |
-| R2 | Add Run: distance and time, body and muscle exhaustion | **Next** (spec below) | — |
+| R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
+| K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -107,6 +108,41 @@ Original two-note tick (`LLR/Resources/rest-tick.wav`, 0.75 s, mono 16-bit PCM).
 6. Old time-only runs still display; `PersistenceRecoveryTests` passes.
 
 **Tests.** `RunLoadTests` (MET interpolation and clamps, load, exhaustion monotonicity and cap, validation, muscle weights, decay), recovery-entry integration, Weekly Volume exclusion, add-run factory and unfinished-run cleanup.
+
+## Queued for a future session
+
+### K1. Kineto (back care) stability and catalog access
+
+**Reported by the owner.** The Kineto hub (Workout tab → Kineto) randomly freezes when its buttons are pressed, and the catalog is not accessible. Investigate the whole module (`LLR/Kineto/`, `LLR/Models/KinetoCatalog.swift`, about 1,600 lines across 19 files) and fix every issue found, not only these two.
+
+**Screen in question.** Hub with the "Not medical advice" banner and Red flags link, **New Routine**, **Browse Catalog**, **Pain history**, and "My Kineto Routines" (with Start) once any exist.
+
+**Migration impact.** None expected. If a fix needs a model change, state it first (`CLAUDE.md` working rule).
+
+**Suspects.** From reading `KinetoView.swift` only, so unverified until reproduced:
+1. **Gate re-presenting.** `.onAppear { if !isCleared { showingGate = true } }` runs every time the hub reappears (back from the catalog, Pain history, or any sheet). If clearing the gate does not persist `kinetoClearedVersion` before it dismisses, a full-screen cover can re-present over the screen and swallow taps, which reads as a freeze.
+2. **Three presentations on one view.** One `fullScreenCover` and two `.sheet(item:)` modifiers sit on the same `ScrollView`. SwiftUI drops a presentation requested while another is animating in or out, leaving the screen unresponsive or a button doing nothing.
+3. **Heavy work on the main thread.** The catalog and its detail screens may do synchronous work (building entries, fetching all exercises, loading media) when opened; a hang there looks like a frozen Browse Catalog. Another session recently moved media I/O off the main actor (#51), so this class of problem already exists in the app.
+4. **Not reachable from the gate flow.** Whether the catalog is blocked by the gate, by a navigation problem, or by an empty or failing data load is unknown and must be established first.
+
+**Method**
+1. Reproduce each control on a simulator build: Red flags, New Routine, Browse Catalog, Pain history, Start on a saved routine, and pick mode from the routine builder. Record which one fails and how (no response, blank screen, crash).
+2. Use Instruments (Hangs, Time Profiler) and the Main Thread Checker to find work over 250 ms on the main thread.
+3. Trace every presentation (cover, sheets, navigation) in the module and make sure only one can be pending at a time.
+4. Read every file in `LLR/Kineto/` for the same classes of bug (state mutated during view updates, unbounded work in `body`, force unwraps, queries without limits).
+5. Fix each cause at its root; add a regression test for each piece of logic (gate state, catalog loading) that can be tested without a UI.
+
+**Acceptance**
+1. Every control on the hub responds on the first tap, every time, including after returning from another screen and after dismissing a sheet.
+2. Browse Catalog opens, lists every catalog exercise, searches, and opens an exercise detail. Pick mode works from the Kineto routine builder.
+3. The gate shows once per catalog version and never re-presents once cleared; its cleared state survives relaunch.
+4. No main-thread hang above 250 ms while using the hub, catalog, check-in, check-out, or pain history.
+5. Only one modal presentation can be requested at a time from the hub; a second request is queued or ignored, never lost silently.
+6. The unit tests pass, and a device checklist covers each control above.
+
+**Out of scope.** Changing clinical content, red-flag text, or the physiotherapist gate rules (they still need real clinical sign-off).
+
+**Process.** This is a bug-fix item: reproduce first, one root cause per commit, and report anything found that was not in this list.
 
 ## Possible later
 
