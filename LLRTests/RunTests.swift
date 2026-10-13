@@ -23,17 +23,25 @@ final class RunTests: XCTestCase {
     }
 
     func testSummaryTotalsAverageAndUsualHour() {
-        let summary = RunStats.summary([
-            (date(7), date(7, 30)), (date(7, 10, day: 2), date(8, 10, day: 2)), (date(18, 0, day: 3), date(18, 20, day: 3)),
-        ], calendar: cal)
+        var runs: [(start: Date, end: Date)] = []
+        runs.append((start: date(7, 0, day: 1), end: date(7, 30, day: 1)))
+        runs.append((start: date(7, 10, day: 2), end: date(8, 10, day: 2)))
+        runs.append((start: date(18, 0, day: 3), end: date(18, 20, day: 3)))
+
+        let summary = RunStats.summary(runs, calendar: cal)
+
+        let totalMinutes: Double = 30 + 60 + 20
         XCTAssertEqual(summary.count, 3)
-        XCTAssertEqual(summary.totalSeconds, 30 * 60 + 60 * 60 + 20 * 60)
-        XCTAssertEqual(summary.averageSeconds, (110 * 60) / 3, accuracy: 0.001)
+        XCTAssertEqual(summary.totalSeconds, totalMinutes * 60, accuracy: 0.001)
+        XCTAssertEqual(summary.averageSeconds, totalMinutes * 60 / 3, accuracy: 0.001)
         XCTAssertEqual(summary.typicalHour, 7)
     }
 
     func testUsualHourTieGoesToTheEarlierHourAndEmptyIsNil() {
-        let tie = RunStats.summary([(date(18), date(19)), (date(6), date(7))], calendar: cal)
+        var runs: [(start: Date, end: Date)] = []
+        runs.append((start: date(18), end: date(19)))
+        runs.append((start: date(6), end: date(7)))
+        let tie = RunStats.summary(runs, calendar: cal)
         XCTAssertEqual(tie.typicalHour, 6)
         let none = RunStats.summary([], calendar: cal)
         XCTAssertEqual(none, RunStats.Summary(count: 0, totalSeconds: 0, averageSeconds: 0, typicalHour: nil))
