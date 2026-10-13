@@ -40,12 +40,18 @@ final class ActiveWorkoutModel {
 
     func add(_ exercise: Exercise) {
         guard let context else { return }
+        let isFirst = workout.exercises.isEmpty
         let entry = WorkoutExercise(order: (workout.exercises.map(\.order).max() ?? -1) + 1)
         context.insert(entry)
         entry.exercise = exercise
         workout.exercises.append(entry)
-        // Mirror last session's set count so a repeat day is pure check-tapping.
         let history = history(for: exercise)
+        if let timed = TimedWarmup.prefill(muscleGroup: exercise.muscleGroup, name: exercise.name, history: history, isFirstInWorkout: isFirst) {
+            appendSet(to: entry, prefill: timed)
+            syncLockScreen()
+            return
+        }
+        // Mirror last session's set count so a repeat day is pure check-tapping.
         for index in 0..<max(PreviousPerformance.latestSets(in: history).count, 1) {
             appendSet(to: entry, prefill: exercise.progressionPrefill(index: index, history: history, currentLast: nil))
         }
@@ -106,6 +112,8 @@ final class ActiveWorkoutModel {
         // Mid-superset the next exercise follows straight on; the rest comes once the round is done.
         if !endsRound(set) {
             syncLockScreen()
+        } else if TimedWarmup.isTimedWarmup(kind: set.kind, durationSeconds: set.durationSeconds) {
+            restTimer.skip()
         } else if let seconds = RestDuration.resolve(override: exercise?.restSeconds, defaultSeconds: defaultRestSeconds) {
             restTimer.start(seconds: seconds, exerciseName: exercise?.name)
         } else {
