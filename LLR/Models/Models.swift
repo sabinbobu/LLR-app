@@ -12,6 +12,8 @@ final class Workout {
     var sectionRaw: String = "gym"
     /// A label only (see SessionCategory); empty = uncategorised. Never read by history, prefill or PRs.
     var categoryRaw: String = ""
+    /// Runs only: distance in km, nil for lifts and for runs logged before distance existed.
+    var distanceKm: Double?
     // 0–10 each, back and leg scored separately; nil = not asked (every workout before Kineto shipped).
     var backPainBefore: Int?
     var legPainBefore: Int?

@@ -14,7 +14,13 @@ struct RunCard: View {
                 Image(systemName: "figure.run").font(.title2).foregroundStyle(Theme.accent)
             }
             HStack(spacing: 32) {
+                if let km = workout.distanceKm {
+                    RunStat(label: "Distance", value: "\(km.formatted(.number.precision(.fractionLength(0...2)))) km")
+                }
                 RunStat(label: "Time", value: Format.duration(workout.duration))
+                if let km = workout.distanceKm {
+                    RunStat(label: "Pace", value: "\(RunLoad.paceLabel(secondsPerKm: RunLoad.paceSecondsPerKm(km: km, seconds: workout.duration))) /km")
+                }
                 RunStat(label: "Started", value: workout.startedAt.formatted(date: .omitted, time: .shortened))
             }
         }

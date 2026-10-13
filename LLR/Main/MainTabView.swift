@@ -28,11 +28,7 @@ struct MainTabView: View {
         }
         .environment(presenter)
         .fullScreenCover(item: $presenter.presented, onDismiss: presenter.coverDismissed) { workout in
-            if workout.isRun {
-                RunActiveView(workout: workout)
-            } else {
-                ActiveWorkoutView(workout: workout) { presenter.pendingSummary = $0 }
-            }
+            ActiveWorkoutView(workout: workout) { presenter.pendingSummary = $0 }
         }
         .sheet(item: $presenter.summary, onDismiss: presenter.summaryDismissed) { WorkoutSummaryView(workout: $0) }
         // Catches anything Finish's own sync could have missed (e.g. a Lock Screen set logged
