@@ -15,7 +15,8 @@ enum RestNotifier {
             let content = UNMutableNotificationContent()
             content.title = "Rest over"
             content.body = exerciseName.map { "Time for your next set of \($0)." } ?? "Time for your next set."
-            content.sound = .default
+            // A bundled sound must be linear PCM under 30 s; a missing file falls back to the default alert.
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(RestSound.fileName))
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
             center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
         }

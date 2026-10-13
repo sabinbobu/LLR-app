@@ -25,6 +25,7 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
 - Import Hevy/Strong CSV exports; export a Strong-format CSV
 - Lock Screen Live Activity: complete the next set, adjust or skip rest
 - Rule-based progression targets inside a per-exercise rep range (double progression)
+- Rest-timer end sound: an original two-note tick (`LLR/Resources/rest-tick.wav`, `LLR/Workout/RestSound.swift`) played by the notification in the background and by the app in the foreground
 - Kineto: a physiotherapist-gated section for logging cited, low-load back-care exercises and pain before/after each session (see `LLR/Kineto/`, `LLR/Models/KinetoCatalog.swift`). Content still needs real clinical sign-off — see the roadmap in the plan this was built from.
 - Exercise photos and videos (PRs #14, #15, plan in `docs/kineto-v2-plan.md`): your own photos/videos and notes on custom exercises, and notes/media on built-in Kineto exercises. Files live in Application Support (`ExerciseMediaStore`); photos are downscaled and videos re-encoded to 720p.
 - Routines: a built-in library of 16 cited programs plus a routine builder (see `LLR/Models/RoutineLibrary.swift`, `docs/routine-library-research.md`).

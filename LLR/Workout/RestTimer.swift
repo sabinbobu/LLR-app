@@ -69,6 +69,7 @@ final class RestTimer {
             self.startDate = nil
             self.endDate = nil
             self.finishedCount += 1
+            RestSound.play()
             LiveWorkoutActivity.sync()
         }
     }
