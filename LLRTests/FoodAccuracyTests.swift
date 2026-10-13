@@ -55,7 +55,7 @@ final class FoodAccuracyTests: XCTestCase {
     func testLiveAccuracyReport() async throws {
         let env = ProcessInfo.processInfo.environment
         guard let key = env["OPENROUTER_KEY"], !key.isEmpty else { throw XCTSkip("Set OPENROUTER_KEY to run the live accuracy report") }
-        let model = env["OPENROUTER_MODEL"] ?? OpenRouterClient.defaultModel
+        let model = env["OPENROUTER_MODEL"].flatMap { $0.isEmpty ? nil : $0 } ?? OpenRouterClient.defaultModel
         let fixture = try load()
         for (label, pick) in [("stated grams", \Fixture.Meal.description), ("vague portions", \Fixture.Meal.vagueDescription)] {
             var errors: [[Double]] = []

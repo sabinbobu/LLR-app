@@ -16,6 +16,10 @@ Without `OPENROUTER_KEY` the live test is skipped; `testFixtureIsComplete` and t
 
 Two passes per run: **stated grams** (tests food-composition recall and arithmetic) and **vague portions** (tests portion guessing, the F2 hypothesis). Error is mean absolute percentage error per meal; macros under 1 g are skipped.
 
+## One-click run (no Mac)
+
+Add the repository secret `OPENROUTER_KEY` (Settings → Secrets and variables → Actions), then Actions → *Fuel accuracy* → Run workflow. The `MEAN` lines are in the job log and the `fuel-accuracy-report` artifact.
+
 ## Baselines
 
 | Date | Model | Pass | kcal | P | C | F |
