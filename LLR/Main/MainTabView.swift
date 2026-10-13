@@ -18,6 +18,10 @@ struct MainTabView: View {
             case .profile: ProfileView()
             }
         }
+        // The floating bar sits over the scroll view's edge, so the last row ended right against it.
+        // Extra scroll-content space lets every tab screen (and the screens pushed from it) scroll
+        // its last row clear of the bar.
+        .contentMargins(.bottom, 32, for: .scrollContent)
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
                 if let current = unfinished.first, presenter.presented == nil {
