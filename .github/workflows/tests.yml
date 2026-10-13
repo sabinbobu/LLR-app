@@ -1,0 +1,32 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  xcode-tests:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Pick an iPhone simulator
+        # The runner's Xcode ships different simulators than the dev machine, so don't hard-code a name.
+        run: |
+          NAME=$(xcrun simctl list devices available | grep -Eo 'iPhone [0-9A-Za-z ]+ \(' | head -1 | sed 's/ ($//')
+          echo "SIM_NAME=$NAME" >> "$GITHUB_ENV"
+      - name: Test
+        run: |
+          set -o pipefail
+          xcodebuild -scheme LLR -destination "platform=iOS Simulator,name=$SIM_NAME" \
+            CODE_SIGNING_ALLOWED=NO test | tee test.log | tail -n 200
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: test.log
