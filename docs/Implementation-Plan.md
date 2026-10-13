@@ -24,6 +24,7 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
 | U2 | Repeat button: a colour that complements the theme | **Queued** for a future session (spec below) | — |
+| U3 | Profile header card: a modern redesign | **Queued** for a future session (spec below; needs design sign-off first) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -218,6 +219,44 @@ White text on these fills only reaches 2.1 : 1 and 3.2 : 1, so the label must be
 **Tests.** `ThemeContrastTests`: resolve `repeatAction` and `repeatActionLabel` in light and dark and assert the contrast ratio is at least 4.5.
 
 **Effort.** Under an hour.
+
+### U3. Profile header card redesign
+
+**Request.** Improve the Profile card (the card at the top of the Profile tab: photo, name, age, height, goal, workout count) from a UI point of view: modern and really cool.
+
+**What it is today** (`ProfileHeaderCard.swift`, `AvatarView`, `FlowChips`). A flat `Theme.surface` rounded rectangle: a 76 pt round photo, the name, then a wrapping row of four equal grey chips (age, height, goal, workout count), and a chevron. Problems visible in use:
+- Everything is the same weight: the chips carry the numbers, so nothing stands out and the card reads as a form, not a profile.
+- The goal chip is long ("Gain Strength") and gets cut off or pushes the other chips onto a second line.
+- The "N workouts" chip counts every history entry, so since run tracking it also counts runs. It is mislabelled.
+- Nothing about the card says anything about training.
+
+**Migration impact.** None. Display only; it reads values the app already stores.
+
+**Design check first (required).** There is no `/reference/` folder in the repo, and `CLAUDE.md` says to ask for a screenshot rather than invent a screen design. The build session must start by either receiving a reference screenshot from the owner or showing the owner a preview of the direction below and getting a yes. Do not build blind.
+
+**Recommended direction: a hero card.**
+1. **Surface.** A subtle gradient (the accent at about 12% into the surface colour), a hairline top highlight, a larger corner radius (28), and a soft shadow in light mode. Static gradients only (no live blur), so scrolling stays smooth.
+2. **Avatar with a weekly ring.** A larger photo (about 96 pt) wrapped in a seven-segment ring: one segment per day of the current week, filled when a workout or run happened that day (`TrainingCalendar.trainedDays` already provides this). It fills with a short animation when the screen appears (none with Reduce Motion). The no-photo fallback (gradient with initials) stays.
+3. **Header.** Name at the top in a bolder, larger size; the goal as one pill under the name, with room to wrap, never cut off.
+4. **Stats row.** A single row of equal columns separated by hairlines: **Age**, **Height**, **Sessions**, **Streak** (weeks). Big monospaced numbers with small labels in the secondary colour. At the largest Dynamic Type sizes it becomes a 2 × 2 grid.
+5. **Interaction.** The whole card is still the tap target for the details screen; a small press-down scale with a spring; keep a quiet chevron or drop it (owner's call at the preview).
+6. **Sessions, not workouts.** Count lifts and runs together and call the stat **Sessions**; this also fixes the mislabelled chip.
+
+**Constraints.** One view per file and under about 200 lines (split the stats row and the ring into their own views); colours from `Theme` only, with any new token defined adaptively for light and dark; no new data, network or permissions; works in both appearance modes and at all Dynamic Type sizes; VoiceOver reads the card as one element with a sentence ("Sabeen, 28, 169 centimetres, goal gain strength, 4 sessions, 2 week streak").
+
+**Alternatives considered.** A cover-photo style card (large blurred photo behind the name) looks striking but needs a photo; most profiles start with initials, so it would look empty for them. A minimal card (bigger name, fewer chips) is safe but not "really cool". The hero card keeps the photo optional and puts training on the card.
+
+**Acceptance**
+1. The goal is never truncated; nothing overlaps at any Dynamic Type size.
+2. The ring shows exactly the days of this week with a workout or run; an empty week shows an empty ring.
+3. "Sessions" equals the lifts and runs in history; Streak matches the calendar screen.
+4. Looks right with a photo, with initials only, and with no name (placeholder).
+5. Smooth to scroll past on a device; the animation respects Reduce Motion.
+6. The owner approved the preview before the build, and approved the result on a device.
+
+**Tests.** The week-ring segments and the session count are logic: a `ProfileHeaderStats` struct with unit tests (week boundaries, runs and lifts both count, empty week, streak equals `TrainingCalendar.weekStreak`). The visuals are checked by hand.
+
+**Effort.** About a day, including the preview round with the owner.
 
 ## Possible later
 
