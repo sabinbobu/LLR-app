@@ -7,6 +7,7 @@ final class Routine {
     var name: String
     var createdAt: Date
     var sectionRaw: String = "gym"
+    var categoryRaw: String = ""
     @Relationship(deleteRule: .cascade, inverse: \RoutineExercise.routine) var exercises: [RoutineExercise] = []
 
     init(name: String = "") {
@@ -17,6 +18,10 @@ final class Routine {
 }
 
 extension Routine {
+    var category: SessionCategory {
+        get { SessionCategory(raw: categoryRaw) }
+        set { categoryRaw = newValue.rawValue }
+    }
     var section: WorkoutSection {
         get { WorkoutSection(rawValue: sectionRaw) ?? .gym }
         set { sectionRaw = newValue.rawValue }

@@ -9,6 +9,7 @@ enum RoutineFactory {
     @discardableResult
     static func save(_ workout: Workout, in context: ModelContext) -> Routine {
         let routine = Routine(name: workout.title)
+        routine.category = workout.category
         routine.section = workout.section
         context.insert(routine)
         var order = 0

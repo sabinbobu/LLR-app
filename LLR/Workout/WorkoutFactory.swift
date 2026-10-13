@@ -18,6 +18,7 @@ enum WorkoutFactory {
     static func start(copying source: Workout?, in context: ModelContext) -> Workout {
         let workout = Workout()
         workout.section = source?.section ?? .gym
+        workout.category = source?.category ?? .none
         context.insert(workout)
         for (index, sourceEntry) in (source?.orderedExercises ?? []).enumerated() {
             guard let exercise = sourceEntry.exercise else { continue }
@@ -59,7 +60,7 @@ enum WorkoutFactory {
                 )
             }
         }
-        return start(plan, named: routine.name, section: routine.section, in: context)
+        return start(plan, named: routine.name, section: routine.section, category: routine.category, in: context)
     }
 
     /// A Kineto session's pain check-in, recorded before the first set exists. Back and leg are
@@ -76,10 +77,11 @@ enum WorkoutFactory {
     /// target (or last session's value when no rep range is set), same rule as mid-workout
     /// prefill — "leave it blank to workout on the go". The workout takes the plan's name so
     /// history reads "Push Day" rather than "Evening Workout".
-    static func start(_ plan: [PlannedExercise], named name: String, section: WorkoutSection = .gym, in context: ModelContext) -> Workout {
+    static func start(_ plan: [PlannedExercise], named name: String, section: WorkoutSection = .gym, category: SessionCategory = .none, in context: ModelContext) -> Workout {
         let workout = Workout()
         workout.name = name
         workout.section = section
+        workout.category = category
         context.insert(workout)
         for (order, planned) in plan.enumerated() {
             let exercise = planned.exercise

@@ -133,7 +133,10 @@ struct WorkoutTabView: View {
     private func routineRow(_ routine: Routine) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(routine.name.isEmpty ? "Untitled Routine" : routine.name).font(.headline)
+                HStack(spacing: 8) {
+                    Text(routine.name.isEmpty ? "Untitled Routine" : routine.name).font(.headline)
+                    CategoryChip(category: routine.category)
+                }
                 Text(routine.orderedExercises.compactMap { $0.exercise?.name }.joined(separator: ", "))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -196,6 +199,7 @@ struct WorkoutTabView: View {
 
     private func start(program: ProgramTemplate, day: ProgramTemplate.Day) {
         let plan = RoutineLibrary.plan(for: day, in: context)
-        presenter.present(WorkoutFactory.start(plan, named: RoutineLibrary.routineName(program, day), in: context))
+        presenter.present(WorkoutFactory.start(plan, named: RoutineLibrary.routineName(program, day),
+                                               category: .infer(fromDayName: day.name), in: context))
     }
 }
