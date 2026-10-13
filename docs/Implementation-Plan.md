@@ -25,6 +25,8 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
 | U2 | Repeat button: a colour that complements the theme | **Queued** for a future session (spec below) | — |
 | U3 | Profile header card: a modern redesign | **Queued** for a future session (spec below; needs design sign-off first) | — |
+| D1 | One design system: buttons, cards, corner radii | **Queued** for a future session (spec below) | — |
+| W1 | Workout tab restructure: start in one tap | **Queued** for a future session (spec below; needs design sign-off first) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -113,6 +115,8 @@ Original two-note tick (`LLR/Resources/rest-tick.wav`, 0.75 s, mono 16-bit PCM).
 **Tests.** `RunLoadTests` (MET interpolation and clamps, load, exhaustion monotonicity and cap, validation, muscle weights, decay), recovery-entry integration, Weekly Volume exclusion, add-run factory and unfinished-run cleanup.
 
 ## Queued for a future session
+
+**Suggested order.** D1 first (it defines the buttons, cards and radii the others use), then W1, then U1, U2 and U3 on top of them, and K1 whenever the owner wants the Kineto fixes (it is independent). U2 becomes one case of D1's button roles: if D1 lands first, U2 is done by assigning the amber to the "repeat" role and needs no separate pass.
 
 ### K1. Kineto (back care) stability and catalog access
 
@@ -257,6 +261,81 @@ White text on these fills only reaches 2.1 : 1 and 3.2 : 1, so the label must be
 **Tests.** The week-ring segments and the session count are logic: a `ProfileHeaderStats` struct with unit tests (week boundaries, runs and lifts both count, empty week, streak equals `TrainingCalendar.weekStreak`). The visuals are checked by hand.
 
 **Effort.** About a day, including the preview round with the owner.
+
+### D1. One design system: buttons, cards, corner radii
+
+**Source.** A review of the whole UI (code scan of all 229 view files plus the Workout, Kineto and Profile screens). The Home, Fuel and active-workout screens and light mode were not inspected on a device, so the audit step below covers them.
+
+**Problem.** The app has no single set of building blocks, so screens drift apart.
+- Six button styles are in use: plain (40 uses), `CardButtonStyle` (15), `PrimaryButtonStyle` (13), the system `.borderedProminent` (9), `SheetButtonStyle` (5) and `.bordered` (3). Three of them are "the main action" with different heights, fonts and disabled looks.
+- Ten corner radii are in use (14 is the most common at 32 uses, then 16, 24, 8, 12, 10, 20, 18, 3 and 56).
+- Cards differ by screen: the Workout tab uses outline-only cards, Profile uses filled cards.
+- On the Workout tab, **Start** and **Repeat** are the same blue button.
+
+**Migration impact.** None. Styling only.
+
+**Design**
+1. **Radius scale** in `Theme`: 8 (chips, small controls), 12 (fields, rows), 16 (cards, buttons), 24 (hero cards, sheets). Replace the ten values; anything that is a capsule stays a capsule.
+2. **One card style** (`CardStyle`): filled `Theme.card`, one hairline border colour, radius 16, one padding value; an `emphasised` variant for hero cards (U3). The outline-only look is retired.
+3. **Four button roles**, each a `ButtonStyle` with one height, font, pressed state and disabled state:
+   - **primary**: filled accent, the one main action on a screen;
+   - **secondary**: tinted fill, for the second action (the Repeat button's amber lives here, see U2);
+   - **quiet**: text only;
+   - **destructive**: red, always with a confirmation or an Undo.
+   The system `.borderedProminent` and `.bordered` uses are moved to these roles; `PrimaryButtonStyle` and `SheetButtonStyle` collapse into `primary`.
+4. A short `docs/design-system.md` that lists the tokens and roles, so new screens use them by default.
+
+**Method.** Add the styles first and change no screen. Then migrate screen by screen (Workout, Profile, Fuel, Home, sheets, Kineto, onboarding), one PR per area, each with before and after screenshots from the simulator in the PR. Finish with a grep check that no screen uses a retired style or an off-scale radius. Keep behaviour identical; this is a visual pass.
+
+**Acceptance**
+1. Only the four roles remain in the code; no `.borderedProminent`, `.bordered` or legacy primary style outside the style definitions.
+2. Every corner radius comes from the scale.
+3. Every card in the app uses `CardStyle` (or its emphasised variant).
+4. On the Workout tab, Start and Repeat are visibly different roles.
+5. All colours are `Theme` tokens and work in dark and light mode; label contrast is at least 4.5 : 1 (checked by a test over the tokens).
+6. No screen changes behaviour, and the owner has looked at each migrated area on a device.
+
+**Tests.** `ThemeContrastTests` for token pairs in both modes; a lint-style test that fails when a banned style or an off-scale radius appears in the source tree.
+
+**Effort.** About two days: one for the styles and the doc, one to migrate the screens.
+
+### W1. Workout tab restructure: start in one tap
+
+**Source.** The same UI review. The Workout tab is the app's core screen; `CLAUDE.md` says speed of entry beats feature count.
+
+**Problem.** The tab is one long scroll of eight or nine sections of equal visual weight, in this order: Start Empty Workout (or Resume), Add Run (and the run summary), Log a Past Workout, Routines (New Routine, Explore Routines), the Kineto card, My Routines (five rows and See All), Repeat a Workout (ten rows), and How to get started. Starting your usual routine can mean scrolling past three screens of other things; the 10-row Repeat list duplicates the history that already has Repeat (G10); the onboarding link never goes away; and the Kineto card sits in the middle of the gym content.
+
+**Migration impact.** None. Layout only.
+
+**Design check first (required).** There is no `/reference/` folder, and `CLAUDE.md` says not to invent a screen design without one. The build session starts by receiving a reference screenshot or by showing the owner a preview of the layout below and getting a yes.
+
+**Recommended layout, top to bottom**
+1. **Primary action.** One large **Start Workout** button (Resume when one is open). Beside or under it a compact row of secondary actions: **Add Run**, **Log Past**.
+2. **Quick start.** A horizontal strip of cards for the five most recent routines (name, exercise count, a Start button), with **See All** at the end. This is where U1's swipe-to-delete, or the card's long-press, applies. New Routine and Explore Routines become two small tiles at the end of the strip or a single "Routines" link.
+3. **Repeat last.** One line of up to three chips for the last three workouts ("Repeat: Push Day · Legs day · Night Workout"), replacing the 10-row list. The full history, with long-press Repeat (G10), is unchanged.
+4. **Runs.** The run summary card, only when runs exist, below the strip.
+5. **Kineto.** A single compact row at the bottom ("Back care") that opens the Kineto hub. The gate, banner and red-flags flow are unchanged (this item does not touch clinical content).
+6. **How to get started.** Shown only until the first workout is finished, then removed from the tab. It stays reachable from Profile → Settings → Help.
+
+**Decisions.**
+- Chips instead of a list for Repeat: a list with ten rows is what buries everything below it, and history already offers the full list. Rejected alternative: keep the list but collapse it behind a disclosure; this keeps the clutter one tap away but also keeps a second place to maintain the same rows.
+- Kineto stays on this tab, but at the bottom: it is a gated section for back care, so it should not be prominent for everyone, and it must stay reachable within two taps of app launch.
+
+**Acceptance**
+1. From a cold launch, starting one of your three most recent routines takes two taps (Workout tab, then Start) with no scrolling, on an iPhone 15-sized screen.
+2. The primary Start action is the most prominent control on the tab; Resume replaces it while a workout is open.
+3. Quick start shows the five most recent routines in order; See All opens the full list; Edit and delete still work.
+4. Repeat last shows the last three finished gym workouts and starts a copy in one tap; disabled with a reason while another workout is open.
+5. Kineto is reachable in at most two taps from launch and its gate and disclaimer are unchanged.
+6. The onboarding row disappears after the first finished workout and its content is still reachable from Settings.
+7. The tab scrolls less than one screen on a typical account; nothing is hidden behind the tab bar.
+8. The owner approved the preview before the build and approved the result on a device.
+
+**Tests.** Pure logic: which routines are "recent", which workouts qualify for Repeat last (gym only, finished, last three), and when the onboarding row shows. The layout is checked by hand.
+
+**Depends on / interacts with.** D1 (use its card and button roles); U1 (swipe-to-delete applies to the strip's cards, so build W1's cards first or build U1 against the strip); U2 (the Repeat chips take the secondary role).
+
+**Effort.** About a day and a half, including the preview round.
 
 ## Possible later
 
