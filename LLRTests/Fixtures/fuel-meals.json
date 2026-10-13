@@ -1,0 +1,653 @@
+{
+  "note": "Ground truth = grams x USDA per-100 g values. Values were entered from memory of FoodData Central (SR Legacy) entries named in 'source' and are UNVERIFIED against the live database; spot-check before treating small errors as model error.",
+  "foods": {
+    "chicken": {
+      "source": "USDA FoodData Central: Chicken, broilers or fryers, breast, meat only, roasted",
+      "per100g": {
+        "kcal": 165,
+        "protein_g": 31,
+        "carbs_g": 0,
+        "fat_g": 3.6
+      }
+    },
+    "rice": {
+      "source": "USDA FoodData Central: Rice, white, long-grain, regular, cooked",
+      "per100g": {
+        "kcal": 130,
+        "protein_g": 2.7,
+        "carbs_g": 28.2,
+        "fat_g": 0.3
+      }
+    },
+    "broccoli": {
+      "source": "USDA FoodData Central: Broccoli, cooked, boiled, drained, without salt",
+      "per100g": {
+        "kcal": 35,
+        "protein_g": 2.4,
+        "carbs_g": 7.2,
+        "fat_g": 0.4
+      }
+    },
+    "egg": {
+      "source": "USDA FoodData Central: Egg, whole, cooked, hard-boiled",
+      "per100g": {
+        "kcal": 155,
+        "protein_g": 12.6,
+        "carbs_g": 1.1,
+        "fat_g": 10.6
+      }
+    },
+    "banana": {
+      "source": "USDA FoodData Central: Bananas, raw",
+      "per100g": {
+        "kcal": 89,
+        "protein_g": 1.1,
+        "carbs_g": 22.8,
+        "fat_g": 0.3
+      }
+    },
+    "oats": {
+      "source": "USDA FoodData Central: Cereals, oats, regular, cooked with water",
+      "per100g": {
+        "kcal": 71,
+        "protein_g": 2.5,
+        "carbs_g": 12,
+        "fat_g": 1.5
+      }
+    },
+    "milk": {
+      "source": "USDA FoodData Central: Milk, whole, 3.25% milkfat",
+      "per100g": {
+        "kcal": 61,
+        "protein_g": 3.2,
+        "carbs_g": 4.8,
+        "fat_g": 3.3
+      }
+    },
+    "salmon": {
+      "source": "USDA FoodData Central: Fish, salmon, Atlantic, farmed, cooked, dry heat",
+      "per100g": {
+        "kcal": 206,
+        "protein_g": 22.1,
+        "carbs_g": 0,
+        "fat_g": 12.4
+      }
+    },
+    "sweetpotato": {
+      "source": "USDA FoodData Central: Sweet potato, baked in skin, without salt",
+      "per100g": {
+        "kcal": 90,
+        "protein_g": 2,
+        "carbs_g": 20.7,
+        "fat_g": 0.2
+      }
+    },
+    "spaghetti": {
+      "source": "USDA FoodData Central: Pasta, cooked, enriched, without added salt",
+      "per100g": {
+        "kcal": 158,
+        "protein_g": 5.8,
+        "carbs_g": 30.9,
+        "fat_g": 0.9
+      }
+    },
+    "beef": {
+      "source": "USDA FoodData Central: Beef, ground, 85% lean, pan-browned",
+      "per100g": {
+        "kcal": 250,
+        "protein_g": 26,
+        "carbs_g": 0,
+        "fat_g": 15
+      }
+    },
+    "bread": {
+      "source": "USDA FoodData Central: Bread, whole-wheat, commercially prepared",
+      "per100g": {
+        "kcal": 252,
+        "protein_g": 12.5,
+        "carbs_g": 42.7,
+        "fat_g": 3.5
+      }
+    },
+    "pb": {
+      "source": "USDA FoodData Central: Peanut butter, smooth style",
+      "per100g": {
+        "kcal": 588,
+        "protein_g": 25,
+        "carbs_g": 20,
+        "fat_g": 50
+      }
+    },
+    "yogurt": {
+      "source": "USDA FoodData Central: Yogurt, Greek, plain, nonfat",
+      "per100g": {
+        "kcal": 59,
+        "protein_g": 10.2,
+        "carbs_g": 3.6,
+        "fat_g": 0.4
+      }
+    },
+    "avocado": {
+      "source": "USDA FoodData Central: Avocados, raw, all commercial varieties",
+      "per100g": {
+        "kcal": 160,
+        "protein_g": 2,
+        "carbs_g": 8.5,
+        "fat_g": 14.7
+      }
+    },
+    "cheddar": {
+      "source": "USDA FoodData Central: Cheese, cheddar",
+      "per100g": {
+        "kcal": 403,
+        "protein_g": 24.9,
+        "carbs_g": 1.3,
+        "fat_g": 33.1
+      }
+    },
+    "oliveoil": {
+      "source": "USDA FoodData Central: Oil, olive, salad or cooking",
+      "per100g": {
+        "kcal": 884,
+        "protein_g": 0,
+        "carbs_g": 0,
+        "fat_g": 100
+      }
+    },
+    "tuna": {
+      "source": "USDA FoodData Central: Fish, tuna, light, canned in water, drained",
+      "per100g": {
+        "kcal": 116,
+        "protein_g": 25.5,
+        "carbs_g": 0,
+        "fat_g": 0.8
+      }
+    },
+    "apple": {
+      "source": "USDA FoodData Central: Apples, raw, with skin",
+      "per100g": {
+        "kcal": 52,
+        "protein_g": 0.3,
+        "carbs_g": 13.8,
+        "fat_g": 0.2
+      }
+    },
+    "almonds": {
+      "source": "USDA FoodData Central: Nuts, almonds",
+      "per100g": {
+        "kcal": 579,
+        "protein_g": 21.2,
+        "carbs_g": 21.6,
+        "fat_g": 49.9
+      }
+    },
+    "lentils": {
+      "source": "USDA FoodData Central: Lentils, mature seeds, cooked, boiled",
+      "per100g": {
+        "kcal": 116,
+        "protein_g": 9,
+        "carbs_g": 20.1,
+        "fat_g": 0.4
+      }
+    },
+    "tomato": {
+      "source": "USDA FoodData Central: Tomatoes, red, ripe, raw",
+      "per100g": {
+        "kcal": 18,
+        "protein_g": 0.9,
+        "carbs_g": 3.9,
+        "fat_g": 0.2
+      }
+    },
+    "potato": {
+      "source": "USDA FoodData Central: Potatoes, baked, flesh and skin",
+      "per100g": {
+        "kcal": 93,
+        "protein_g": 2.5,
+        "carbs_g": 21.2,
+        "fat_g": 0.1
+      }
+    },
+    "tofu": {
+      "source": "USDA FoodData Central: Tofu, raw, firm, prepared with calcium sulfate",
+      "per100g": {
+        "kcal": 144,
+        "protein_g": 17.3,
+        "carbs_g": 2.8,
+        "fat_g": 8.7
+      }
+    },
+    "tortilla": {
+      "source": "USDA FoodData Central: Tortillas, ready-to-bake or -fry, corn",
+      "per100g": {
+        "kcal": 218,
+        "protein_g": 5.7,
+        "carbs_g": 44.6,
+        "fat_g": 2.9
+      }
+    },
+    "blackbeans": {
+      "source": "USDA FoodData Central: Beans, black, mature seeds, cooked, boiled",
+      "per100g": {
+        "kcal": 132,
+        "protein_g": 8.9,
+        "carbs_g": 23.7,
+        "fat_g": 0.5
+      }
+    }
+  },
+  "meals": [
+    {
+      "id": 1,
+      "name": "Chicken and rice",
+      "description": "150 g roasted chicken breast, 200 g cooked white rice, 100 g boiled broccoli",
+      "vagueDescription": "a chicken breast with a cup of rice and some broccoli",
+      "ingredients": [
+        {
+          "food": "chicken",
+          "grams": 150
+        },
+        {
+          "food": "rice",
+          "grams": 200
+        },
+        {
+          "food": "broccoli",
+          "grams": 100
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Egg breakfast",
+      "description": "2 large hard-boiled eggs (100 g), 60 g whole-wheat toast, 50 g avocado",
+      "vagueDescription": "two boiled eggs on toast with some avocado",
+      "ingredients": [
+        {
+          "food": "egg",
+          "grams": 100
+        },
+        {
+          "food": "bread",
+          "grams": 60
+        },
+        {
+          "food": "avocado",
+          "grams": 50
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Oat bowl",
+      "description": "240 g cooked oatmeal, one 118 g banana, 100 g whole milk",
+      "vagueDescription": "a bowl of oatmeal with a banana and a splash of milk",
+      "ingredients": [
+        {
+          "food": "oats",
+          "grams": 240
+        },
+        {
+          "food": "banana",
+          "grams": 118
+        },
+        {
+          "food": "milk",
+          "grams": 100
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Salmon dinner",
+      "description": "140 g cooked salmon, 200 g baked sweet potato, 100 g boiled broccoli",
+      "vagueDescription": "a salmon fillet with a baked sweet potato and broccoli",
+      "ingredients": [
+        {
+          "food": "salmon",
+          "grams": 140
+        },
+        {
+          "food": "sweetpotato",
+          "grams": 200
+        },
+        {
+          "food": "broccoli",
+          "grams": 100
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Spaghetti bolognese",
+      "description": "220 g cooked spaghetti, 100 g browned 85% lean ground beef, 120 g tomato",
+      "vagueDescription": "a plate of spaghetti with ground beef and tomato",
+      "ingredients": [
+        {
+          "food": "spaghetti",
+          "grams": 220
+        },
+        {
+          "food": "beef",
+          "grams": 100
+        },
+        {
+          "food": "tomato",
+          "grams": 120
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Peanut butter toast",
+      "description": "60 g whole-wheat toast with 32 g peanut butter",
+      "vagueDescription": "two slices of toast with peanut butter",
+      "ingredients": [
+        {
+          "food": "bread",
+          "grams": 60
+        },
+        {
+          "food": "pb",
+          "grams": 32
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Yogurt snack",
+      "description": "170 g plain nonfat Greek yogurt, 28 g almonds, one 182 g apple",
+      "vagueDescription": "Greek yogurt with a handful of almonds and an apple",
+      "ingredients": [
+        {
+          "food": "yogurt",
+          "grams": 170
+        },
+        {
+          "food": "almonds",
+          "grams": 28
+        },
+        {
+          "food": "apple",
+          "grams": 182
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Cheese and avocado wrap",
+      "description": "two 30 g corn tortillas (60 g), 30 g cheddar, 70 g avocado",
+      "vagueDescription": "corn tortillas with cheddar and avocado",
+      "ingredients": [
+        {
+          "food": "tortilla",
+          "grams": 60
+        },
+        {
+          "food": "cheddar",
+          "grams": 30
+        },
+        {
+          "food": "avocado",
+          "grams": 70
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Tuna salad",
+      "description": "110 g canned tuna in water drained, 150 g tomato, 14 g olive oil",
+      "vagueDescription": "a can of tuna with tomato and a tablespoon of olive oil",
+      "ingredients": [
+        {
+          "food": "tuna",
+          "grams": 110
+        },
+        {
+          "food": "tomato",
+          "grams": 150
+        },
+        {
+          "food": "oliveoil",
+          "grams": 14
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Lentil bowl",
+      "description": "200 g cooked lentils, 150 g cooked white rice, 7 g olive oil",
+      "vagueDescription": "lentils over rice with a drizzle of olive oil",
+      "ingredients": [
+        {
+          "food": "lentils",
+          "grams": 200
+        },
+        {
+          "food": "rice",
+          "grams": 150
+        },
+        {
+          "food": "oliveoil",
+          "grams": 7
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Baked potato and beef",
+      "description": "250 g baked potato, 120 g browned ground beef, 20 g cheddar",
+      "vagueDescription": "a baked potato topped with ground beef and cheese",
+      "ingredients": [
+        {
+          "food": "potato",
+          "grams": 250
+        },
+        {
+          "food": "beef",
+          "grams": 120
+        },
+        {
+          "food": "cheddar",
+          "grams": 20
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Tofu stir fry",
+      "description": "150 g firm tofu, 120 g broccoli, 180 g cooked rice, 10 g olive oil",
+      "vagueDescription": "tofu and broccoli stir fry with rice",
+      "ingredients": [
+        {
+          "food": "tofu",
+          "grams": 150
+        },
+        {
+          "food": "broccoli",
+          "grams": 120
+        },
+        {
+          "food": "rice",
+          "grams": 180
+        },
+        {
+          "food": "oliveoil",
+          "grams": 10
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Bean tacos",
+      "description": "three corn tortillas (90 g), 150 g black beans, 25 g cheddar, 60 g tomato",
+      "vagueDescription": "three bean tacos with cheese and tomato",
+      "ingredients": [
+        {
+          "food": "tortilla",
+          "grams": 90
+        },
+        {
+          "food": "blackbeans",
+          "grams": 150
+        },
+        {
+          "food": "cheddar",
+          "grams": 25
+        },
+        {
+          "food": "tomato",
+          "grams": 60
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Banana smoothie",
+      "description": "118 g banana, 250 g whole milk, 16 g peanut butter, 40 g cooked oats blended",
+      "vagueDescription": "a banana peanut butter oat smoothie",
+      "ingredients": [
+        {
+          "food": "banana",
+          "grams": 118
+        },
+        {
+          "food": "milk",
+          "grams": 250
+        },
+        {
+          "food": "pb",
+          "grams": 16
+        },
+        {
+          "food": "oats",
+          "grams": 40
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Steak-free protein plate",
+      "description": "150 g browned ground beef, 150 g baked sweet potato, 60 g avocado",
+      "vagueDescription": "a beef patty with sweet potato and avocado",
+      "ingredients": [
+        {
+          "food": "beef",
+          "grams": 150
+        },
+        {
+          "food": "sweetpotato",
+          "grams": 150
+        },
+        {
+          "food": "avocado",
+          "grams": 60
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Chicken salad",
+      "description": "120 g roasted chicken breast, 120 g tomato, 60 g avocado, 10 g olive oil",
+      "vagueDescription": "chicken salad with tomato, avocado and oil",
+      "ingredients": [
+        {
+          "food": "chicken",
+          "grams": 120
+        },
+        {
+          "food": "tomato",
+          "grams": 120
+        },
+        {
+          "food": "avocado",
+          "grams": 60
+        },
+        {
+          "food": "oliveoil",
+          "grams": 10
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Egg fried rice",
+      "description": "250 g cooked rice, 100 g egg, 10 g olive oil",
+      "vagueDescription": "egg fried rice",
+      "ingredients": [
+        {
+          "food": "rice",
+          "grams": 250
+        },
+        {
+          "food": "egg",
+          "grams": 100
+        },
+        {
+          "food": "oliveoil",
+          "grams": 10
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Salmon pasta",
+      "description": "200 g cooked pasta, 120 g cooked salmon, 8 g olive oil",
+      "vagueDescription": "pasta with salmon",
+      "ingredients": [
+        {
+          "food": "spaghetti",
+          "grams": 200
+        },
+        {
+          "food": "salmon",
+          "grams": 120
+        },
+        {
+          "food": "oliveoil",
+          "grams": 8
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Snack plate",
+      "description": "one 182 g apple, 40 g cheddar, 30 g almonds",
+      "vagueDescription": "an apple with cheese and almonds",
+      "ingredients": [
+        {
+          "food": "apple",
+          "grams": 182
+        },
+        {
+          "food": "cheddar",
+          "grams": 40
+        },
+        {
+          "food": "almonds",
+          "grams": 30
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Tuna sandwich",
+      "description": "two slices whole-wheat bread (70 g), 85 g tuna, 40 g avocado",
+      "vagueDescription": "a tuna and avocado sandwich",
+      "ingredients": [
+        {
+          "food": "bread",
+          "grams": 70
+        },
+        {
+          "food": "tuna",
+          "grams": 85
+        },
+        {
+          "food": "avocado",
+          "grams": 40
+        }
+      ]
+    }
+  ]
+}
