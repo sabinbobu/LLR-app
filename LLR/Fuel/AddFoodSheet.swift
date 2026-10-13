@@ -13,6 +13,7 @@ struct AddFoodSheet: View {
     @State private var analyzing = false
     @State private var errorMessage: String?
     @State private var review: FoodAnalysis.Result?
+    @State private var identified: IdentifiedMeal?
     @State private var reviewPhoto: Data?
     @State private var manual = false
     @FocusState private var noteFocused: Bool
@@ -64,6 +65,9 @@ struct AddFoodSheet: View {
             .toolbar { Button("Cancel") { dismiss() } }
             .navigationDestination(item: $review) { result in
                 FoodReviewView(result: result, photoData: reviewPhoto, loggedAt: loggedAt) { dismiss() }
+            }
+            .navigationDestination(item: $identified) { meal in
+                IngredientCorrectionView(meal: meal, loggedAt: loggedAt) { dismiss() }
             }
             .sheet(isPresented: $manual) { FoodEditView(newAt: loggedAt) { dismiss() } }
             .fullScreenCover(isPresented: $showingCamera) { CameraPicker(image: $photo).ignoresSafeArea() }
@@ -124,14 +128,19 @@ struct AddFoodSheet: View {
         analyzing = true
         // 1024 px is plenty to recognise food and keeps the upload small on mobile data.
         let jpeg = photo.flatMap { ImageDownscale.jpeg($0, maxDimension: 1024, quality: 0.8) }
-        let input: FoodAnalysis.Input = jpeg.map { .photo(jpeg: $0, note: note) } ?? .text(note)
         let key = KeychainStore.get(StorageKey.openRouterKey) ?? ""
         Task {
             defer { analyzing = false }
             do {
-                let result = try await OpenRouterClient.analyze(input, key: key, model: model)
-                reviewPhoto = photo.flatMap { ImageDownscale.jpeg($0, maxDimension: 512, quality: 0.7) }
-                review = result
+                let thumbnail = photo.flatMap { ImageDownscale.jpeg($0, maxDimension: 512, quality: 0.7) }
+                if let jpeg {
+                    // Photos get a correction step first: portion guesses are the biggest error source.
+                    let list = try await OpenRouterClient.identify(jpeg: jpeg, note: note, key: key, model: model)
+                    identified = IdentifiedMeal(ingredients: list, photoData: thumbnail)
+                } else {
+                    review = try await OpenRouterClient.analyze(.text(note), key: key, model: model)
+                    reviewPhoto = nil
+                }
             } catch {
                 errorMessage = error.localizedDescription
             }

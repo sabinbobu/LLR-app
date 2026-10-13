@@ -82,8 +82,8 @@ enum FoodAnalysis {
         return try JSONSerialization.data(withJSONObject: body)
     }
 
-    /// Parses an OpenRouter chat-completions response body.
-    static func parseResponse(_ data: Data) throws -> Result {
+    /// The assistant's text and the model that produced it, from a chat-completions response body.
+    static func messageContent(_ data: Data) throws -> (content: String, model: String?) {
         struct Envelope: Decodable {
             struct Choice: Decodable {
                 struct Message: Decodable { let content: String? }
@@ -94,8 +94,14 @@ enum FoodAnalysis {
         }
         let envelope = try JSONDecoder().decode(Envelope.self, from: data)
         guard let content = envelope.choices.first?.message.content else { throw ParseError.noJSON }
-        var result = try parseContent(content)
-        result.model = envelope.model
+        return (content, envelope.model)
+    }
+
+    /// Parses an OpenRouter chat-completions response body.
+    static func parseResponse(_ data: Data) throws -> Result {
+        let message = try messageContent(data)
+        var result = try parseContent(message.content)
+        result.model = message.model
         return result
     }
 
