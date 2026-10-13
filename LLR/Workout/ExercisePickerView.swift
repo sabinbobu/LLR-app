@@ -14,7 +14,16 @@ struct ExercisePickerView: View {
     @State private var inspecting: Exercise?
     /// Picking a stand-in for one exercise: a tap replaces the choice instead of adding to it.
     var single = false
+    /// The muscle filter the picker opens with; "Show all" clears it. Nil opens unfiltered.
+    let initialMuscle: String?
     let onAdd: ([Exercise]) -> Void
+
+    init(single: Bool = false, initialMuscle: String? = nil, onAdd: @escaping ([Exercise]) -> Void) {
+        self.single = single
+        self.initialMuscle = initialMuscle
+        self.onAdd = onAdd
+        _muscle = State(initialValue: initialMuscle)
+    }
 
     private var muscleOptions: [String] { Array(Set(exercises.map(\.muscleGroup))).sorted() }
     private var equipmentOptions: [String] { Equipment.options(in: exercises.map(\.equipment)) }
@@ -64,6 +73,10 @@ struct ExercisePickerView: View {
                     HStack(spacing: 8) {
                         FilterChip(title: "Equipment", options: equipmentOptions, selection: $equipment)
                         FilterChip(title: "Muscle", options: muscleOptions, selection: $muscle)
+                        if initialMuscle != nil, muscle == initialMuscle {
+                            Button("Show all") { muscle = nil }
+                                .font(.subheadline.weight(.medium))
+                        }
                     }
                     .padding(.bottom, 12)
 

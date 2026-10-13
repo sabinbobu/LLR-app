@@ -7,7 +7,7 @@ Specs for the open items from the owner's notes (originally two raw bullet lists
 | # | Item | Status | Size | Data model |
 |---|------|--------|------|------------|
 | G1 | Reorder exercises mid-workout (listed twice in the notes) | **Shipped** (#32) | — | none |
-| G2 | Replace an exercise from the library | **Shipped** (#32) | — | none |
+| G2 | Replace an exercise from the library | **Shipped** (#32); picker opens filtered to the muscle with Show all (follow-up) | — | none |
 | G3 | Pre-fill last session's weights | **Shipped**, one question open (see G3) | — | none |
 | G4 | Edit button for routines | **Shipped** (#34) | S | none |
 | G5 | Minimised workout stays on screen like a video card | **Shipped** (#35), device checks pending | M | none |
