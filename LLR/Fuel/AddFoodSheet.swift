@@ -68,8 +68,11 @@ struct AddFoodSheet: View {
             .sheet(isPresented: $manual) { FoodEditView(newAt: loggedAt) { dismiss() } }
             .fullScreenCover(isPresented: $showingCamera) { CameraPicker(image: $photo).ignoresSafeArea() }
             .onChange(of: pickerItem) { _, item in
-                Task {
-                    if let data = try? await item?.loadTransferable(type: Data.self) { photo = UIImage(data: data) }
+                Task.detached(priority: .userInitiated) {
+                    if let data = try? await item?.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data) {
+                        await MainActor.run { photo = image }
+                    }
                 }
             }
         }

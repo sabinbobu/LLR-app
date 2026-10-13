@@ -50,7 +50,12 @@ struct ExerciseMediaSection: View {
         .onChange(of: cameraVideo) { _, url in
             guard let url else { return }
             cameraVideo = nil
-            run { try await ExerciseMediaStore.saveVideo(from: url) }
+            // Video encoding should not block the main actor
+            run {
+                try await Task.detached(priority: .userInitiated) {
+                    try await ExerciseMediaStore.saveVideo(from: url)
+                }.value
+            }
         }
         .fullScreenCover(isPresented: $showingCamera) {
             CameraPicker(image: $cameraImage, videoURL: $cameraVideo).ignoresSafeArea()
@@ -106,6 +111,7 @@ struct ExerciseMediaSection: View {
 struct ExerciseMediaThumbnail: View {
     let item: ExerciseMediaItem
     @State private var image: UIImage?
+    @State private var isLoading = false
 
     var body: some View {
         Color(.systemGray5)
@@ -113,6 +119,8 @@ struct ExerciseMediaThumbnail: View {
             .overlay {
                 if let image {
                     Image(uiImage: image).resizable().scaledToFill()
+                } else if isLoading {
+                    ProgressView()
                 }
             }
             .overlay(alignment: .bottomLeading) {
@@ -125,7 +133,12 @@ struct ExerciseMediaThumbnail: View {
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .task(id: item) { image = await ExerciseMediaStore.thumbnail(for: item) }
+            .task(id: item) {
+                guard image == nil, !isLoading else { return }
+                isLoading = true
+                defer { isLoading = false }
+                image = await ExerciseMediaStore.thumbnail(for: item)
+            }
             .accessibilityLabel(item.kind == .video ? "Video" : "Photo")
     }
 }
