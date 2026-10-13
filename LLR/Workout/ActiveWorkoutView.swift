@@ -124,6 +124,18 @@ struct ActiveWorkoutView: View {
                 }
             }
             Spacer()
+            if model.workout.section == .gym {
+                Menu {
+                    CategoryPicker(category: Binding(get: { model.workout.category }, set: { model.workout.category = $0 }))
+                } label: {
+                    if model.workout.category == .none {
+                        Image(systemName: "tag")
+                    } else {
+                        CategoryChip(category: model.workout.category)
+                    }
+                }
+                .accessibilityLabel("Session category")
+            }
         }
         .monospacedDigit()
     }
