@@ -141,7 +141,7 @@ struct ExerciseLogCard: View {
             PlateCalculatorView(unit: unit, targetKg: plateTargetKg ?? 0)
         }
         .sheet(isPresented: $swapping) {
-            ExercisePickerView(single: true) { picked in
+            ExercisePickerView(single: true, initialMuscle: SwapFilter.muscle(for: entry.exercise)) { picked in
                 if let exercise = picked.first { model.swap(entry, to: exercise) }
             }
         }
