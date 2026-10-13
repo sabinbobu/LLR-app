@@ -39,24 +39,28 @@ enum ExerciseMediaStore {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         let item = ExerciseMediaItem(kind: .video, fileName: "\(UUID().uuidString).mp4")
         let destination = url(for: item.fileName, root: root)
-        guard let session = AVAssetExportSession(asset: AVURLAsset(url: source), presetName: AVAssetExportPreset1280x720) else {
-            throw StoreError.exportFailed
-        }
-        do {
-            if #available(iOS 18, *) {
-                try await session.export(to: destination, as: .mp4)
-            } else {
-                session.outputURL = destination
-                session.outputFileType = .mp4
-                await session.export()
-                guard session.status == .completed else { throw session.error ?? StoreError.exportFailed }
+        
+        // Ensure video export happens off the main thread
+        return try await Task.detached(priority: .userInitiated) {
+            guard let session = AVAssetExportSession(asset: AVURLAsset(url: source), presetName: AVAssetExportPreset1280x720) else {
+                throw StoreError.exportFailed
             }
-        } catch {
-            // A failed export can leave a partial file that no row will ever point at.
-            try? FileManager.default.removeItem(at: destination)
-            throw error
-        }
-        return item
+            do {
+                if #available(iOS 18, *) {
+                    try await session.export(to: destination, as: .mp4)
+                } else {
+                    session.outputURL = destination
+                    session.outputFileType = .mp4
+                    await session.export()
+                    guard session.status == .completed else { throw session.error ?? StoreError.exportFailed }
+                }
+            } catch {
+                // A failed export can leave a partial file that no row will ever point at.
+                try? FileManager.default.removeItem(at: destination)
+                throw error
+            }
+            return item
+        }.value
     }
 
     static func delete(_ fileName: String, root: URL = defaultRoot) {
