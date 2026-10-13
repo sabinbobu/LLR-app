@@ -24,6 +24,12 @@ struct RoutineBuilderView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     nameField
+                    if routine.section == .gym {
+                        CategoryPicker(category: $routine.category)
+                            .padding(.horizontal, 16)
+                            .frame(height: 52)
+                            .background(Theme.surface, in: RoundedRectangle(cornerRadius: 12))
+                    }
                     exercises
                     Button { showingPicker = true } label: {
                         Label("Add exercise", systemImage: "plus")

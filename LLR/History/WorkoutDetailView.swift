@@ -122,6 +122,9 @@ struct WorkoutDetailView: View {
                     Button("Save as Routine", systemImage: "list.clipboard") {
                         savedRoutine = RoutineFactory.save(workout, in: context)
                     }
+                    Picker("Category", selection: Binding(get: { workout.category }, set: { workout.category = $0 })) {
+                        ForEach(SessionCategory.allCases) { Text($0.title).tag($0) }
+                    }
                 }
                 Button("Delete Workout", systemImage: "trash", role: .destructive) { confirmDelete = true }
             } label: {

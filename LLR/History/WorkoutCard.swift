@@ -7,7 +7,10 @@ struct WorkoutCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(workout.title).font(.title3.weight(.semibold))
+                HStack(spacing: 8) {
+                    Text(workout.title).font(.title3.weight(.semibold))
+                    CategoryChip(category: workout.category)
+                }
                 Text(workout.startedAt.formatted(date: .abbreviated, time: .shortened))
                     .foregroundStyle(.secondary)
             }

@@ -10,6 +10,8 @@ final class Workout {
     /// Empty for workouts logged here (they're titled by time of day); imports keep their original name.
     var name: String = ""
     var sectionRaw: String = "gym"
+    /// A label only (see SessionCategory); empty = uncategorised. Never read by history, prefill or PRs.
+    var categoryRaw: String = ""
     // 0–10 each, back and leg scored separately; nil = not asked (every workout before Kineto shipped).
     var backPainBefore: Int?
     var legPainBefore: Int?
@@ -28,6 +30,10 @@ final class Workout {
 }
 
 extension Workout {
+    var category: SessionCategory {
+        get { SessionCategory(raw: categoryRaw) }
+        set { categoryRaw = newValue.rawValue }
+    }
     var section: WorkoutSection {
         get { WorkoutSection(rawValue: sectionRaw) ?? .gym }
         set { sectionRaw = newValue.rawValue }
