@@ -153,6 +153,13 @@ struct WorkoutTabView: View {
             Button("Start") { start(routine: routine) }
                 .buttonStyle(.borderedProminent)
                 .disabled(routine.orderedExercises.isEmpty || !unfinished.isEmpty)
+            // Edit stays enabled mid-workout: it changes the template, never the running workout.
+            Menu {
+                Button("Edit", systemImage: "pencil") { buildingRoutine = routine }
+            } label: {
+                Image(systemName: "ellipsis.circle").font(.title3)
+            }
+            .accessibilityLabel("Routine options")
         }
         .padding()
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border, lineWidth: 1.5))

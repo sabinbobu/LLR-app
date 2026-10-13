@@ -95,4 +95,21 @@ final class RoutineFactoryTests: XCTestCase {
         XCTAssertEqual(benchSets.map(\.kind), [.warmup, .normal])
         XCTAssertTrue(benchSets.allSatisfy { $0.completedAt == nil })
     }
+
+    func testStartingAnEditedRoutineReflectsTheEditsAndLeavesHistoryAlone() throws {
+        let source = finishedWorkout()
+        let routine = RoutineFactory.save(source, in: context)
+        let createdAt = routine.createdAt
+
+        routine.name = "Push (edited)"
+        let removed = try XCTUnwrap(routine.orderedExercises.last)
+        routine.exercises.removeAll { $0 === removed }
+        context.delete(removed)
+
+        let started = WorkoutFactory.start(routine: routine, in: context)
+        XCTAssertEqual(started.title, "Push (edited)")
+        XCTAssertEqual(started.orderedExercises.compactMap { $0.exercise?.name }, ["Bench Press (Barbell)"])
+        XCTAssertEqual(routine.createdAt, createdAt)
+        XCTAssertEqual(source.orderedExercises.count, 3, "finished workouts are never touched by routine edits")
+    }
 }
