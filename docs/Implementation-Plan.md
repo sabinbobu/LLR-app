@@ -23,6 +23,7 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
 | K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
+| U2 | Repeat button: a colour that complements the theme | **Queued** for a future session (spec below) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -181,6 +182,42 @@ Original two-note tick (`LLR/Resources/rest-tick.wav`, 0.75 s, mono 16-bit PCM).
 **Tests.** `RoutineSnapshotTests` (snapshot then restore equals the original, including nested plans, delete cascades, finished workouts untouched). The gesture itself is checked by hand on a device.
 
 **Effort.** About half a day for the gesture and its tuning, plus the snapshot and tests.
+
+### U2. A complementary colour for the Repeat button
+
+**Request.** Change the colour of the **Repeat** button (Workout tab, "Repeat a Workout" rows) to one that is complementary to the whole theme.
+
+**Why it needs doing.** `repeatRow` in `WorkoutTabView` uses `.buttonStyle(.borderedProminent)` with the default tint, which is the theme accent (`Theme.accent`, #2563EB light / #3B82F6 dark). **Start** on the routine rows above it is the same blue, so the two different actions look identical.
+
+**Migration impact.** None. Styling only.
+
+**Decision: amber.** The accent blue sits at a hue of about 221°; its colour-wheel complement is about 41°, which is amber. Chosen values:
+
+| Mode | Button fill | Label | Contrast of label on fill |
+|---|---|---|---|
+| Dark | #F59E0B (hue 38°) | #1C1300 | 8.6 : 1 |
+| Light | #D97706 (hue 32°) | #1C1300 | 5.8 : 1 |
+
+White text on these fills only reaches 2.1 : 1 and 3.2 : 1, so the label must be dark in both modes (WCAG AA needs 4.5 : 1 for text this size).
+
+**Design**
+1. New token `Theme.repeatAction` (adaptive, like `Theme.accent`) and `Theme.repeatActionLabel`.
+2. Apply to the Repeat button in `repeatRow` only. Start keeps the blue accent. Tint the shape with `.tint(Theme.repeatAction)` and set the label colour explicitly.
+3. The disabled state (a workout is in progress) keeps the system disabled look; the label must not become unreadable on it.
+4. Keep amber out of macro colours: `Theme.carbs` is a similar yellow reserved for carbohydrates ("colour alone identifies it"), and the Push category is orange. Amber here is on a different screen from carbs, but if either reads too close on a device, shift Repeat toward 30° rather than touching the macro or category colours.
+5. Text menu items named "Repeat Workout" (long-press and detail menus) stay uncoloured; only buttons carry the colour.
+
+**Alternatives considered.** A soft tinted button (blue text on a faint blue fill) would also separate the two actions without a new colour, but it stays in the same hue family; the owner asked for a complement, so amber is the pick. Green was rejected because it already means "completed" (`Theme.completedCheck`).
+
+**Acceptance**
+1. On the Workout tab, Repeat and Start are clearly different at a glance, in dark and light mode.
+2. The Repeat label meets 4.5 : 1 against its fill in both modes, enabled; disabled looks disabled.
+3. No other button or view changes colour.
+4. Confirmed on a device in both appearance modes.
+
+**Tests.** `ThemeContrastTests`: resolve `repeatAction` and `repeatActionLabel` in light and dark and assert the contrast ratio is at least 4.5.
+
+**Effort.** Under an hour.
 
 ## Possible later
 
