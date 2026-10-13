@@ -35,7 +35,7 @@ private struct WorkoutActionsModifier: ViewModifier {
         content
             .contextMenu {
                 // Gym only: a Kineto session starts through its own pain check-in.
-                if workout.section == .gym {
+                if workout.section == .gym && !workout.isRun {
                     Button(WorkoutActions.repeatLabel(canStart: unfinished.isEmpty), systemImage: "arrow.clockwise") {
                         presenter.present(WorkoutFactory.start(copying: workout, in: context))
                     }

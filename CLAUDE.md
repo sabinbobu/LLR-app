@@ -37,6 +37,7 @@ Logging a set must take at most 2 taps mid-workout. Every design decision is jud
   - A Home Screen widget showing the training streak
   - Weekly Volume: hard sets per muscle per week (secondary muscles count half) against a cited 10–20 set zone (`LLR/Logic/WeeklyVolume.swift`)
 - Session categories (Push / Pull / Legs / Yoga): a colour label on workouts and routines, inherited when a workout starts from a routine and editable afterwards. Label only: it never affects history scoping, prefill, PRs or Weekly Volume. Stored as `categoryRaw` on `Workout` and `Routine` (additive, default empty).
+- Run tracking: a stopwatch for running sessions, timing and start hour only (no distance, pace or GPS). A run is a `Workout` with `sectionRaw` "run" and no exercises, so it appears in Home/Profile history, the calendar and the streak with no schema change (`LLR/Run/`, `LLR/Logic/RunStats.swift`). Not part of the Strong CSV export.
 - Fuel (4th tab, `LLR/Fuel/`): food logging with daily calorie/macro targets (Mifflin-St Jeor + goal, protein 1.6 g/kg, all overridable). Optional AI estimates from a photo or description via free OpenRouter vision models, using the user's own key (Keychain). Photo estimates go through an ingredient-correction step first. AI output is always an editable draft; nothing saves without review.
 
 ## Non-goals (do not build in v1)

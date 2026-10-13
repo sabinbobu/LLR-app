@@ -153,11 +153,12 @@ extension Workout {
 
     var title: String {
         if !name.isEmpty { return name }
+        let noun = isRun ? "Run" : "Workout"
         return switch Calendar.current.component(.hour, from: startedAt) {
-        case 5..<12: "Morning Workout"
-        case 12..<17: "Afternoon Workout"
-        case 17..<22: "Evening Workout"
-        default: "Night Workout"
+        case 5..<12: "Morning \(noun)"
+        case 12..<17: "Afternoon \(noun)"
+        case 17..<22: "Evening \(noun)"
+        default: "Night \(noun)"
         }
     }
 }
