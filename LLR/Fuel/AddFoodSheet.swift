@@ -5,6 +5,7 @@ struct AddFoodSheet: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage(StorageKey.fuelModel) private var model = OpenRouterClient.defaultModel
     let day: Date
+    @State private var when: Date
 
     @State private var photo: UIImage?
     @State private var pickerItem: PhotosPickerItem?
@@ -18,14 +19,13 @@ struct AddFoodSheet: View {
     @State private var manual = false
     @FocusState private var noteFocused: Bool
 
+    init(day: Date) {
+        self.day = day
+        _when = State(initialValue: FoodLogTime.defaultTime(for: day))
+    }
+
     private var hasKey: Bool { !(KeychainStore.get(StorageKey.openRouterKey) ?? "").isEmpty }
     private var canAnalyze: Bool { hasKey && !analyzing && (photo != nil || !note.trimmingCharacters(in: .whitespaces).isEmpty) }
-
-    /// A past day gets midday rather than "now", so it lands on that day with a sensible meal default.
-    private var loggedAt: Date {
-        Calendar.current.isDateInToday(day) ? .now
-            : Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: day) ?? day
-    }
 
     var body: some View {
         NavigationStack {
@@ -37,6 +37,9 @@ struct AddFoodSheet: View {
                         .lineLimit(2...5)
                         .focused($noteFocused)
                         .padding(14)
+                        .background(Theme.field, in: RoundedRectangle(cornerRadius: 14))
+                    DatePicker("When", selection: $when, in: ...Date.now)
+                        .padding(.horizontal, 14).padding(.vertical, 10)
                         .background(Theme.field, in: RoundedRectangle(cornerRadius: 14))
                     if !hasKey {
                         Label("Add your OpenRouter key in Fuel settings to use AI estimates.", systemImage: "key")
@@ -64,12 +67,12 @@ struct AddFoodSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { Button("Cancel") { dismiss() } }
             .navigationDestination(item: $review) { result in
-                FoodReviewView(result: result, photoData: reviewPhoto, loggedAt: loggedAt) { dismiss() }
+                FoodReviewView(result: result, photoData: reviewPhoto, loggedAt: when) { dismiss() }
             }
             .navigationDestination(item: $identified) { meal in
-                IngredientCorrectionView(meal: meal, loggedAt: loggedAt) { dismiss() }
+                IngredientCorrectionView(meal: meal, loggedAt: when) { dismiss() }
             }
-            .sheet(isPresented: $manual) { FoodEditView(newAt: loggedAt) { dismiss() } }
+            .sheet(isPresented: $manual) { FoodEditView(newAt: when) { dismiss() } }
             .fullScreenCover(isPresented: $showingCamera) { CameraPicker(image: $photo).ignoresSafeArea() }
             .onChange(of: pickerItem) { _, item in
                 Task.detached(priority: .userInitiated) {

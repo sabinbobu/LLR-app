@@ -13,6 +13,7 @@ struct FuelView: View {
 
     @State private var day = Calendar.current.startOfDay(for: .now)
     @State private var adding = false
+    @State private var pickingDay = false
     @State private var showingSettings = false
 
     private var targets: Macros {
@@ -46,6 +47,7 @@ struct FuelView: View {
             .overlay(alignment: .bottomTrailing) { addButton }
             .sheet(isPresented: $adding) { AddFoodSheet(day: day) }
             .sheet(isPresented: $showingSettings) { FuelSettingsView() }
+            .sheet(isPresented: $pickingDay) { FuelDayPickerSheet(day: $day) }
         }
     }
 
@@ -53,9 +55,15 @@ struct FuelView: View {
         HStack {
             Button { shiftDay(-1) } label: { Image(systemName: "chevron.left").frame(width: 44, height: 36) }
             Spacer()
-            Text(isToday ? "Today" : day.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()))
-                .font(.headline)
-                .contentTransition(.numericText())
+            Button { pickingDay = true } label: {
+                HStack(spacing: 4) {
+                    Text(isToday ? "Today" : day.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()))
+                        .font(.headline)
+                        .contentTransition(.numericText())
+                    Image(systemName: "chevron.down").font(.caption.weight(.bold))
+                }
+            }
+            .accessibilityHint("Pick a day")
             Spacer()
             Button { shiftDay(1) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 36) }
                 .disabled(isToday)

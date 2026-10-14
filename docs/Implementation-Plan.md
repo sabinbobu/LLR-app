@@ -20,6 +20,7 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | F2 | Fuel: ingredients from photo, user corrects, then analysis | Shipped; acceptance 6 not yet measured | #38 |
 | R1 | Run tracking: stopwatch, time-only stats | Shipped; the stopwatch is replaced by R2 | #49 |
 | S1 | Rest-timer end sound | Shipped | #50 |
+| F3 | Fuel: log food on past days and edit when an entry happened | Built; needs CI and a device check | — |
 | R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
 | K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
