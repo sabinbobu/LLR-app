@@ -55,6 +55,14 @@ struct SettingsView: View {
                         Label("Import & Export", systemImage: "arrow.up.arrow.down")
                     }
                 }
+                Section("Help") {
+                    // The Workout tab drops its onboarding row after the first finished workout.
+                    NavigationLink {
+                        RoutineHelpView()
+                    } label: {
+                        Label("How routines work", systemImage: "questionmark.circle")
+                    }
+                }
                 Section("About") {
                     NavigationLink {
                         AcknowledgementsView()

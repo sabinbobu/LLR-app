@@ -18,71 +18,54 @@ struct WorkoutTabView: View {
     @State private var openRoutineID: UUID?
     @State private var deleter = RoutineDeleter()
 
+    private var recent: [Routine] { WorkoutTabModel.recentRoutines(routines) }
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 16) {
                     startRow
-                    actionRow(icon: "figure.run", title: "Add Run") { addingRun = true }
-                    if !runs.isEmpty { RunSummaryCard(runs: runs) }
-                    Button("Log a Past Workout", systemImage: "clock.arrow.circlepath", action: logPastWorkout)
-                        .font(.subheadline.weight(.medium))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 4)
-                        .fullScreenCover(item: $loggingPast) { WorkoutEditorView(workout: $0, isNew: true) }
-
-                    Text("Routines").font(.title2.weight(.semibold))
-                    HStack(spacing: 16) {
-                        routineTile(title: "New Routine", icon: "list.clipboard") { newRoutine() }
-                        NavigationLink {
-                            ExploreRoutinesView(canStart: unfinished.isEmpty, onStart: start(program:day:))
-                        } label: {
-                            routineTileLabel(title: "Explore Routines", icon: "magnifyingglass")
-                        }
-                        .buttonStyle(CardButtonStyle())
+                    HStack(spacing: 12) {
+                        Button { addingRun = true } label: { Label("Add Run", systemImage: "figure.run") }
+                            .buttonStyle(.secondaryRole)
+                        Button(action: logPastWorkout) { Label("Log Past", systemImage: "clock.arrow.circlepath") }
+                            .buttonStyle(.secondaryRole)
+                            .fullScreenCover(item: $loggingPast) { WorkoutEditorView(workout: $0, isNew: true) }
                     }
 
-                    NavigationLink {
-                        KinetoView(canStart: unfinished.isEmpty) { presenter.present($0) }
-                    } label: {
-                        KinetoEntryCard()
-                    }
-                    .buttonStyle(.plain)
-
-                    if !routines.isEmpty {
+                    if !recent.isEmpty {
                         HStack(alignment: .firstTextBaseline) {
-                            Text("My Routines").font(.title3.weight(.semibold))
+                            Text("Quick start").font(.title3.weight(.semibold))
                             Spacer()
-                            // The tab shows five; the rest live one tap away.
                             NavigationLink("See All") { RoutineListView(onStart: start(routine:)) }
                                 .font(.subheadline.weight(.medium))
                         }
                         .padding(.top, 4)
-                        ForEach(routines.prefix(5)) { routine in
+                        ForEach(recent) { routine in
                             routineRow(routine)
                         }
                     }
+                    RoutineTiles(onNew: newRoutine, canStart: unfinished.isEmpty, onStart: start(program:day:))
 
-                    if !past.isEmpty {
-                        Text("Repeat a Workout").font(.title3.weight(.semibold)).padding(.top, 4)
-                        ForEach(past.prefix(10)) { workout in
-                            repeatRow(workout)
+                    let repeats = WorkoutTabModel.repeatCandidates(past)
+                    if !repeats.isEmpty {
+                        RepeatLastRow(workouts: repeats, canStart: unfinished.isEmpty) { workout in
+                            presenter.present(WorkoutFactory.start(copying: workout, in: context))
                         }
                     }
+                    if !runs.isEmpty { RunSummaryCard(runs: runs) }
 
                     NavigationLink {
-                        RoutineHelpView()
+                        KinetoView(canStart: unfinished.isEmpty) { presenter.present($0) }
                     } label: {
-                        HStack {
-                            Text("How to get started")
-                            Spacer()
-                            Image(systemName: "arrow.right")
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Theme.accent.opacity(0.15), in: RoundedRectangle(cornerRadius: 14))
+                        KinetoLinkRow()
                     }
                     .buttonStyle(.plain)
+
+                    if WorkoutTabModel.showsGettingStarted(finishedGymWorkouts: past.count) {
+                        NavigationLink { RoutineHelpView() } label: { GettingStartedRow() }
+                            .buttonStyle(.plain)
+                    }
                 }
                 .padding()
             }
@@ -94,49 +77,24 @@ struct WorkoutTabView: View {
         .sheet(isPresented: $addingRun) { AddRunSheet() }
     }
 
+    /// One large primary button: the most common thing to do on this tab is start a session.
     private var startRow: some View {
         Group {
             if let current = unfinished.first {
-                actionRow(icon: "play.fill", title: "Resume Workout", detail: current.title) {
-                    presenter.present(current)
+                Button { presenter.present(current) } label: {
+                    Label("Resume: \(current.title)", systemImage: "play.fill")
+                        .font(.title3.weight(.semibold))
+                        .padding(.vertical, 10)
                 }
             } else {
-                actionRow(icon: "plus", title: "Start Empty Workout") {
-                    presenter.present(WorkoutFactory.start(copying: nil, in: context))
+                Button { presenter.present(WorkoutFactory.start(copying: nil, in: context)) } label: {
+                    Label("Start Workout", systemImage: "plus")
+                        .font(.title3.weight(.semibold))
+                        .padding(.vertical, 10)
                 }
             }
         }
-    }
-
-    private func actionRow(icon: String, title: String, detail: String? = nil, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 16) {
-                Image(systemName: icon).font(.title2)
-                VStack(alignment: .leading) {
-                    Text(title).font(.title3)
-                    if let detail {
-                        Text(detail).font(.subheadline).foregroundStyle(.secondary)
-                    }
-                }
-                Spacer()
-            }
-            .padding(.horizontal, 22)
-            .frame(minHeight: 72)
-        }
-        .buttonStyle(CardButtonStyle())
-    }
-
-    private func routineTile(title: String, icon: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) { routineTileLabel(title: title, icon: icon) }
-            .buttonStyle(CardButtonStyle())
-    }
-
-    private func routineTileLabel(title: String, icon: String) -> some View {
-        VStack(spacing: 10) {
-            Image(systemName: icon).font(.title2)
-            Text(title)
-        }
-        .frame(maxWidth: .infinity, minHeight: 90)
+        .buttonStyle(.primaryRole)
     }
 
     private func routineRow(_ routine: Routine) -> some View {
@@ -167,29 +125,6 @@ struct WorkoutTabView: View {
             onEdit: { buildingRoutine = routine },
             onDelete: { deleter.delete(routine, in: context) }
         )
-    }
-
-    private func repeatRow(_ workout: Workout) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(workout.title).font(.headline)
-                Text(workout.orderedExercises.compactMap { $0.exercise?.name }.joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-            Spacer()
-            Button {
-                presenter.present(WorkoutFactory.start(copying: workout, in: context))
-            } label: {
-                Text("Repeat").foregroundStyle(Theme.repeatActionLabel)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(Theme.repeatAction)
-            .disabled(!unfinished.isEmpty)
-        }
-        .padding()
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border, lineWidth: 1.5))
     }
 
     /// Starts as a finished hour ending now; the editor's date pickers move it to when it happened.
