@@ -173,10 +173,13 @@ struct WorkoutTabView: View {
                     .lineLimit(2)
             }
             Spacer()
-            Button("Repeat") {
+            Button {
                 presenter.present(WorkoutFactory.start(copying: workout, in: context))
+            } label: {
+                Text("Repeat").foregroundStyle(Theme.repeatActionLabel)
             }
             .buttonStyle(.borderedProminent)
+            .tint(Theme.repeatAction)
             .disabled(!unfinished.isEmpty)
         }
         .padding()

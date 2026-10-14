@@ -24,9 +24,9 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
 | K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | **Queued** for a future session (spec below) | — |
-| U2 | Repeat button: a colour that complements the theme | **Queued** for a future session (spec below) | — |
+| U2 | Repeat button: a colour that complements the theme | **In review** (amber tokens and Repeat button done; device check pending) | — |
 | U3 | Profile header card: a modern redesign | **Queued** for a future session (spec below; needs design sign-off first) | — |
-| D1 | One design system: buttons, cards, corner radii | **Queued** for a future session (spec below) | — |
+| D1 | One design system: buttons, cards, corner radii | **Foundation in review** (screens not yet migrated; see `docs/design-system.md`) | — |
 | W1 | Workout tab restructure: start in one tap | **Queued** for a future session (spec below; needs design sign-off first) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
