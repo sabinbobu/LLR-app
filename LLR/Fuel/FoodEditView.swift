@@ -63,9 +63,8 @@ struct FoodEditView: View {
                     numberRow("Fat (g)", $fat)
                 } footer: {
                     if kcal == 0, protein + carbs + fat > 0 {
-                        Button("Fill calories from macros (\(Int(protein * 4 + carbs * 4 + fat * 9)) kcal)") {
-                            kcal = (protein * 4 + carbs * 4 + fat * 9).rounded()
-                        }
+                        let derived = MacroEnergy.kcal(proteinG: protein, carbsG: carbs, fatG: fat)
+                        Button("Fill calories from macros (\(Int(derived)) kcal)") { kcal = derived }
                         .font(.footnote)
                     }
                 }
