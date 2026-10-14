@@ -5,10 +5,10 @@ struct FoodEditView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     private let entry: FoodEntry?
-    private let loggedAt: Date
     private let onSaved: () -> Void
 
     @State private var name: String
+    @State private var when: Date
     @State private var meal: Meal
     @State private var grams: Double
     @State private var kcal: Double
@@ -18,8 +18,8 @@ struct FoodEditView: View {
 
     init(entry: FoodEntry) {
         self.entry = entry
-        self.loggedAt = entry.loggedAt
         self.onSaved = {}
+        _when = State(initialValue: entry.loggedAt)
         _name = State(initialValue: entry.name)
         _meal = State(initialValue: entry.meal)
         _grams = State(initialValue: entry.grams ?? 0)
@@ -31,8 +31,8 @@ struct FoodEditView: View {
 
     init(newAt loggedAt: Date, onSaved: @escaping () -> Void) {
         self.entry = nil
-        self.loggedAt = loggedAt
         self.onSaved = onSaved
+        _when = State(initialValue: loggedAt)
         _name = State(initialValue: "")
         _meal = State(initialValue: Meal.suggested(for: loggedAt))
         _grams = State(initialValue: 0)
@@ -50,6 +50,10 @@ struct FoodEditView: View {
                     Picker("Meal", selection: $meal) {
                         ForEach(Meal.allCases) { Label($0.title, systemImage: $0.icon).tag($0) }
                     }
+                }
+                Section {
+                    // Past dates are allowed so a forgotten meal can be added, or a wrong day fixed.
+                    DatePicker("When", selection: $when, in: ...Date.now)
                 }
                 Section {
                     numberRow("Portion (g)", $grams)
@@ -94,6 +98,7 @@ struct FoodEditView: View {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         if let entry {
             entry.name = trimmed
+            entry.loggedAt = FoodLogTime.clamped(when)
             entry.meal = meal
             entry.grams = grams > 0 ? grams : nil
             entry.kcal = kcal
@@ -102,7 +107,7 @@ struct FoodEditView: View {
             entry.fatG = fat
         } else {
             context.insert(FoodEntry(name: trimmed, meal: meal, kcal: kcal, proteinG: protein, carbsG: carbs,
-                                     fatG: fat, grams: grams > 0 ? grams : nil, loggedAt: loggedAt))
+                                     fatG: fat, grams: grams > 0 ? grams : nil, loggedAt: FoodLogTime.clamped(when)))
         }
         dismiss()
         onSaved()

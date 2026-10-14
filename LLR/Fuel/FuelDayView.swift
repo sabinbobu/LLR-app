@@ -10,8 +10,7 @@ struct FuelDayView: View {
     @State private var editing: FoodEntry?
 
     init(day: Date, targets: Macros) {
-        let start = Calendar.current.startOfDay(for: day)
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: start) ?? start
+        let (start, end) = FoodLogTime.dayBounds(day)
         _entries = Query(filter: #Predicate<FoodEntry> { $0.loggedAt >= start && $0.loggedAt < end },
                          sort: \FoodEntry.loggedAt)
         self.targets = targets
