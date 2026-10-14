@@ -1,13 +1,20 @@
 name: Tests
 on:
+  # Private repos on the free plan get 2,000 minutes/month and macOS bills at 10x (~200 real
+  # minutes). Out of minutes, jobs die in seconds with no steps. So: PRs only (main is the PR
+  # merged), skip docs-only changes, cancel superseded runs.
   pull_request:
-  push:
-    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md']
   workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   xcode-tests:
     runs-on: macos-15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
