@@ -17,9 +17,9 @@ struct ProfileView: View {
                     NavigationLink {
                         ProfileDetailsView(avatar: $avatar)
                     } label: {
-                        ProfileHeaderCard(workoutCount: workouts.count, avatar: avatar)
+                        ProfileHeaderCard(starts: workouts.map(\.startedAt), avatar: avatar)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(HeroCardButtonStyle())
 
                     RecoveryCard(workouts: workouts)
                     WeeklyStatsCard(summaries: summaries)
