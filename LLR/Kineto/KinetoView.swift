@@ -13,10 +13,15 @@ struct KinetoView: View {
     @State private var showingGate = false
     @State private var buildingRoutine: Routine?
     @State private var checkingIn: Routine?
+    /// Held until the check-in sheet has finished closing: the workout cover lives on the tab root,
+    /// and a presentation requested while a sheet is still dismissing is silently dropped.
+    @State private var startedWorkout: Workout?
     @Query(filter: #Predicate<Routine> { $0.sectionRaw == "kineto" }, sort: \Routine.createdAt, order: .reverse)
     private var routines: [Routine]
 
-    private var isCleared: Bool { clearedVersion >= KinetoCatalog.version }
+    private var isCleared: Bool { KinetoCatalog.isCleared(clearedVersion) }
+    /// A second presentation requested while one is up or animating is lost, which reads as a dead button.
+    private var modalActive: Bool { showingGate || buildingRoutine != nil || checkingIn != nil }
 
     var body: some View {
         ScrollView {
@@ -24,7 +29,7 @@ struct KinetoView: View {
                 KinetoBanner()
 
                 HStack(spacing: 16) {
-                    tile(title: "New Routine", icon: "list.clipboard") { newRoutine() }
+                    tile(title: "New Routine", icon: "list.clipboard") { if !modalActive { newRoutine() } }
                     NavigationLink {
                         KinetoCatalogView(mode: .browse)
                     } label: {
@@ -59,13 +64,18 @@ struct KinetoView: View {
         .background(Theme.background)
         .navigationTitle("Kineto")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { if !isCleared { showingGate = true } }
+        .onAppear { if !isCleared, !modalActive { showingGate = true } }
         .fullScreenCover(isPresented: $showingGate) {
             KinetoGateView { showingGate = false }
         }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
-        .sheet(item: $checkingIn) { routine in
-            PainCheckInSheet(routine: routine, onStart: onStart)
+        .sheet(item: $checkingIn, onDismiss: {
+            if let workout = startedWorkout {
+                startedWorkout = nil
+                onStart(workout)
+            }
+        }) { routine in
+            PainCheckInSheet(routine: routine) { startedWorkout = $0 }
         }
     }
 
@@ -92,7 +102,7 @@ struct KinetoView: View {
                     .lineLimit(2)
             }
             Spacer()
-            Button("Start") { checkingIn = routine }
+            Button("Start") { if !modalActive { checkingIn = routine } }
                 .buttonStyle(.borderedProminent)
                 .disabled(routine.orderedExercises.isEmpty || !canStart)
         }
