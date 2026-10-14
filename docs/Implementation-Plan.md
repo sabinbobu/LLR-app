@@ -22,10 +22,10 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | S1 | Rest-timer end sound | Shipped | #50 |
 | F3 | Fuel: log food on past days and edit when an entry happened | Built; needs CI and a device check | — |
 | R2 | Add Run: distance and time, body and muscle exhaustion | **In review** (spec below) | #52, #53 |
-| K1 | Kineto (back care): fix freezes, make the catalog reachable | **Queued** for a future session (spec below) | — |
+| K1 | Kineto (back care): fix freezes, make the catalog reachable | **In review**: causes found by reading the code; not reproduced on a device | next PR |
 | U1 | Routine rows: swipe left to delete, replacing the three-dots menu | In review; swipe feel needs a device check (spec below) | — |
 | U2 | Repeat button: a colour that complements the theme | **Queued** for a future session (spec below) | — |
-| U3 | Profile header card: a modern redesign | **Queued** for a future session (spec below; needs design sign-off first) | — |
+| U3 | Profile header card: a modern redesign | In review; needs owner's on-device approval | — |
 | D1 | One design system: buttons, cards, corner radii | **Queued** for a future session (spec below) | — |
 | W1 | Workout tab restructure: start in one tap | **Queued** for a future session (spec below; needs design sign-off first) | — |
 

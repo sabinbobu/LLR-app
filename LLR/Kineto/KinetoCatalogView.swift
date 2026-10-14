@@ -32,29 +32,55 @@ struct KinetoCatalogView: View {
         KinetoCatalog.exercises.filter { category == nil || $0.category == category }
     }
 
+    /// Browse is pushed from the hub, which already sits in the Workout tab's NavigationStack; a second
+    /// stack inside a pushed screen breaks back navigation. Only a sheet (pick mode) needs its own.
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    categoryPills
-                    let custom = customExercises.filter { category == nil || $0.customKinetoSpec?.category == category }
-                    if !custom.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Your exercises").sectionLabel()
-                            VStack(spacing: 0) {
-                                ForEach(Array(custom.enumerated()), id: \.element.id) { index, exercise in
-                                    if let spec = exercise.customKinetoSpec {
-                                        Button { inspectingCustom = exercise } label: { row(spec) }
-                                            .buttonStyle(.plain)
-                                            .contextMenu {
-                                                if exercise.canDelete {
-                                                    Button("Delete", systemImage: "trash", role: .destructive) {
-                                                        exercise.deleteWithMedia(from: context)
-                                                    }
+        if isPicking {
+            NavigationStack { content }
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                categoryPills
+                let custom = customExercises.filter { category == nil || $0.customKinetoSpec?.category == category }
+                if !custom.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Your exercises").sectionLabel()
+                        VStack(spacing: 0) {
+                            ForEach(Array(custom.enumerated()), id: \.element.id) { index, exercise in
+                                if let spec = exercise.customKinetoSpec {
+                                    Button { inspectingCustom = exercise } label: { row(spec) }
+                                        .buttonStyle(.plain)
+                                        .contextMenu {
+                                            if exercise.canDelete {
+                                                Button("Delete", systemImage: "trash", role: .destructive) {
+                                                    exercise.deleteWithMedia(from: context)
                                                 }
                                             }
-                                    }
-                                    if index < custom.count - 1 { Divider().padding(.leading, 16) }
+                                        }
+                                }
+                                if index < custom.count - 1 { Divider().padding(.leading, 16) }
+                            }
+                        }
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
+                    }
+                }
+                ForEach(KinetoCatalog.Category.allCases) { section in
+                    let inSection = filtered.filter { $0.category == section }
+                    if !inSection.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(section.title).sectionLabel()
+                            VStack(spacing: 0) {
+                                ForEach(Array(inSection.enumerated()), id: \.element.id) { index, exercise in
+                                    Button { inspecting = exercise } label: { row(exercise) }
+                                        .buttonStyle(.plain)
+                                    if index < inSection.count - 1 { Divider().padding(.leading, 16) }
                                 }
                             }
                             .background(Theme.surface)
@@ -62,60 +88,42 @@ struct KinetoCatalogView: View {
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
                         }
                     }
-                    ForEach(KinetoCatalog.Category.allCases) { section in
-                        let inSection = filtered.filter { $0.category == section }
-                        if !inSection.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(section.title).sectionLabel()
-                                VStack(spacing: 0) {
-                                    ForEach(Array(inSection.enumerated()), id: \.element.id) { index, exercise in
-                                        Button { inspecting = exercise } label: { row(exercise) }
-                                            .buttonStyle(.plain)
-                                        if index < inSection.count - 1 { Divider().padding(.leading, 16) }
-                                    }
-                                }
-                                .background(Theme.surface)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
-                            }
-                        }
+                }
+            }
+            .padding(16)
+        }
+        .background(Theme.background)
+        .navigationTitle(isPicking ? "Add Exercise" : "Kineto Catalog")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if isPicking {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                // An HStack rather than a Label: iOS 26 toolbars collapse a Label to its icon alone.
+                Button { creating = true } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus")
+                        Text("Custom")
                     }
                 }
-                .padding(16)
+                .accessibilityLabel("Create custom exercise")
             }
-            .background(Theme.background)
-            .navigationTitle(isPicking ? "Add Exercise" : "Kineto Catalog")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if isPicking {
-                    ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    // An HStack rather than a Label: iOS 26 toolbars collapse a Label to its icon alone.
-                    Button { creating = true } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "plus")
-                            Text("Custom")
-                        }
-                    }
-                    .accessibilityLabel("Create custom exercise")
+        }
+        .sheet(isPresented: $creating) {
+            // Not opened straight away: presenting a sheet while this one dismisses gets dropped.
+            ExerciseEditorView(section: .kineto) { _ in }
+        }
+        .sheet(item: $inspectingCustom) { exercise in
+            NavigationStack {
+                if let spec = exercise.customKinetoSpec {
+                    KinetoExerciseDetailView(exercise: spec, row: exercise, onAdd: onAdd(for: exercise))
                 }
             }
-            .sheet(isPresented: $creating) {
-                // Not opened straight away: presenting a sheet while this one dismisses gets dropped.
-                ExerciseEditorView(section: .kineto) { _ in }
-            }
-            .sheet(item: $inspectingCustom) { exercise in
-                NavigationStack {
-                    if let spec = exercise.customKinetoSpec {
-                        KinetoExerciseDetailView(exercise: spec, row: exercise, onAdd: onAdd(for: exercise))
-                    }
-                }
-            }
-            .sheet(item: $inspecting) { exercise in
-                NavigationStack {
-                    KinetoExerciseDetailView(exercise: exercise, row: builtInRow(for: exercise), onAdd: onAdd(for: exercise))
-                }
+        }
+        .sheet(item: $inspecting) { exercise in
+            NavigationStack {
+                KinetoExerciseDetailView(exercise: exercise, row: builtInRow(for: exercise), onAdd: onAdd(for: exercise))
             }
         }
     }

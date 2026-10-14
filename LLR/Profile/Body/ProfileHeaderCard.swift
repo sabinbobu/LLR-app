@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct ProfileHeaderCard: View {
-    let workoutCount: Int
+    /// Start dates of every finished lift and run, the same list the calendar screen reads.
+    let starts: [Date]
     let avatar: UIImage?
     @AppStorage(StorageKey.displayName) private var name = ""
     @AppStorage(StorageKey.birthday) private var birthday: Double = 820_454_400
@@ -12,6 +13,9 @@ struct ProfileHeaderCard: View {
     @Query(filter: #Predicate<BodyMeasurement> { $0.kindRaw == "height" }, sort: \BodyMeasurement.takenAt, order: .reverse)
     private var heights: [BodyMeasurement]
 
+    /// Local on purpose: the shared radius scale is being introduced separately.
+    private let cornerRadius: CGFloat = 28
+
     /// The latest logged height wins over the onboarding answer, matching what the Body tiles use.
     private var height: Double { heights.first?.value ?? Double(heightCm) }
 
@@ -19,81 +23,73 @@ struct ProfileHeaderCard: View {
         Calendar.current.dateComponents([.year], from: Date(timeIntervalSince1970: birthday), to: .now).year ?? 0
     }
 
+    private var heightText: String { unit.formatLength(cm: height) }
+
     var body: some View {
-        HStack(spacing: 16) {
-            AvatarView(image: avatar, name: name, size: 76)
-            VStack(alignment: .leading, spacing: 8) {
-                Text(name.isEmpty ? "Add your name" : name)
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(name.isEmpty ? .secondary : .primary)
-                FlowChips(items: [
-                    "\(age) yrs",
-                    "\(unit.formatLength(cm: height)) \(unit.lengthSuffix)",
-                    goal?.title,
-                    "\(workoutCount) workout\(workoutCount == 1 ? "" : "s")",
-                ].compactMap { $0 })
+        let summary = ProfileHeaderStats(starts: starts)
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 16) {
+                WeeklyRingAvatar(image: avatar, name: name, days: summary.weekDays)
+                header
+                Image(systemName: "chevron.right").font(.footnote).foregroundStyle(.tertiary)
             }
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+            ProfileStatsRow(items: items(summary))
         }
         .padding(18)
-        .background(Theme.surface, in: RoundedRectangle(cornerRadius: 24))
-        .contentShape(RoundedRectangle(cornerRadius: 24))
-    }
-}
-
-struct AvatarView: View {
-    let image: UIImage?
-    let name: String
-    let size: CGFloat
-
-    private var initials: String {
-        let letters = name.split(separator: " ").prefix(2).compactMap(\.first)
-        return letters.isEmpty ? "" : String(letters).uppercased()
+        .background(surface)
+        .overlay(highlight)
+        .shadow(color: Theme.heroShadow, radius: 16, x: 0, y: 8)
+        .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(spoken(summary))
+        .accessibilityAddTraits(.isButton)
     }
 
-    var body: some View {
-        Group {
-            if let image {
-                Image(uiImage: image).resizable().scaledToFill()
-            } else {
-                LinearGradient(colors: [Theme.accent, Theme.protein], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .overlay {
-                        if initials.isEmpty {
-                            Image(systemName: "person.fill").font(.system(size: size * 0.42)).foregroundStyle(.white)
-                        } else {
-                            Text(initials).font(.system(size: size * 0.38, weight: .bold, design: .rounded)).foregroundStyle(.white)
-                        }
-                    }
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(name.isEmpty ? "Add your name" : name)
+                .font(.title.weight(.heavy))
+                .foregroundStyle(name.isEmpty ? .secondary : .primary)
+                .fixedSize(horizontal: false, vertical: true)
+            if let goal {
+                Text(goal.title)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Theme.accent.opacity(0.14), in: Capsule())
             }
         }
-        .frame(width: size, height: size)
-        .clipShape(Circle())
-        .accessibilityHidden(true)
-    }
-}
-
-/// Chips that wrap onto a second line instead of truncating on narrow widths or large text.
-struct FlowChips: View {
-    let items: [String]
-
-    var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 6) { chips }
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 6) { ForEach(items.prefix(2), id: \.self, content: chip) }
-                HStack(spacing: 6) { ForEach(items.dropFirst(2), id: \.self, content: chip) }
-            }
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var chips: some View { ForEach(items, id: \.self, content: chip) }
+    private var surface: some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .fill(LinearGradient(colors: [Theme.heroTint, Theme.surface], startPoint: .topLeading, endPoint: .bottomTrailing))
+    }
 
-    private func chip(_ text: String) -> some View {
-        Text(text)
-            .font(.caption.weight(.medium))
-            .lineLimit(1)
-            .padding(.horizontal, 9).padding(.vertical, 4)
-            .background(Theme.field, in: Capsule())
+    private var highlight: some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .strokeBorder(
+                LinearGradient(colors: [Theme.heroHighlight, Color.clear], startPoint: .top, endPoint: .center),
+                lineWidth: 1
+            )
+    }
+
+    private func items(_ summary: ProfileHeaderStats) -> [ProfileStatsRow.Item] {
+        [
+            ProfileStatsRow.Item(label: "Age", value: "\(age)", suffix: nil),
+            ProfileStatsRow.Item(label: "Height", value: heightText, suffix: unit.lengthSuffix),
+            ProfileStatsRow.Item(label: "Sessions", value: "\(summary.sessionCount)", suffix: nil),
+            ProfileStatsRow.Item(label: "Streak", value: "\(summary.streak)", suffix: "wk"),
+        ]
+    }
+
+    private func spoken(_ summary: ProfileHeaderStats) -> String {
+        let unitWord: String = unit == .kg ? "centimetres" : "inches"
+        return ProfileHeaderStats.spokenSummary(
+            name: name, age: age, height: heightText, heightUnit: unitWord,
+            goal: goal?.title, sessions: summary.sessionCount, streak: summary.streak)
     }
 }
