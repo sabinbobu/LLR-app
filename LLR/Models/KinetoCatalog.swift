@@ -164,6 +164,12 @@ enum KinetoCatalog {
 
     /// Bumped whenever the catalog content changes, so the physio-clearance gate can re-ask.
     static var version: Int { loaded.version }
+
+    /// An unreadable catalog reports version 0; counting that as "cleared" would skip the physio gate
+    /// in front of an empty catalog, so a zero version never clears.
+    static func isCleared(_ clearedVersion: Int, catalogVersion: Int = KinetoCatalog.version) -> Bool {
+        catalogVersion > 0 && clearedVersion >= catalogVersion
+    }
     static var exercises: [Exercise] { loaded.exercises }
     static var libraryEntries: [LibraryExercise] { loaded.libraryEntries }
 
