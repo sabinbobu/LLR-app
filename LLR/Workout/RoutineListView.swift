@@ -7,6 +7,7 @@ struct RoutineListView: View {
     @Environment(\.modelContext) private var context
     let onStart: (Routine) -> Void
     @State private var editing: Routine?
+    @State private var deleter = RoutineDeleter()
 
     var body: some View {
         List {
@@ -20,10 +21,11 @@ struct RoutineListView: View {
                 }
                 .buttonStyle(.plain)
                 .swipeActions {
-                    Button("Delete", systemImage: "trash", role: .destructive) { context.delete(routine) }
+                    Button("Delete", systemImage: "trash", role: .destructive) { deleter.delete(routine, in: context) }
                 }
             }
         }
+        .routineUndoToast(deleter)
         .navigationTitle("My Routines")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $editing) { RoutineBuilderView(routine: $0) }
