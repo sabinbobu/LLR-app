@@ -15,6 +15,8 @@ struct WorkoutTabView: View {
     @State private var addingRun = false
     @State private var buildingRoutine: Routine?
     @State private var loggingPast: Workout?
+    @State private var openRoutineID: UUID?
+    @State private var deleter = RoutineDeleter()
 
     var body: some View {
         NavigationStack {
@@ -84,6 +86,8 @@ struct WorkoutTabView: View {
                 }
                 .padding()
             }
+            .closesSwipeOnScroll($openRoutineID)
+            .routineUndoToast(deleter)
             .navigationTitle("Workout")
         }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
@@ -151,16 +155,18 @@ struct WorkoutTabView: View {
             Button("Start") { start(routine: routine) }
                 .buttonStyle(.borderedProminent)
                 .disabled(routine.orderedExercises.isEmpty || !unfinished.isEmpty)
-            // Edit stays enabled mid-workout: it changes the template, never the running workout.
-            Menu {
-                Button("Edit", systemImage: "pencil") { buildingRoutine = routine }
-            } label: {
-                Image(systemName: "ellipsis.circle").font(.title3)
-            }
-            .accessibilityLabel("Routine options")
         }
         .padding()
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border, lineWidth: 1.5))
+        // Edit stays enabled mid-workout: it changes the template, never the running workout.
+        .contentShape(RoundedRectangle(cornerRadius: 14))
+        .onTapGesture { buildingRoutine = routine }
+        .swipeToDelete(
+            id: routine.id,
+            openID: $openRoutineID,
+            onEdit: { buildingRoutine = routine },
+            onDelete: { deleter.delete(routine, in: context) }
+        )
     }
 
     private func repeatRow(_ workout: Workout) -> some View {
