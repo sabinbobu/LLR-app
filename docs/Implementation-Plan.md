@@ -27,7 +27,7 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | U2 | Repeat button: a colour that complements the theme | **In review** (amber tokens and Repeat button done; device check pending) | — |
 | U3 | Profile header card: a modern redesign | In review; needs owner's on-device approval | — |
 | D1 | One design system: buttons, cards, corner radii | **Foundation in review** (screens not yet migrated; see `docs/design-system.md`) | — |
-| W1 | Workout tab restructure: start in one tap | **Queued** for a future session (spec below; needs design sign-off first) | — |
+| W1 | Workout tab restructure: start in one tap | In review; layout built from the spec without an owner preview, needs your approval on a device | next PR |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
