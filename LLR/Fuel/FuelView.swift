@@ -13,6 +13,7 @@ struct FuelView: View {
 
     @State private var day = Calendar.current.startOfDay(for: .now)
     @State private var adding = false
+    @State private var addingManually = false
     @State private var pickingDay = false
     @State private var showingSettings = false
 
@@ -46,6 +47,7 @@ struct FuelView: View {
             }
             .overlay(alignment: .bottomTrailing) { addButton }
             .sheet(isPresented: $adding) { AddFoodSheet(day: day) }
+            .sheet(isPresented: $addingManually) { FoodEditView(newAt: FoodLogTime.defaultTime(for: day)) {} }
             .sheet(isPresented: $showingSettings) { FuelSettingsView() }
             .sheet(isPresented: $pickingDay) { FuelDayPickerSheet(day: $day) }
         }
@@ -73,8 +75,10 @@ struct FuelView: View {
     }
 
     private var addButton: some View {
-        Button {
-            adding = true
+        // Manual entry is a first-class choice: it needs no key, photo or network.
+        Menu {
+            Button("Enter calories & macros", systemImage: "square.and.pencil") { addingManually = true }
+            Button("Estimate with AI", systemImage: "sparkles") { adding = true }
         } label: {
             Image(systemName: "plus")
                 .font(.title2.weight(.bold))
@@ -85,7 +89,7 @@ struct FuelView: View {
         }
         .padding(.trailing, 20)
         .padding(.bottom, 90)
-        .sensoryFeedback(.impact(weight: .light), trigger: adding)
+        .sensoryFeedback(.impact(weight: .light), trigger: addingManually || adding)
     }
 
     private func shiftDay(_ delta: Int) {
