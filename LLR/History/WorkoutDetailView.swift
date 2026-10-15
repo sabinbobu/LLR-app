@@ -14,6 +14,8 @@ struct WorkoutDetailView: View {
     @Query(filter: #Predicate<Workout> { $0.endedAt == nil }) private var unfinished: [Workout]
     @Environment(ActiveWorkoutPresenter.self) private var presenter
     @State private var savedRoutine: Routine?
+    /// Deleted once this screen has gone: it still renders the workout while it pops.
+    @State private var deleteOnDisappear = false
 
     // Precomputed rows keep `body` cheap to type-check; the inline version took 11s per build.
     private struct Row: Identifiable {
@@ -139,10 +141,13 @@ struct WorkoutDetailView: View {
             WorkoutShareCard(workout: workout, recap: WorkoutRecap(workout), unit: unit)
                 .presentationDetents([.medium])
         }
+        .onDisappear {
+            if deleteOnDisappear { WorkoutActions.delete(workout, in: context) }
+        }
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Workout", role: .destructive) {
+                deleteOnDisappear = true
                 dismiss()
-                WorkoutActions.delete(workout, in: context)
             }
         } message: {
             Text(WorkoutActions.deleteMessage(for: workout))

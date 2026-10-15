@@ -15,7 +15,7 @@ struct ExerciseMediaViewer: View {
             Group {
                 switch item.kind {
                 case .photo:
-                    if let image = UIImage(contentsOfFile: url.path()) {
+                    if let image = UIImage(contentsOfFile: url.path(percentEncoded: false)) {
                         Image(uiImage: image).resizable().scaledToFit()
                     } else {
                         ContentUnavailableView("Photo missing", systemImage: "photo")

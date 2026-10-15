@@ -98,4 +98,17 @@ struct RoutineSnapshot: Equatable {
         }
         return routine
     }
+
+    /// Puts a routine that is still alive back as it was, for Cancel in the builder: edits there
+    /// apply as they're made, so without this a cancelled edit would quietly stick.
+    func revert(_ routine: Routine, in context: ModelContext) {
+        routine.name = name
+        routine.sectionRaw = sectionRaw
+        routine.categoryRaw = categoryRaw
+        for entry in routine.exercises { context.delete(entry) }
+        routine.exercises.removeAll()
+        for entry in entries {
+            entry.insert(into: routine, in: context)
+        }
+    }
 }

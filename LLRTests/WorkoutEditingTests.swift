@@ -55,6 +55,16 @@ final class WorkoutEditingTests: XCTestCase {
         XCTAssertFalse(RestTimer.shared.isRunning, "editing history must never start a rest")
     }
 
+    func testReschedulingMovesTickedSetsWithTheWorkout() throws {
+        let workout = finishedWorkout()
+        let weekEarlier = workout.startedAt.addingTimeInterval(-7 * 86_400)
+        workout.reschedule(startingAt: weekEarlier)
+        XCTAssertEqual(workout.startedAt, weekEarlier)
+        XCTAssertEqual(workout.endedAt, weekEarlier.addingTimeInterval(3600))
+        XCTAssertEqual(Set(workout.completedSets.compactMap(\.completedAt)), [weekEarlier],
+                       "recovery and Weekly Volume read set times, so they must follow the workout")
+    }
+
     func testSaveKeepsWorkoutFinishedAndDropsDrafts() throws {
         let workout = finishedWorkout()
         let model = ActiveWorkoutModel(workout: workout, isHistory: true)

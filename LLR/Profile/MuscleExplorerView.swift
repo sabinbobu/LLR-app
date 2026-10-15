@@ -8,8 +8,6 @@ struct MuscleExplorerView: View {
     @State private var selected: MuscleGroup?
     @State private var equipment: String?
 
-    private var counts: [MuscleGroup: Int] { MuscleExplorer.counts(exercises) }
-
     private func equipmentOptions(_ muscle: MuscleGroup) -> [String] {
         Equipment.options(in: MuscleExplorer.hits(for: muscle, in: exercises).map(\.item.equipment))
     }
@@ -36,7 +34,10 @@ struct MuscleExplorerView: View {
     }
 
     private var mapCard: some View {
-        VStack(spacing: 16) {
+        // Once per render: as a computed property each chip re-ran the query and the full count,
+        // twice (its label and its accessibility label).
+        let counts = MuscleExplorer.counts(exercises)
+        return VStack(spacing: 16) {
             BodyMapView(tint: { groups in
                 selected.map(groups.contains) == true ? Theme.accent : nil
             }, onTap: { side, point in
@@ -49,7 +50,7 @@ struct MuscleExplorerView: View {
 
             FlowLayout(spacing: 8) {
                 ForEach(MuscleExplorer.muscles) { muscle in
-                    chip(muscle)
+                    chip(muscle, count: counts[muscle] ?? 0)
                 }
             }
         }
@@ -57,14 +58,14 @@ struct MuscleExplorerView: View {
         .cardStyle()
     }
 
-    private func chip(_ muscle: MuscleGroup) -> some View {
+    private func chip(_ muscle: MuscleGroup, count: Int) -> some View {
         let isOn = selected == muscle
         return Button {
             select(isOn ? nil : muscle)
         } label: {
             HStack(spacing: 4) {
                 Text(muscle.rawValue)
-                Text("\(counts[muscle] ?? 0)").foregroundStyle(isOn ? Color.white.opacity(0.8) : Color.secondary)
+                Text("\(count)").foregroundStyle(isOn ? Color.white.opacity(0.8) : Color.secondary)
             }
             .font(.footnote.weight(.medium))
             .foregroundStyle(isOn ? Color.white : Color.primary)
@@ -73,7 +74,7 @@ struct MuscleExplorerView: View {
             .background(isOn ? Theme.accent : Theme.field, in: Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(muscle.rawValue), \(counts[muscle] ?? 0) exercises")
+        .accessibilityLabel("\(muscle.rawValue), \(count) exercises")
         .accessibilityAddTraits(isOn ? .isSelected : [])
     }
 

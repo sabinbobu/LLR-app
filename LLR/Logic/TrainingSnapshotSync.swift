@@ -12,7 +12,8 @@ enum TrainingSnapshotSync {
         TrainingSnapshot(
             streak: TrainingCalendar.weekStreak(workouts: starts),
             trainedDaysThisMonth: Array(TrainingCalendar.trainedDays(in: .now, workouts: starts)),
-            generatedAt: .now
+            generatedAt: .now,
+            lastTrainedAt: starts.max()
         ).write()
         WidgetCenter.shared.reloadAllTimelines()
     }

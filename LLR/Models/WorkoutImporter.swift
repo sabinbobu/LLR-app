@@ -15,10 +15,14 @@ enum WorkoutImporter {
     /// export only adds what isn't here yet.
     static func apply(_ parsed: WorkoutCSV.Parsed, into context: ModelContext) -> ImportSummary {
         var summary = ImportSummary(skippedTimedSets: parsed.skippedTimedSets)
-        var known = (try? context.fetch(FetchDescriptor<Exercise>())) ?? []
+        // Gym only: Kineto shares names like "Plank", and history landing there is hidden from the gym side.
+        var known = (try? context.fetch(FetchDescriptor<Exercise>(predicate: #Predicate { $0.sectionRaw == "gym" }))) ?? []
         var candidates = known.map { ExerciseMatcher.Candidate(name: $0.name, equipment: $0.equipment) }
         var resolved: [String: Exercise] = [:]
-        var taken = Set(((try? context.fetch(FetchDescriptor<Workout>())) ?? []).map(\.startedAt))
+        // Whole seconds: exports carry no fractions, so a workout logged here at 09:00:00.734 must
+        // still be recognised when its own export comes back as 09:00:00.
+        func identity(_ date: Date) -> TimeInterval { date.timeIntervalSince1970.rounded(.down) }
+        var taken = Set(((try? context.fetch(FetchDescriptor<Workout>())) ?? []).map { identity($0.startedAt) })
 
         func exercise(named name: String) -> Exercise {
             if let hit = resolved[name] { return hit }
@@ -38,7 +42,7 @@ enum WorkoutImporter {
         }
 
         for imported in parsed.workouts {
-            guard taken.insert(imported.startedAt).inserted else {
+            guard taken.insert(identity(imported.startedAt)).inserted else {
                 summary.duplicates += 1
                 continue
             }

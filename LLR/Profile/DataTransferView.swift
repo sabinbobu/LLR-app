@@ -103,7 +103,10 @@ struct DataTransferView: View {
             defer { if scoped { url.stopAccessingSecurityScopedResource() } }
             let text = try String(contentsOf: url, encoding: .utf8)
             let parsed = try WorkoutCSV.parse(text, strongUnit: strongUnit ?? unit)
-            return .imported(parsed.source, WorkoutImporter.apply(parsed, into: context))
+            let summary = WorkoutImporter.apply(parsed, into: context)
+            // Imported sessions can extend the streak; refresh the widget like Finish does.
+            if summary.workouts > 0 { TrainingSnapshotSync.sync(context: context) }
+            return .imported(parsed.source, summary)
         } catch {
             return .failed(error.localizedDescription)
         }

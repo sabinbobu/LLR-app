@@ -16,6 +16,7 @@ final class MeasurementSeederTests: XCTestCase {
         context = ModelContext(container)
         defaults = UserDefaults(suiteName: suiteName)
         defaults.removePersistentDomain(forName: suiteName)
+        defaults.set(true, forKey: StorageKey.hasOnboarded)
     }
 
     override func tearDown() async throws {
@@ -32,6 +33,19 @@ final class MeasurementSeederTests: XCTestCase {
         XCTAssertEqual(measurements.count, 2)
         XCTAssertTrue(measurements.contains { $0.kind == .bodyWeight && $0.value == 82.5 })
         XCTAssertTrue(measurements.contains { $0.kind == .height && $0.value == 180 })
+    }
+
+    func testALaunchBeforeOnboardingDoesNotUseUpTheSeed() throws {
+        // App launch runs the seeder before the first onboarding has asked for anything.
+        defaults.set(false, forKey: StorageKey.hasOnboarded)
+        MeasurementSeeder.seedIfNeeded(in: context, defaults: defaults)
+
+        defaults.set(82.5, forKey: StorageKey.bodyWeightKg)
+        defaults.set(180, forKey: StorageKey.heightCm)
+        defaults.set(true, forKey: StorageKey.hasOnboarded)
+        MeasurementSeeder.seedIfNeeded(in: context, defaults: defaults)
+
+        XCTAssertEqual(try context.fetch(FetchDescriptor<BodyMeasurement>()).count, 2)
     }
 
     func testNeverSeedsAValueOnboardingNeverActuallySet() throws {

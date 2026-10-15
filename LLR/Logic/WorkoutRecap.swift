@@ -38,7 +38,14 @@ struct WorkoutRecap {
             let recordKinds = entry.recordKinds()
             for (index, set) in sets.enumerated() where set.completedAt != nil {
                 for kind in recordKinds[index].sorted() {
-                    lines.append(RecordLine(exerciseName: exercise.name, kind: kind, valueKg: PersonalRecords.metric(kind, set.value)))
+                    let line = RecordLine(exerciseName: exercise.name, kind: kind, valueKg: PersonalRecords.metric(kind, set.value))
+                    // A later set can beat a record set earlier the same day; only the one that stands is news,
+                    // and one line per exercise and kind keeps the ids unique for ForEach.
+                    if let existing = lines.firstIndex(where: { $0.id == line.id }) {
+                        if line.valueKg > lines[existing].valueKg { lines[existing] = line }
+                    } else {
+                        lines.append(line)
+                    }
                 }
             }
         }

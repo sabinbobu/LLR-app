@@ -151,6 +151,18 @@ extension Workout {
         )
     }
 
+    /// Moves the whole session in time, keeping its length. Ticked sets move too: recovery and
+    /// Weekly Volume read their times, so leaving them behind would put a past workout in this week.
+    func reschedule(startingAt start: Date) {
+        let shift = start.timeIntervalSince(startedAt)
+        let length = duration
+        startedAt = start
+        endedAt = start.addingTimeInterval(length)
+        for set in completedSets {
+            set.completedAt = set.completedAt?.addingTimeInterval(shift)
+        }
+    }
+
     var recordSetCount: Int { exercises.reduce(0) { $0 + $1.recordKinds().filter { !$0.isEmpty }.count } }
 
     var title: String {

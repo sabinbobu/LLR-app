@@ -106,6 +106,10 @@ struct HoldSetRowView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        // The symbols' own labels ("Selected", "Close") would describe a set that isn't done as selected.
+        .accessibilityLabel(isHolding ? "Stop hold" : isDone ? "Mark set not done" : "Complete set")
+        .accessibilityValue(isDone ? "Done" : "Not done")
+        .accessibilityIdentifier("set-check")
     }
 
     /// No hold recorded (shouldn't happen for a catalog set, but the field is user-editable):

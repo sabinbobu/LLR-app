@@ -7,7 +7,9 @@ enum MeasurementSeeder {
     private static let seededKey = "measurementsSeeded"
 
     static func seedIfNeeded(in context: ModelContext, defaults: UserDefaults = .standard) {
-        guard !defaults.bool(forKey: seededKey) else { return }
+        // The first launch runs this before onboarding has asked anything; marking it done then
+        // would make the call at the end of onboarding a no-op and the answers would never land.
+        guard defaults.bool(forKey: StorageKey.hasOnboarded), !defaults.bool(forKey: seededKey) else { return }
         defaults.set(true, forKey: seededKey)
 
         // Only present if the user actually moved the onboarding picker off its default — an

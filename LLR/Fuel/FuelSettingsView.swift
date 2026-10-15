@@ -96,10 +96,9 @@ struct FuelSettingsView: View {
 
     private func overrideRow(_ title: String, unit: String, auto: Double, value: Binding<Double>) -> some View {
         LabeledContent(title) {
-            TextField("\(Int(auto)) \(unit)", value: Binding(get: { value.wrappedValue > 0 ? value.wrappedValue : nil },
-                                                               set: { value.wrappedValue = $0 ?? 0 }),
-                      format: .number.precision(.fractionLength(0)))
-                .keyboardType(.numberPad)
+            NumberField(title: "\(Int(auto)) \(unit)", value: Binding(get: { value.wrappedValue > 0 ? value.wrappedValue : nil },
+                                                                     set: { value.wrappedValue = $0 ?? 0 }),
+                        fractionDigits: 0)
                 .multilineTextAlignment(.trailing)
                 .monospacedDigit()
         }

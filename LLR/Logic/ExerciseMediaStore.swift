@@ -67,11 +67,11 @@ enum ExerciseMediaStore {
         try? FileManager.default.removeItem(at: url(for: fileName, root: root))
     }
 
-    static func thumbnail(for item: ExerciseMediaItem, maxDimension: CGFloat = 400) async -> UIImage? {
-        let fileURL = url(for: item.fileName)
+    static func thumbnail(for item: ExerciseMediaItem, maxDimension: CGFloat = 400, root: URL = defaultRoot) async -> UIImage? {
+        let fileURL = url(for: item.fileName, root: root)
         switch item.kind {
         case .photo:
-            return await UIImage(contentsOfFile: fileURL.path())?
+            return await UIImage(contentsOfFile: fileURL.path(percentEncoded: false))?
                 .byPreparingThumbnail(ofSize: CGSize(width: maxDimension, height: maxDimension))
         case .video:
             let generator = AVAssetImageGenerator(asset: AVURLAsset(url: fileURL))

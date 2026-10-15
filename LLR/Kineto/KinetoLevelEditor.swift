@@ -53,8 +53,7 @@ struct KinetoLevelEditor: View {
 
     private func numberField(_ title: String, value: Binding<Int?>) -> some View {
         LabeledContent(title) {
-            TextField("—", value: value, format: .number)
-                .keyboardType(.numberPad)
+            NumberField("—", value: value)
                 .multilineTextAlignment(.trailing)
                 .monospacedDigit()
         }

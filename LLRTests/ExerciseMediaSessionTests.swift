@@ -1,3 +1,4 @@
+import UIKit
 import XCTest
 @testable import LLR
 
@@ -5,7 +6,8 @@ final class ExerciseMediaSessionTests: XCTestCase {
     private var root: URL!
 
     override func setUpWithError() throws {
-        root = URL.temporaryDirectory.appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        // A space like the real "Application Support" root, so percent-encoded paths fail here too.
+        root = URL.temporaryDirectory.appending(path: "Media Dir \(UUID().uuidString)", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
     }
 
@@ -19,7 +21,17 @@ final class ExerciseMediaSessionTests: XCTestCase {
     }
 
     private func exists(_ item: ExerciseMediaItem) -> Bool {
-        FileManager.default.fileExists(atPath: ExerciseMediaStore.url(for: item.fileName, root: root).path())
+        FileManager.default.fileExists(atPath: ExerciseMediaStore.url(for: item.fileName, root: root).path(percentEncoded: false))
+    }
+
+    func testPhotoThumbnailLoadsFromARootWithASpace() async throws {
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 8, height: 8)).image { context in
+            UIColor.red.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 8, height: 8))
+        }
+        let item = try ExerciseMediaStore.savePhoto(image, root: root)
+        let thumbnail = await ExerciseMediaStore.thumbnail(for: item, root: root)
+        XCTAssertNotNil(thumbnail)
     }
 
     func testCommitDeletesFilesAddedThenRemovedButKeepsTheRest() throws {

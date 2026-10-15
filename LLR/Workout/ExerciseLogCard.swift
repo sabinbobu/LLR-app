@@ -76,7 +76,11 @@ struct ExerciseLogCard: View {
             // Rest and progression shape the next session, not one already done. Holds only
             // progress on their own in the gym: a Kineto dose is the physiotherapist's call.
             if let exercise = entry.exercise, !model.isHistory {
-                restMenu(for: exercise)
+                // Rest is stored on the exercise, which Kineto shares with the gym (Plank, Glute Bridge…);
+                // setting it here would change the gym rest too, the leak WorkoutFactory guards against.
+                if model.workout.section == .gym {
+                    restMenu(for: exercise)
+                }
                 if !entry.isDurationBased || entry.workout?.section == .gym {
                     ProgressionMenu(entry: entry, exercise: exercise, model: model, unit: unit)
                 }

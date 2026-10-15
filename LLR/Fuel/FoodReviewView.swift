@@ -74,8 +74,7 @@ struct FoodReviewView: View {
 
     private func numberRow(_ title: String, value: Binding<Double>) -> some View {
         LabeledContent(title) {
-            TextField(title, value: value, format: .number.precision(.fractionLength(0...1)))
-                .keyboardType(.decimalPad)
+            NumberField(title, value: value)
                 .multilineTextAlignment(.trailing)
                 .monospacedDigit()
         }

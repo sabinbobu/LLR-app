@@ -30,7 +30,6 @@ struct MainTabView: View {
                 FloatingTabBar(selection: $tab)
             }
         }
-        .environment(presenter)
         .fullScreenCover(item: $presenter.presented, onDismiss: presenter.coverDismissed) { workout in
             ActiveWorkoutView(workout: workout) { presenter.pendingSummary = $0 }
         }
@@ -40,5 +39,9 @@ struct MainTabView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { TrainingSnapshotSync.sync(context: context) }
         }
+        // Outermost, so the workout cover and the summary sheet see it too: presented content
+        // inherits only what is set outside the modifier that presents it. The summary reads it
+        // for the cooldown offer, and crashed on every Finish while this sat inside.
+        .environment(presenter)
     }
 }

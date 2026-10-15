@@ -65,6 +65,10 @@ struct SetRowView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            // The checkmark symbol's own label is "Selected", which VoiceOver read out on unticked sets too.
+            .accessibilityLabel(isDone ? "Mark set not done" : "Complete set")
+            .accessibilityValue(isDone ? "Done" : "Not done")
+            .accessibilityIdentifier("set-check")
         }
         .font(.title3)
         .multilineTextAlignment(.center)

@@ -39,9 +39,12 @@ enum Persistence {
 
     static func quarantine(_ storeURL: URL) {
         let stamp = Int(Date.now.timeIntervalSince1970)
+        // Unencoded: the real store sits under "Application Support", and path() would turn the space
+        // into %20, naming a file that doesn't exist so nothing ever got set aside.
+        let path = storeURL.path(percentEncoded: false)
         for suffix in ["", "-wal", "-shm"] {
-            let source = URL(fileURLWithPath: storeURL.path() + suffix)
-            let target = URL(fileURLWithPath: storeURL.path() + suffix + ".corrupt-\(stamp)")
+            let source = URL(fileURLWithPath: path + suffix)
+            let target = URL(fileURLWithPath: path + suffix + ".corrupt-\(stamp)")
             try? FileManager.default.moveItem(at: source, to: target)
         }
     }

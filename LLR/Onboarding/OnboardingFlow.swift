@@ -30,8 +30,8 @@ struct OnboardingFlow: View {
         case .goal: GoalStep { path.append(.experience) }
         case .experience: ExperienceStep { path.append(.welcome) }
         case .welcome: WelcomeCarousel {
-                MeasurementSeeder.seedIfNeeded(in: context)
                 hasOnboarded = true
+                MeasurementSeeder.seedIfNeeded(in: context)
             }
         }
     }

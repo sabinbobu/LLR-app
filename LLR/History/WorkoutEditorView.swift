@@ -65,11 +65,7 @@ struct WorkoutEditorView: View {
 
     /// Moving the start keeps the length, so fixing a wrong date doesn't also change the duration.
     private var startBinding: Binding<Date> {
-        Binding(get: { workout.startedAt }, set: { start in
-            let length = workout.duration
-            workout.startedAt = start
-            workout.endedAt = start.addingTimeInterval(length)
-        })
+        Binding(get: { workout.startedAt }, set: { workout.reschedule(startingAt: $0) })
     }
 
     private var endBinding: Binding<Date> {

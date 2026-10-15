@@ -87,6 +87,37 @@ final class WorkoutRecapTests: XCTestCase {
         XCTAssertTrue(recap.records.contains { $0.kind == .weight })
     }
 
+    func testTwoRecordSetsOfOneKindGiveOneLineWithTheBestValue() {
+        let past = Workout(startedAt: .now.addingTimeInterval(-7 * 86_400))
+        past.endedAt = past.startedAt.addingTimeInterval(3600)
+        context.insert(past)
+        let pastEntry = WorkoutExercise(order: 0)
+        context.insert(pastEntry)
+        pastEntry.exercise = bench
+        past.exercises.append(pastEntry)
+        let pastSet = SetEntry(order: 0, weightKg: 80, reps: 8)
+        pastSet.completedAt = past.startedAt
+        context.insert(pastSet)
+        pastEntry.sets.append(pastSet)
+
+        let today = Workout()
+        context.insert(today)
+        let entry = WorkoutExercise(order: 0)
+        context.insert(entry)
+        entry.exercise = bench
+        today.exercises.append(entry)
+        for (order, kg) in [100.0, 105.0].enumerated() {
+            let set = SetEntry(order: order, weightKg: kg, reps: 1)
+            set.completedAt = .now
+            context.insert(set)
+            entry.sets.append(set)
+        }
+
+        let records = WorkoutRecap(today).records
+        XCTAssertEqual(Set(records.map(\.id)).count, records.count, "ForEach needs unique ids")
+        XCTAssertEqual(records.filter { $0.kind == .weight }.map(\.valueKg), [105])
+    }
+
     func testVolumeAndSetCountOnlyCountCompletedSets() {
         let workout = Workout()
         context.insert(workout)

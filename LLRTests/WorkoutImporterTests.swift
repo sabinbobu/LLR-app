@@ -40,6 +40,25 @@ final class WorkoutImporterTests: XCTestCase {
         XCTAssertEqual(custom.muscleGroup, "Other")
     }
 
+    func testImportNeverAttachesGymHistoryToAKinetoExerciseOfTheSameName() throws {
+        let context = try makeContext()
+        // A user-made Kineto exercise; built-ins like Plank share one gym row and can't collide.
+        let kineto = Exercise(name: "Clamshell", muscleGroup: "Glutes", isCustom: true)
+        kineto.sectionRaw = "kineto"
+        context.insert(kineto)
+        let csv = """
+        Date,Workout Name,Duration,Exercise Name,Set Order,Weight,Reps,Distance,Seconds,Notes,Workout Notes,RPE
+        2021-01-02 09:00:00,"Hips",20m,"Clamshell",1,0,15,0,0,,,
+        """
+
+        let summary = WorkoutImporter.apply(try WorkoutCSV.parse(csv, strongUnit: .kg), into: context)
+
+        let entry = try XCTUnwrap(context.fetch(FetchDescriptor<Workout>()).first?.orderedExercises.first)
+        XCTAssertEqual(entry.exercise?.sectionRaw, "gym", "Kineto exercises are hidden from gym history and the picker")
+        XCTAssertNotEqual(entry.exercise?.id, kineto.id)
+        XCTAssertEqual(summary.newExercises, ["Clamshell"])
+    }
+
     func testImportedHistoryFeedsPreviousPerformance() throws {
         let context = try makeContext()
         _ = WorkoutImporter.apply(try WorkoutCSV.parse(strong, strongUnit: .kg), into: context)
@@ -55,6 +74,30 @@ final class WorkoutImporterTests: XCTestCase {
         XCTAssertEqual(again.workouts, 0)
         XCTAssertEqual(again.duplicates, 1)
         XCTAssertEqual(again.newExercises, [])
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Workout>()), 1)
+    }
+
+    func testReimportingOwnExportSkipsWorkoutsLoggedHere() throws {
+        let context = try makeContext()
+        let bench = Exercise(name: "Bench Press", muscleGroup: "Chest")
+        context.insert(bench)
+        // Logged live: Date.now carries sub-second precision the export's whole seconds can't keep.
+        let workout = Workout(startedAt: Date(timeIntervalSince1970: 1_700_000_000.734))
+        workout.endedAt = workout.startedAt.addingTimeInterval(3600)
+        context.insert(workout)
+        let entry = WorkoutExercise(order: 0)
+        context.insert(entry)
+        entry.exercise = bench
+        workout.exercises.append(entry)
+        let set = SetEntry(order: 0, weightKg: 80, reps: 5)
+        set.completedAt = workout.startedAt
+        context.insert(set)
+        entry.sets.append(set)
+
+        let csv = WorkoutExport.strongCSV([workout], unit: .kg)
+        let summary = WorkoutImporter.apply(try WorkoutCSV.parse(csv, strongUnit: .kg), into: context)
+
+        XCTAssertEqual(summary.duplicates, 1)
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<Workout>()), 1)
     }
 

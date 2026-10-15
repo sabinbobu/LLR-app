@@ -88,8 +88,11 @@ struct ProfileDetailsView: View {
         .onAppear { heightAtOpen = heightCm }
         .onDisappear(perform: recordHeightChange)
         .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            // Cleared at once so picking the same photo again (say after Remove) still registers.
+            pickerItem = nil
             Task {
-                guard let data = try? await item?.loadTransferable(type: Data.self) else { return }
+                guard let data = try? await item.loadTransferable(type: Data.self) else { return }
                 AvatarStore.save(data)
                 avatar = AvatarStore.load()
             }

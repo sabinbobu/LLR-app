@@ -36,8 +36,7 @@ struct IngredientCorrectionView: View {
                 ForEach($ingredients) { $item in
                     HStack {
                         TextField("Name", text: $item.name)
-                        TextField("g", value: $item.grams, format: .number)
-                            .keyboardType(.decimalPad)
+                        NumberField("g", value: $item.grams)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 70)
                         Text("g").foregroundStyle(.secondary)

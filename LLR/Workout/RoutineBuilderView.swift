@@ -10,11 +10,14 @@ struct RoutineBuilderView: View {
     /// Save requires a name, so a nameless routine was never saved: Cancel discards it.
     /// A saved routine opened for editing is only closed, never deleted.
     @State private var isNew: Bool
+    /// Edits apply live, so Cancel on a saved routine puts this back.
+    @State private var original: RoutineSnapshot
     @FocusState private var nameFocused: Bool
 
     init(routine: Routine) {
         _routine = Bindable(routine)
         _isNew = State(initialValue: routine.name.isEmpty)
+        _original = State(initialValue: RoutineSnapshot(routine))
     }
 
     private var trimmedName: String { routine.name.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -53,6 +56,8 @@ struct RoutineBuilderView: View {
                 }
             }
         }
+        // A swipe-down would keep half-made edits, or an untitled routine, without Save or Cancel.
+        .interactiveDismissDisabled()
     }
 
     private var nameField: some View {
@@ -119,7 +124,12 @@ struct RoutineBuilderView: View {
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button("Cancel") {
-                if isNew { context.delete(routine) }
+                if isNew {
+                    context.delete(routine)
+                } else {
+                    original.revert(routine, in: context)
+                }
+                try? context.save()
                 dismiss()
             }
         }

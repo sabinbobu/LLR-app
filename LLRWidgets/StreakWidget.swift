@@ -34,7 +34,7 @@ struct StreakWidgetView: View {
         }
     }
 
-    private var streak: Int { entry.snapshot?.streak ?? 0 }
+    private var streak: Int { entry.snapshot?.streak(asOf: entry.date) ?? 0 }
 
     private var smallBody: some View {
         VStack(alignment: .leading, spacing: 6) {

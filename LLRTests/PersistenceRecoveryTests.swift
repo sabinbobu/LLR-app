@@ -7,7 +7,8 @@ final class PersistenceRecoveryTests: XCTestCase {
     private var dir: URL!
 
     override func setUpWithError() throws {
-        dir = URL.temporaryDirectory.appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        // A space in the path, like the real store's "Application Support", so percent-encoding bugs surface.
+        dir = URL.temporaryDirectory.appending(path: "Store Dir \(UUID().uuidString)", directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     }
 
@@ -37,7 +38,7 @@ final class PersistenceRecoveryTests: XCTestCase {
         let container = Persistence.open(config())
         XCTAssertEqual(try container.mainContext.fetchCount(FetchDescriptor<Exercise>()), 0)
 
-        let leftovers = try FileManager.default.contentsOfDirectory(atPath: dir.path())
+        let leftovers = try FileManager.default.contentsOfDirectory(atPath: dir.path(percentEncoded: false))
         XCTAssertTrue(leftovers.contains { $0.hasPrefix("test.store.corrupt-") }, "the bad file must be kept for recovery: \(leftovers)")
     }
 
@@ -66,7 +67,7 @@ final class PersistenceRecoveryTests: XCTestCase {
         XCTAssertTrue(try context.fetch(FetchDescriptor<RoutineExercise>()).allSatisfy { $0.supersetGroup == nil })
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<FoodEntry>()), 0)
 
-        let leftovers = try FileManager.default.contentsOfDirectory(atPath: dir.path())
+        let leftovers = try FileManager.default.contentsOfDirectory(atPath: dir.path(percentEncoded: false))
         XCTAssertFalse(leftovers.contains { $0.contains(".corrupt-") }, "migration must not fall back to quarantine: \(leftovers)")
     }
 }

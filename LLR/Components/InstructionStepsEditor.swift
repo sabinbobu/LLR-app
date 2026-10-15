@@ -9,7 +9,12 @@ struct InstructionStepsEditor: View {
             ForEach(steps.indices, id: \.self) { index in
                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                     Text("\(index + 1).").monospacedDigit().foregroundStyle(.secondary)
-                    TextField("Describe this step", text: $steps[index], axis: .vertical)
+                    // Guarded: after a delete SwiftUI can still evaluate a row for an index that's gone,
+                    // and `$steps[index]` would crash out of range.
+                    TextField("Describe this step", text: Binding(
+                        get: { steps.indices.contains(index) ? steps[index] : "" },
+                        set: { if steps.indices.contains(index) { steps[index] = $0 } }
+                    ), axis: .vertical)
                 }
             }
             .onDelete { steps.remove(atOffsets: $0) }

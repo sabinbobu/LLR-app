@@ -73,6 +73,23 @@ final class RoutineSnapshotTests: XCTestCase {
         XCTAssertEqual(restored.orderedExercises[1].orderedSets[0].durationSeconds, 45)
     }
 
+    func testRevertUndoesEditsInPlace() throws {
+        let routine = makeRoutine()
+        let before = RoutineSnapshot(routine)
+        // What a cancelled builder session leaves behind: a cleared name, a removed exercise, a new set.
+        routine.name = ""
+        context.delete(routine.orderedExercises[1])
+        routine.orderedExercises[0].sets.append(RoutineSetPlan(order: 9, reps: 3))
+        try context.save()
+
+        before.revert(routine, in: context)
+        try context.save()
+
+        XCTAssertEqual(RoutineSnapshot(routine), before)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Routine>()), 1)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<RoutineExercise>()), 2, "no orphaned copies left behind")
+    }
+
     func testRestoreKeepsRestNotesSupersetAndCreationDate() throws {
         let original = makeRoutine()
         let originalID = original.id

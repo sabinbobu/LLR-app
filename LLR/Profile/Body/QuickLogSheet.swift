@@ -40,8 +40,7 @@ struct QuickLogSheet: View {
                 HStack(spacing: 20) {
                     stepButton("minus") { value = max(0, value - step) }
                     VStack(spacing: 0) {
-                        TextField("", value: $value, format: .number.precision(.fractionLength(1)))
-                            .keyboardType(.decimalPad)
+                        NumberField("", value: $value)
                             .multilineTextAlignment(.center)
                             .font(.system(size: 56, weight: .bold, design: .rounded))
                             .monospacedDigit()
