@@ -106,4 +106,37 @@ final class WorkoutCSVTests: XCTestCase {
         XCTAssertNil(ExerciseMatcher.match("Push Up (Weighted)", in: candidates))
         XCTAssertNil(ExerciseMatcher.match("Snatch Ballance", in: candidates))
     }
+
+    func testCorruptNumbersAreSkippedNotCrashed() throws {
+        let text = [
+            strongHeader,
+            #"2021-01-02 09:00:00,"Morning",infh,"Squat (Barbell)",1,inf,nan,0,0,,,"#,
+            #"2021-01-02 09:00:00,"Morning",infh,"Squat (Barbell)",2,100,1e30,0,0,,,"#,
+            #"2021-01-02 09:00:00,"Morning",infh,"Squat (Barbell)",3,1e300,5,0,99999999999,,,"#,
+        ].joined(separator: "\n")
+        let parsed = try WorkoutCSV.parse(text, strongUnit: .kg)
+        XCTAssertEqual(parsed.skippedTimedSets, 2, "reps of nan and 1e30 are no reps")
+        let workout = try XCTUnwrap(parsed.workouts.first)
+        XCTAssertEqual(workout.endedAt, workout.startedAt, "an infinite duration is ignored")
+        let set = try XCTUnwrap(workout.exercises.first?.sets.first)
+        XCTAssertEqual(set.weightKg, 0, "an impossible weight reads as none")
+        XCTAssertEqual(set.reps, 5)
+        XCTAssertNil(set.durationSeconds, "a hold longer than a day is not a hold")
+    }
+
+    func testDurationIsCappedAndIgnoresNonsenseTokens() {
+        XCTAssertEqual(WorkoutCSV.duration("1e300h"), WorkoutCSV.maxDuration)
+        XCTAssertEqual(WorkoutCSV.duration("nanm 30s"), 30)
+        XCTAssertEqual(WorkoutCSV.duration("-5m 30s"), 30)
+    }
+
+    func testHevyRepsBeyondTheLimitAreSkipped() throws {
+        let text = hevy([
+            #""Legs","1 Apr 2025, 07:05","1 Apr 2025, 08:00","","Squat (Barbell)",,"",0,"normal",100,9000000000000000000,,,"#,
+            #""Legs","1 Apr 2025, 07:05","1 Apr 2025, 08:00","","Squat (Barbell)",,"",1,"normal",100,5.0,,,"#,
+        ])
+        let parsed = try WorkoutCSV.parse(text, strongUnit: .kg)
+        XCTAssertEqual(parsed.skippedTimedSets, 1)
+        XCTAssertEqual(parsed.workouts.first?.exercises.first?.sets.map(\.reps), [5])
+    }
 }

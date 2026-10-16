@@ -165,7 +165,7 @@ struct RoutineBuilderView: View {
         context.insert(entry)
         entry.exercise = exercise
         routine.exercises.append(entry)
-        for _ in 0..<max(level.sets ?? 1, 1) {
+        for _ in 0..<min(max(level.sets ?? 1, 1), InputLimits.maxSets) {
             let plan = RoutineSetPlan(order: (entry.sets.map(\.order).max() ?? -1) + 1, reps: level.reps ?? 1)
             plan.durationSeconds = level.durationSeconds
             context.insert(plan)

@@ -5,6 +5,7 @@ import SwiftUI
 /// otherwise specified by your doctor or physical therapist"; CUH leaves dosing for the physio to set).
 struct KinetoGateView: View {
     var onComplete: () -> Void
+    @Environment(\.dismiss) private var dismiss
     @AppStorage(StorageKey.kinetoClearedVersion) private var clearedVersion = 0
     @AppStorage(StorageKey.kinetoClearedAt) private var clearedAt: Double = 0
     @AppStorage(StorageKey.kinetoDirection) private var directionRaw = KinetoDirectionPreference.notAssessed.rawValue
@@ -38,6 +39,11 @@ struct KinetoGateView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            // Someone only looking, or without a physiotherapist yet, needs a way out other than
+            // ticking a clearance they don't have. Leaving without clearing also leaves Kineto.
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Not now") { dismiss() } }
+            }
         }
         .interactiveDismissDisabled()
     }
@@ -67,7 +73,7 @@ struct KinetoGateView: View {
 
     private var redFlags: some View {
         VStack(spacing: 0) {
-            RedFlagsView(mode: .info)
+            RedFlagsView(mode: .info, showsDone: false)
             continueBar { step = .setup }
         }
     }

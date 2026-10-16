@@ -80,10 +80,12 @@ struct HoldSetRowView: View {
         .onAppear { if isDone { fillTextFromModel() } }
         .onDisappear { holdTask?.cancel() }
         .onChange(of: repsText) { _, text in
-            if let value = Int(text) { entry.reps = value }
+            if let value = InputLimits.count(text) { entry.reps = value }
         }
+        // Only a real hold is written: a cleared field (mid-retype) set nil, and one nil turns the
+        // whole card into weight × reps rows, dropping this set's hold for good.
         .onChange(of: secondsText) { _, text in
-            entry.durationSeconds = Int(text)
+            if let value = InputLimits.count(text, max: InputLimits.maxSeconds), value > 0 { entry.durationSeconds = value }
         }
     }
 

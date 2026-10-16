@@ -71,7 +71,7 @@ enum MeasurementKind: String, CaseIterable, Identifiable {
         switch dimension {
         case .mass: "\(unit.format(kg: canonicalValue)) \(unit.rawValue)"
         case .length: "\(unit.formatLength(cm: canonicalValue)) \(unit.lengthSuffix)"
-        case .percent: "\(Int(canonicalValue.rounded()))%"
+        case .percent: "\(String(format: "%.0f", canonicalValue.rounded()))%"
         }
     }
 }
@@ -86,8 +86,5 @@ extension WeightUnit {
     func fromCm(_ cm: Double) -> Double { self == .kg ? cm : cm / Self.cmPerInch }
     func toCm(_ value: Double) -> Double { self == .kg ? value : value * Self.cmPerInch }
 
-    func formatLength(cm: Double) -> String {
-        let value = (fromCm(cm) * 10).rounded() / 10
-        return value == value.rounded() ? String(Int(value)) : String(format: "%.1f", value)
-    }
+    func formatLength(cm: Double) -> String { Self.oneDecimal(fromCm(cm)) }
 }

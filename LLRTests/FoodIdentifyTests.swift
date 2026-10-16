@@ -44,4 +44,10 @@ final class FoodIdentifyTests: XCTestCase {
         XCTAssertFalse(FoodAnalysis.canAnalyze([I(name: "Rice", grams: -5)]))
         XCTAssertTrue(FoodAnalysis.canAnalyze([I(name: "Rice", grams: 50)]))
     }
+
+    func testAbsurdPortionIsRejected() {
+        XCTAssertThrowsError(try FoodAnalysis.parseIdentifyContent(#"{"ingredients":[{"name":"Rice","grams":1e300}]}"#)) {
+            XCTAssertEqual($0 as? FoodAnalysis.ParseError, .invalidValue("Rice"))
+        }
+    }
 }
