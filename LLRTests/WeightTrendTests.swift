@@ -33,6 +33,18 @@ final class WeightTrendTests: XCTestCase {
         XCTAssertEqual(points.last!.trend, trend, accuracy: 1e-9)
     }
 
+    func testLatestWeighInSurvivesADSTChangeThatSkipsMidnight() throws {
+        var chile = Calendar(identifier: .gregorian)
+        chile.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Santiago"))
+        // Clocks went from 23:59:59 on 2 September 2023 straight to 01:00 on the 3rd.
+        let first = try XCTUnwrap(chile.date(from: DateComponents(year: 2023, month: 9, day: 1, hour: 12)))
+        let last = try XCTUnwrap(chile.date(from: DateComponents(year: 2023, month: 9, day: 5, hour: 12)))
+        let points = WeightTrend.points([(first, 80), (last, 79)], calendar: chile)
+        XCTAssertEqual(points.count, 5)
+        XCTAssertEqual(points.last?.raw, 79)
+        XCTAssertEqual(points.last?.date, chile.startOfDay(for: last))
+    }
+
     func testEarliestWeighInOfTheDayWins() {
         let points = WeightTrend.points([(day(0, hour: 20), 82), (day(0, hour: 7), 80)], calendar: calendar)
         XCTAssertEqual(points.first?.raw, 80)

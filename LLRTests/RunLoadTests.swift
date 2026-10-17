@@ -73,4 +73,9 @@ final class RunLoadTests: XCTestCase {
         XCTAssertFalse(RunLoad.isPlausible(km: 0, seconds: 600))
         XCTAssertFalse(RunLoad.isPlausible(km: 5, seconds: 0))
     }
+
+    func testPlausibilityCapsTheDistance() {
+        XCTAssertTrue(RunLoad.isPlausible(km: RunLoad.maxPlausibleKm, seconds: RunLoad.maxPlausibleKm / 10 * 3600))
+        XCTAssertFalse(RunLoad.isPlausible(km: RunLoad.maxPlausibleKm + 1, seconds: (RunLoad.maxPlausibleKm + 1) / 10 * 3600))
+    }
 }

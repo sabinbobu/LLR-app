@@ -68,10 +68,11 @@ struct RoutineSetRowView: View {
             plan.weightKg = WeightUnit.parse(text).map(unit.toKg)
         }
         .onChange(of: repsText) { _, text in
-            plan.reps = Int(text)
+            plan.reps = InputLimits.count(text)
         }
+        // Unlike reps, a hold can't be blank: one nil turns the card into weight × reps rows.
         .onChange(of: secondsText) { _, text in
-            plan.durationSeconds = Int(text)
+            if let value = InputLimits.count(text, max: InputLimits.maxSeconds), value > 0 { plan.durationSeconds = value }
         }
     }
 

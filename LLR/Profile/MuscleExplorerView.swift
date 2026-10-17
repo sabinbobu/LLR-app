@@ -7,9 +7,38 @@ struct MuscleExplorerView: View {
     @Query(filter: #Predicate<Exercise> { $0.sectionRaw == "gym" }, sort: \Exercise.name) private var exercises: [Exercise]
     @State private var selected: MuscleGroup?
     @State private var equipment: String?
+    /// Plain copies of the library, made once per visit. Counts, hits and the equipment menu each read
+    /// every row's muscle and equipment arrays, and doing that off 400-odd SwiftData models on every
+    /// tap held up the main thread.
+    @State private var rows: [Row] = []
+    @State private var counts: [MuscleGroup: Int] = [:]
+
+    private struct Row: MuscleTargeting, Identifiable {
+        let id: UUID
+        let exercise: Exercise
+        let muscleGroup: String
+        let secondaryMuscles: [String]
+        let equipment: [String]
+        let isFavourite: Bool
+
+        init(_ exercise: Exercise) {
+            id = exercise.id
+            self.exercise = exercise
+            muscleGroup = exercise.muscleGroup
+            secondaryMuscles = exercise.secondaryMuscles
+            equipment = exercise.equipment
+            isFavourite = exercise.isFavourite
+        }
+    }
 
     private func equipmentOptions(_ muscle: MuscleGroup) -> [String] {
-        Equipment.options(in: MuscleExplorer.hits(for: muscle, in: exercises).map(\.item.equipment))
+        Equipment.options(in: MuscleExplorer.hits(for: muscle, in: rows).map(\.item.equipment))
+    }
+
+    /// On every appearance too: coming back from an exercise page may have changed its favourite star.
+    private func refresh() {
+        rows = exercises.map(Row.init)
+        counts = MuscleExplorer.counts(rows)
     }
 
     var body: some View {
@@ -31,13 +60,12 @@ struct MuscleExplorerView: View {
         .background(Theme.background)
         .navigationTitle("Muscles")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear(perform: refresh)
+        .onChange(of: exercises) { refresh() }
     }
 
     private var mapCard: some View {
-        // Once per render: as a computed property each chip re-ran the query and the full count,
-        // twice (its label and its accessibility label).
-        let counts = MuscleExplorer.counts(exercises)
-        return VStack(spacing: 16) {
+        VStack(spacing: 16) {
             BodyMapView(tint: { groups in
                 selected.map(groups.contains) == true ? Theme.accent : nil
             }, onTap: { side, point in
@@ -81,7 +109,7 @@ struct MuscleExplorerView: View {
     @ViewBuilder
     private func results(_ muscle: MuscleGroup) -> some View {
         let options = equipmentOptions(muscle)
-        let hits = MuscleExplorer.hits(for: muscle, in: exercises, equipment: equipment)
+        let hits = MuscleExplorer.hits(for: muscle, in: rows, equipment: equipment)
         HStack {
             Text("Exercises for \(muscle.rawValue)").font(.headline)
             Spacer()
@@ -92,8 +120,8 @@ struct MuscleExplorerView: View {
         if hits.isEmpty {
             EmptyStateCard(systemImage: "magnifyingglass", message: "No exercises match")
         }
-        section("Main target", rows: hits.filter(\.isPrimary).map(\.item))
-        section("Also trains it", rows: hits.filter { !$0.isPrimary }.map(\.item))
+        section("Main target", rows: hits.filter(\.isPrimary).map(\.item.exercise))
+        section("Also trains it", rows: hits.filter { !$0.isPrimary }.map(\.item.exercise))
     }
 
     @ViewBuilder

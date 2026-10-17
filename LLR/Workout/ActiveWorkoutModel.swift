@@ -66,7 +66,7 @@ final class ActiveWorkoutModel {
         context.insert(entry)
         entry.exercise = exercise
         workout.exercises.append(entry)
-        for _ in 0..<max(level.sets ?? 1, 1) {
+        for _ in 0..<min(max(level.sets ?? 1, 1), InputLimits.maxSets) {
             appendSet(to: entry, prefill: SetValue(weightKg: 0, reps: level.reps ?? 1, durationSeconds: level.durationSeconds))
         }
         syncLockScreen()

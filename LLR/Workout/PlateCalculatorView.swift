@@ -9,7 +9,8 @@ struct PlateCalculatorView: View {
 
     init(unit: WeightUnit, targetKg: Double) {
         self.unit = unit
-        _target = State(initialValue: (unit.fromKg(targetKg) * 10).rounded() / 10)
+        // Held to the stepper's range: a mistyped set weight would otherwise draw thousands of plates.
+        _target = State(initialValue: min(max((unit.fromKg(targetKg) * 10).rounded() / 10, 0), 1000))
     }
 
     private var bar: Double { unit == .kg ? barKg : barLbs }

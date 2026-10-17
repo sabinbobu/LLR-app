@@ -82,4 +82,11 @@ final class FoodAnalysisTests: XCTestCase {
         XCTAssertEqual(OpenRouterClient.error(forStatus: 429), .rateLimited)
         XCTAssertEqual(OpenRouterClient.error(forStatus: 503), .server(503))
     }
+
+    func testAbsurdModelNumbersAreRejected() {
+        let huge = #"{"items":[{"name":"Rice","grams":150,"kcal":1e300,"protein_g":4,"carbs_g":42,"fat_g":0.4}]}"#
+        XCTAssertThrowsError(try FoodAnalysis.parseContent(huge)) {
+            XCTAssertEqual($0 as? FoodAnalysis.ParseError, .invalidValue("Rice"))
+        }
+    }
 }

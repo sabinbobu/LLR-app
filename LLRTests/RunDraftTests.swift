@@ -31,4 +31,14 @@ final class RunDraftTests: XCTestCase {
         XCTAssertNil(draft("5", "", "30").problem)
         XCTAssertNotNil(draft("5", "", "1").problem)
     }
+
+    func testHugeTimeOrDistanceIsInvalidInsteadOfOverflowing() {
+        let longHours = draft("10", "3000000000000000", "", "")
+        XCTAssertEqual(longHours.seconds, 3_000_000_000_000_000.0 * 3600)
+        XCTAssertFalse(longHours.isValid)
+        XCTAssertFalse(draft("1e300", "1e300").isValid)
+        XCTAssertFalse(draft("inf", "1").isValid)
+        XCTAssertFalse(draft("nan", "1").isValid)
+        XCTAssertFalse(draft("5000", "300").isValid, "16.7 km/h, but no single run is 5000 km")
+    }
 }

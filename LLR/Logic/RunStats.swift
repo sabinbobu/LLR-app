@@ -1,6 +1,6 @@
 import Foundation
 
-/// Runs track time only: how long, and at what hour of the day. No distance, pace or GPS.
+/// Totals across runs: how many, how long, and at what hour of the day. Distance and pace live in `RunLoad`.
 enum RunStats {
     /// A run is a `Workout` with this section and no exercises, so it flows through the same
     /// timeline, calendar and streak as lifting without a new entity or any schema change.

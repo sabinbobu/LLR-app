@@ -56,7 +56,7 @@ enum WorkoutCSV {
         var builder = Builder()
         for row in table.rows {
             guard let start = hevyDate.date(from: table[row, "start_time"]) else { continue }
-            let end = hevyDate.date(from: table[row, "end_time"]) ?? start
+            let end = min(hevyDate.date(from: table[row, "end_time"]) ?? start, start + maxDuration)
             let kind: SetKind = switch table[row, "set_type"] {
             case "warmup": .warmup
             case "dropset": .drop
@@ -67,7 +67,7 @@ enum WorkoutCSV {
                 workout: (table[row, "title"], start, end, table[row, "description"]),
                 exercise: table[row, "exercise_title"],
                 weightKg: unit.toKg(WeightUnit.parse(table[row, weightColumn]) ?? 0),
-                reps: Int(table[row, "reps"]) ?? 0,
+                reps: reps(table[row, "reps"]),
                 kind: kind,
                 rir: WeightUnit.parse(table[row, "rpe"]).flatMap(Effort.rir(fromRPE:))
             )
@@ -92,12 +92,12 @@ enum WorkoutCSV {
             }
             // A held rep (reps > 0 and a Seconds value) is a duration set; reps == 0 with a Seconds
             // value is a cardio/timed row LLR can't represent, and stays an unsupported skip below.
-            let seconds = Int(table[row, "Seconds"]).flatMap { $0 > 0 ? $0 : nil }
+            let seconds = InputLimits.count(table[row, "Seconds"], max: InputLimits.maxSeconds).flatMap { $0 > 0 ? $0 : nil }
             builder.add(
                 workout: (table[row, "Workout Name"], start, start + duration(table[row, "Duration"]), table[row, "Workout Notes"]),
                 exercise: table[row, "Exercise Name"],
                 weightKg: unit.toKg(WeightUnit.parse(table[row, "Weight"]) ?? 0),
-                reps: Int(WeightUnit.parse(table[row, "Reps"]) ?? 0),
+                reps: reps(table[row, "Reps"]),
                 kind: kind,
                 durationSeconds: seconds,
                 rir: WeightUnit.parse(table[row, "RPE"]).flatMap(Effort.rir(fromRPE:))
@@ -106,11 +106,12 @@ enum WorkoutCSV {
         return Parsed(source: .strong, workouts: builder.workouts, skippedTimedSets: builder.skipped)
     }
 
-    /// Strong writes durations as "2h 38m", "45m" or "30s".
+    /// Strong writes durations as "2h 38m", "45m" or "30s". Capped at a week: "infh" or a runaway
+    /// number would otherwise put the end date off the calendar and crash wherever it's shown.
     static func duration(_ text: String) -> TimeInterval {
         var total: TimeInterval = 0
         for token in text.split(separator: " ") {
-            guard let unit = token.last, let value = Double(token.dropLast()) else { continue }
+            guard let unit = token.last, let value = Double(token.dropLast()), value.isFinite, value >= 0 else { continue }
             switch unit {
             case "h": total += value * 3600
             case "m": total += value * 60
@@ -118,7 +119,15 @@ enum WorkoutCSV {
             default: break
             }
         }
-        return total
+        return min(total, maxDuration)
+    }
+
+    static let maxDuration: TimeInterval = 7 * 86_400
+
+    /// Hevy writes "8", some exports "8.0". 0 (skipped as no reps) for anything else or past `InputLimits.maxReps`.
+    static func reps(_ text: String) -> Int {
+        guard let value = WeightUnit.parse(text), value >= 0, value <= Double(InputLimits.maxReps) else { return 0 }
+        return Int(value)
     }
 
     static let hevyDate = formatter("d MMM yyyy, HH:mm")

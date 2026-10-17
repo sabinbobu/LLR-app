@@ -6,6 +6,9 @@ struct RunDetailView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var confirmDelete = false
+    /// Deleted once this screen has gone: it still reads the run while it pops, and a deleted,
+    /// saved model crashes on access.
+    @State private var deleteOnDisappear = false
 
     var body: some View {
         ScrollView {
@@ -31,10 +34,13 @@ struct RunDetailView: View {
         .toolbar {
             Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
         }
+        .onDisappear {
+            if deleteOnDisappear { WorkoutActions.delete(workout, in: context) }
+        }
         .confirmationDialog("Delete this run?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Run", role: .destructive) {
+                deleteOnDisappear = true
                 dismiss()
-                WorkoutActions.delete(workout, in: context)
             }
         } message: {
             Text("This can't be undone.")

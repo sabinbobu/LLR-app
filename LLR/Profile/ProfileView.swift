@@ -36,7 +36,7 @@ struct ProfileView: View {
                         }
                         .buttonStyle(CardButtonStyle())
                         NavigationLink {
-                            MuscleSplitView(summaries: summaries)
+                            LazyDestination { MuscleSplitView(summaries: summaries) }
                         } label: {
                             Label("Muscle Split", systemImage: "figure.strengthtraining.traditional")
                                 .font(.title3)
@@ -54,7 +54,7 @@ struct ProfileView: View {
                         }
                         .buttonStyle(CardButtonStyle())
                         NavigationLink {
-                            WeeklyVolumeView(entries: workouts.flatMap(\.recoveryEntries))
+                            LazyDestination { WeeklyVolumeView(entries: workouts.flatMap(\.recoveryEntries)) }
                         } label: {
                             Label("Weekly Volume", systemImage: "chart.bar.xaxis")
                                 .font(.title3)
@@ -63,7 +63,7 @@ struct ProfileView: View {
                         }
                         .buttonStyle(CardButtonStyle())
                         NavigationLink {
-                            StructuralBalanceView(workouts: workouts)
+                            LazyDestination { StructuralBalanceView(workouts: workouts) }
                         } label: {
                             Label("Balance", systemImage: "scalemass")
                                 .font(.title3)
@@ -74,9 +74,11 @@ struct ProfileView: View {
                         // Only once sets are being rated: an empty effort screen is noise for everyone else.
                         if effortScale != .off {
                             NavigationLink {
-                                EffortStatsView(samples: workouts.flatMap(\.recoveryEntries).map {
-                                    EffortStats.Sample(date: $0.completedAt, rir: $0.rir)
-                                })
+                                LazyDestination {
+                                    EffortStatsView(samples: workouts.flatMap(\.recoveryEntries).map {
+                                        EffortStats.Sample(date: $0.completedAt, rir: $0.rir)
+                                    })
+                                }
                             } label: {
                                 Label("Effort", systemImage: "flame")
                                     .font(.title3)
