@@ -176,6 +176,12 @@ struct RoutineBuilderView: View {
 
     private func addSet(to entry: RoutineExercise) {
         let plan = RoutineSetPlan(order: (entry.sets.map(\.order).max() ?? -1) + 1)
+        // A hold card stays a hold card: one set without seconds turns every row into weight × reps,
+        // and those rows have no field to give it any. Weight stays blank, to fill in on the day.
+        if entry.isDurationBased, let last = entry.orderedSets.last {
+            plan.durationSeconds = last.durationSeconds
+            plan.reps = last.reps
+        }
         context.insert(plan)
         entry.sets.append(plan)
         // Save now: a deferred autosave re-renders the sheet a moment later and cancels

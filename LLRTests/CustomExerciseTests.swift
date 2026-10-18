@@ -7,6 +7,7 @@ final class CustomExerciseTests: XCTestCase {
     private func makeContext() throws -> ModelContext {
         let container = try ModelContainer(
             for: Exercise.self, Workout.self, WorkoutExercise.self, SetEntry.self, ExerciseMedia.self,
+            Routine.self, RoutineExercise.self, RoutineSetPlan.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
         return ModelContext(container)
@@ -194,6 +195,25 @@ final class CustomExerciseTests: XCTestCase {
         context.insert(entry)
         entry.exercise = exercise
         XCTAssertFalse(exercise.canDelete)
+    }
+
+    func testAnExerciseInARoutineCannotBeDeletedUntilItLeavesIt() throws {
+        let context = try makeContext()
+        let exercise = Exercise(name: "Landmine Press", muscleGroup: "Shoulders", isCustom: true)
+        let routine = Routine(name: "Push")
+        let entry = RoutineExercise(order: 0)
+        context.insert(exercise)
+        context.insert(routine)
+        context.insert(entry)
+        entry.exercise = exercise
+        routine.exercises.append(entry)
+        try context.save()
+        XCTAssertFalse(exercise.canDelete, "the routine would keep pointing at a deleted exercise")
+
+        routine.exercises.removeAll()
+        context.delete(entry)
+        try context.save()
+        XCTAssertTrue(exercise.canDelete)
     }
 
     func testPhotoIsDownscaledToAJPEGOnDisk() throws {

@@ -46,7 +46,8 @@ struct WorkoutInsightsCard: View {
             HStack(spacing: 20) {
                 stat("Volume", signed(comparison.volumeDeltaKg, "\(unit.format(kg: abs(comparison.volumeDeltaKg))) \(unit.rawValue)")
                     // A share that rounds to zero says nothing the kilos didn't.
-                    + (comparison.volumePercent.flatMap { abs($0) < 0.5 ? nil : " (\(signed($0, "\(Int(abs($0).rounded()))%")))" } ?? ""))
+                    // `%.0f`, not `Int(_:)`: against a near-zero earlier volume the share can pass Int's range.
+                    + (comparison.volumePercent.flatMap { abs($0) < 0.5 ? nil : " (\(signed($0, String(format: "%.0f%%", abs($0).rounded()))))" } ?? ""))
                 stat("Sets", signed(Double(comparison.setDelta), "\(abs(comparison.setDelta))"))
                 stat("Time", signed(comparison.durationDelta / 60, Format.duration(abs(comparison.durationDelta))))
             }

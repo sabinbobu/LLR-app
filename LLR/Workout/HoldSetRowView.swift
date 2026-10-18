@@ -79,6 +79,7 @@ struct HoldSetRowView: View {
         .sensoryFeedback(.success, trigger: isRecord) { _, new in new }
         .onAppear { if isDone { fillTextFromModel() } }
         .onDisappear { holdTask?.cancel() }
+        .onChange(of: isDone) { _, done in if done { cancelHold() } }
         .onChange(of: repsText) { _, text in
             if let value = InputLimits.count(text) { entry.reps = value }
         }
@@ -140,7 +141,8 @@ struct HoldSetRowView: View {
             beginNextHold(duration: duration)
         } else {
             holdEndsAt = nil
-            if onToggle() { fillTextFromModel() }
+            // Already ticked from the Lock Screen mid-hold: toggling now would untick it.
+            if !isDone, onToggle() { fillTextFromModel() }
         }
     }
 

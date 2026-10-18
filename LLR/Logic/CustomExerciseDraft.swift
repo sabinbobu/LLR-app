@@ -102,9 +102,14 @@ struct CustomExerciseDraft: Equatable {
 extension Exercise {
     var isCustomKineto: Bool { isCustom && sectionRaw == WorkoutSection.kineto.rawValue }
 
-    /// Only a custom exercise never logged: `usages` nullify on delete, which would leave past
-    /// workouts with nameless entries.
-    var canDelete: Bool { isCustom && usages.isEmpty }
+    /// Only a custom exercise nothing points at. `usages` nullify on delete, which would leave past
+    /// workouts with nameless entries; a routine's link has no inverse, so it would keep pointing at
+    /// the deleted exercise and crash the routine list.
+    var canDelete: Bool {
+        guard isCustom, usages.isEmpty else { return false }
+        let plans = (try? modelContext?.fetch(FetchDescriptor<RoutineExercise>())) ?? []
+        return !plans.contains { $0.exercise?.persistentModelID == persistentModelID }
+    }
 
     /// Files go only after the rows are saved away: a failed save must not leave rows whose files are gone.
     func deleteWithMedia(from context: ModelContext) {

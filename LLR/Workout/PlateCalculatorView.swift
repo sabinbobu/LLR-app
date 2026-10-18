@@ -10,8 +10,11 @@ struct PlateCalculatorView: View {
     init(unit: WeightUnit, targetKg: Double) {
         self.unit = unit
         // Held to the stepper's range: a mistyped set weight would otherwise draw thousands of plates.
-        _target = State(initialValue: min(max((unit.fromKg(targetKg) * 10).rounded() / 10, 0), 1000))
+        _target = State(initialValue: min(max((unit.fromKg(targetKg) * 10).rounded() / 10, 0), Self.maxTarget(unit)))
     }
+
+    /// About the same load in either unit, high enough for a plate-loaded leg press.
+    private static func maxTarget(_ unit: WeightUnit) -> Double { unit == .kg ? 1000 : 2200 }
 
     private var bar: Double { unit == .kg ? barKg : barLbs }
     private var result: PlateCalculator.Result {
@@ -22,7 +25,7 @@ struct PlateCalculatorView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 28) {
-                Stepper(value: $target, in: 0...1000, step: step) {
+                Stepper(value: $target, in: 0...Self.maxTarget(unit), step: step) {
                     Text("\(format(target)) \(unit.rawValue)")
                         .font(.system(size: 44, weight: .bold, design: .rounded))
                         .monospacedDigit()
