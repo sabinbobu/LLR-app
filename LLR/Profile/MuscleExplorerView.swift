@@ -3,8 +3,9 @@ import SwiftUI
 
 /// Browse the library from the body: tap a muscle, see what trains it.
 struct MuscleExplorerView: View {
-    // Gym-facing, like the exercise list this is opened from.
-    @Query(filter: #Predicate<Exercise> { $0.sectionRaw == "gym" }, sort: \Exercise.name) private var exercises: [Exercise]
+    /// Handed down by the exercise list rather than queried here: a second @Query for the same rows,
+    /// pushed from that list, kept the two re-rendering each other and pinned the main thread at 100%.
+    let exercises: [Exercise]
     @State private var selected: MuscleGroup?
     @State private var equipment: String?
 

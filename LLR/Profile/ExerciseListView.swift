@@ -44,7 +44,7 @@ struct ExerciseListView: View {
         .navigationTitle("Exercises")
         .toolbar {
             NavigationLink {
-                MuscleExplorerView()
+                MuscleExplorerView(exercises: exercises)
             } label: {
                 Image(systemName: "figure.arms.open")
             }

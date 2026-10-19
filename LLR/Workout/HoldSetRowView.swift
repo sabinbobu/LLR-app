@@ -110,6 +110,7 @@ struct HoldSetRowView: View {
         .accessibilityLabel(isHolding ? "Stop hold" : isDone ? "Mark set not done" : "Complete set")
         .accessibilityValue(isDone ? "Done" : "Not done")
         .accessibilityIdentifier("set-check")
+        .accessibilityRemoveTraits(.isSelected)
     }
 
     /// No hold recorded (shouldn't happen for a catalog set, but the field is user-editable):

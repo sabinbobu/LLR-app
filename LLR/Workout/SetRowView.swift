@@ -69,6 +69,7 @@ struct SetRowView: View {
             .accessibilityLabel(isDone ? "Mark set not done" : "Complete set")
             .accessibilityValue(isDone ? "Done" : "Not done")
             .accessibilityIdentifier("set-check")
+            .accessibilityRemoveTraits(.isSelected)
         }
         .font(.title3)
         .multilineTextAlignment(.center)
