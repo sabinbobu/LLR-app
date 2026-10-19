@@ -35,7 +35,8 @@ struct RoutineSetRowView: View {
             if isDurationBased {
                 input(text: $repsText, keyboard: .numberPad, field: .reps)
                     .accessibilityLabel("Set \(label) reps")
-                input(text: $secondsText, keyboard: .numberPad, field: .seconds)
+                input(text: $secondsText, keyboard: .numberPad, field: .seconds,
+                      placeholder: plan.durationSeconds.map(String.init) ?? "0")
                     .accessibilityLabel("Set \(label) hold seconds")
             } else {
                 input(text: $weightText, keyboard: .decimalPad, field: .weight)
@@ -68,15 +69,20 @@ struct RoutineSetRowView: View {
             plan.weightKg = WeightUnit.parse(text).map(unit.toKg)
         }
         .onChange(of: repsText) { _, text in
-            plan.reps = Int(text)
+            plan.reps = InputLimits.count(text)
         }
+        // Unlike reps, a hold can't be blank: one nil turns the card into weight × reps rows.
         .onChange(of: secondsText) { _, text in
-            plan.durationSeconds = Int(text)
+            if let value = InputLimits.count(text, max: InputLimits.maxSeconds), value > 0 { plan.durationSeconds = value }
+        }
+        // A blank or 0 left in the field was never stored; show the hold that will be used.
+        .onChange(of: focus) { old, _ in
+            if old == .seconds { secondsText = plan.durationSeconds.map(String.init) ?? "" }
         }
     }
 
-    private func input(text: Binding<String>, keyboard: UIKeyboardType, field: Field) -> some View {
-        TextField("0", text: text)
+    private func input(text: Binding<String>, keyboard: UIKeyboardType, field: Field, placeholder: String = "0") -> some View {
+        TextField(placeholder, text: text)
             .keyboardType(keyboard)
             .focused($focus, equals: field)
             .font(.body.weight(.medium))

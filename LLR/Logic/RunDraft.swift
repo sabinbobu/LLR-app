@@ -14,9 +14,10 @@ struct RunDraft: Equatable {
     }
 
     /// Empty time fields count as zero; a non-number in any of them makes the time invalid (nil).
+    /// Summed as Doubles: a long run of digits in the hours field would overflow Int and crash.
     var seconds: Double? {
         guard let h = part(hoursText), let m = part(minutesText), let s = part(secondsText) else { return nil }
-        return Double(h * 3600 + m * 60 + s)
+        return Double(h) * 3600 + Double(m) * 60 + Double(s)
     }
 
     private func part(_ text: String) -> Int? {

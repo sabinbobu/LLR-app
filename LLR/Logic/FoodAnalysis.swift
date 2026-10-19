@@ -127,7 +127,9 @@ enum FoodAnalysis {
         guard let payload = try? JSONDecoder().decode(Payload.self, from: json) else { throw ParseError.noJSON }
         guard !payload.items.isEmpty else { throw ParseError.noItems }
         let items = try payload.items.map { raw -> Item in
-            for value in [raw.kcal, raw.protein_g, raw.carbs_g, raw.fat_g, raw.grams ?? 0] where !value.isFinite || value < 0 {
+            // The model's numbers are untrusted: a huge one would trap in `Int(_:)` on the Fuel screen.
+            let values = [raw.kcal, raw.protein_g, raw.carbs_g, raw.fat_g, raw.grams ?? 0]
+            for value in values where !value.isFinite || value < 0 || value > InputLimits.maxAmount {
                 throw ParseError.invalidValue(raw.name)
             }
             return Item(name: raw.name, grams: raw.grams, kcal: raw.kcal.rounded(),

@@ -5,6 +5,8 @@ struct RoutineListView: View {
     @Query(filter: #Predicate<Routine> { $0.sectionRaw == "gym" }, sort: \Routine.createdAt, order: .reverse)
     private var routines: [Routine]
     @Environment(\.modelContext) private var context
+    // Section-agnostic like the Workout tab: Start here opened a second workout while one was in progress.
+    @Query(filter: #Predicate<Workout> { $0.endedAt == nil }) private var unfinished: [Workout]
     let onStart: (Routine) -> Void
     @State private var editing: Routine?
     @State private var deleter = RoutineDeleter()
@@ -43,7 +45,7 @@ struct RoutineListView: View {
             Spacer()
             Button("Start") { onStart(routine) }
                 .buttonStyle(.borderedProminent)
-                .disabled(routine.orderedExercises.isEmpty)
+                .disabled(routine.orderedExercises.isEmpty || !unfinished.isEmpty)
         }
         .foregroundStyle(.primary)
     }

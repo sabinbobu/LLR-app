@@ -32,6 +32,7 @@ enum WeightTrend {
         var previousLogged = (day: first, kg: trend)
         var nextIndex = 1
         var day = first
+        var step = 0
         while day <= last {
             let raw = byDay[day]?.kg
             let weight: Double
@@ -47,8 +48,11 @@ enum WeightTrend {
             }
             if day != first { trend += smoothing * (weight - trend) }
             result.append(Point(date: day, raw: raw, trend: trend))
-            guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: day) else { break }
-            day = tomorrow
+            // Counted from `first` and snapped to midnight: where a DST change skips midnight, adding a
+            // day to the day before lands at 01:00 and every later day missed its weigh-in.
+            step += 1
+            guard let next = calendar.date(byAdding: .day, value: step, to: first) else { break }
+            day = calendar.startOfDay(for: next)
         }
         return result
     }

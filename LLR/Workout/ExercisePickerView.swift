@@ -111,7 +111,8 @@ struct ExercisePickerView: View {
                 }
             }
             .sheet(isPresented: $creating) {
-                ExerciseEditorView(section: .gym, initialName: search) { picked.append($0.id) }
+                // Swap takes the first pick, so a new exercise must replace it rather than queue behind it.
+                ExerciseEditorView(section: .gym, initialName: search) { picked = single ? [$0.id] : picked + [$0.id] }
             }
             .sheet(item: $inspecting) { exercise in
                 NavigationStack { ExerciseDetailView(exercise: exercise, showsDoneButton: true) }

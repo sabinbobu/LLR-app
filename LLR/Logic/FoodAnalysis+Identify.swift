@@ -66,7 +66,7 @@ extension FoodAnalysis {
         }
         guard !payload.ingredients.isEmpty else { throw ParseError.noItems }
         return try payload.ingredients.map { raw in
-            guard raw.grams.isFinite, raw.grams >= 0 else { throw ParseError.invalidValue(raw.name) }
+            guard raw.grams.isFinite, raw.grams >= 0, raw.grams <= InputLimits.maxAmount else { throw ParseError.invalidValue(raw.name) }
             return Ingredient(name: raw.name, grams: raw.grams)
         }
     }

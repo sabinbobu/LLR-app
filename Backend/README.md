@@ -16,7 +16,19 @@ database and API to build against instead of starting from zero.
 ## Endpoints
 
 - `GET /exercises` — all exercises, `[{id, name, muscle_group}, ...]`
-- `GET /exercises?muscle=Chest` — filtered by muscle group
+- `GET /exercises?muscle=Chest` — filtered by muscle group (bound parameter; empty or over 64 characters is a 400)
+
+Anything but `GET`/`OPTIONS` is a 405, and a failed query is a JSON 500 with no details (the error goes
+to `wrangler tail`). Successful responses carry `Cache-Control: public, max-age=300`.
+
+## Tests
+
+```bash
+node --test Backend/worker.test.mjs
+```
+
+Runs the worker against an in-memory stand-in for D1 (Node 22+, no install). Source changes reach the
+live API only after a redeploy (below).
 
 ## Redeploying
 

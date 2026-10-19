@@ -12,6 +12,8 @@ struct RedFlagsView: View {
 
     let mode: Mode
     var onDone: () -> Void = {}
+    /// Off inside the Kineto gate: there Done dismissed the whole gate and left the hub open uncleared.
+    var showsDone = true
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -65,7 +67,7 @@ struct RedFlagsView: View {
         .navigationTitle(mode == .info ? "Red Flags" : "Stop")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if mode == .info {
+            if mode == .info, showsDone {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }

@@ -84,7 +84,7 @@ struct SetRowView: View {
             if let value = WeightUnit.parse(text) { entry.weightKg = unit.toKg(value) }
         }
         .onChange(of: repsText) { _, text in
-            if let value = Int(text) { entry.reps = value }
+            if let value = InputLimits.count(text) { entry.reps = value }
         }
     }
 

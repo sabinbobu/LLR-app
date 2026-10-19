@@ -14,6 +14,8 @@ enum RunLoad {
 
     static let minPlausibleKmh = 3.0
     static let maxPlausibleKmh = 25.0
+    /// Past multi-day ultras; a longer "run" is a typo, and its date math would run off the calendar.
+    static let maxPlausibleKm = 1_000.0
     /// MET-hours that read as 100% overall exhaustion: a half marathon lands near 85%.
     static let exhaustionMetHours = 24.0
     /// Overall exhaustion fades linearly to zero over this many hours.
@@ -43,7 +45,7 @@ enum RunLoad {
     }
 
     static func isPlausible(km: Double, seconds: Double) -> Bool {
-        guard km > 0, seconds > 0 else { return false }
+        guard km > 0, km <= maxPlausibleKm, seconds > 0 else { return false }
         let speed = speedKmh(km: km, seconds: seconds)
         return speed >= minPlausibleKmh && speed <= maxPlausibleKmh
     }
@@ -84,7 +86,7 @@ enum RunLoad {
 
     /// "5:30" for 330 s/km.
     static func paceLabel(secondsPerKm: Double) -> String {
-        let total = Int(secondsPerKm.rounded())
+        let total = Format.wholeSeconds(secondsPerKm.rounded())
         return String(format: "%d:%02d", total / 60, total % 60)
     }
 }

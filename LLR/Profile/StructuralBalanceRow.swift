@@ -48,7 +48,8 @@ struct StructuralBalanceRow: View {
         .padding(.vertical, 2)
     }
 
-    private static func percent(_ value: Double) -> String { "\(Int(value.rounded()))%" }
+    /// `%.0f`, not `Int(_:)`: a near-zero reference lift makes the share huge enough to trap.
+    private static func percent(_ value: Double) -> String { String(format: "%.0f%%", value.rounded()) }
 
     private static func label(_ status: StructuralBalance.Status) -> String {
         switch status {

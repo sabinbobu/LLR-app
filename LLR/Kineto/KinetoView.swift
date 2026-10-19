@@ -9,6 +9,7 @@ struct KinetoView: View {
     let canStart: Bool
     let onStart: (Workout) -> Void
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     @AppStorage(StorageKey.kinetoClearedVersion) private var clearedVersion = 0
     @State private var showingGate = false
     @State private var buildingRoutine: Routine?
@@ -65,7 +66,8 @@ struct KinetoView: View {
         .navigationTitle("Kineto")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { if !isCleared, !modalActive { showingGate = true } }
-        .fullScreenCover(isPresented: $showingGate) {
+        // The hub sits behind the gate; closing the gate any way but Continue must not reveal it.
+        .fullScreenCover(isPresented: $showingGate, onDismiss: { if !isCleared { dismiss() } }) {
             KinetoGateView { showingGate = false }
         }
         .sheet(item: $buildingRoutine) { RoutineBuilderView(routine: $0) }
