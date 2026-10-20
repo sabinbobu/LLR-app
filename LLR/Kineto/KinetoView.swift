@@ -32,7 +32,7 @@ struct KinetoView: View {
                 HStack(spacing: 16) {
                     tile(title: "New Routine", icon: "list.clipboard") { if !modalActive { newRoutine() } }
                     NavigationLink {
-                        KinetoCatalogView(mode: .browse)
+                        LazyDestination { KinetoCatalogView(mode: .browse) }
                     } label: {
                         tileLabel(title: "Browse Catalog", icon: "magnifyingglass")
                     }
@@ -47,7 +47,7 @@ struct KinetoView: View {
                 }
 
                 NavigationLink {
-                    PainHistoryView()
+                    LazyDestination { PainHistoryView() }
                 } label: {
                     HStack {
                         Label("Pain history", systemImage: "chart.xyaxis.line")
