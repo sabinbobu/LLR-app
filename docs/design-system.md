@@ -43,7 +43,7 @@ Nothing outside `WorkoutTabView`'s Repeat button uses the new tokens yet.
 1. Workout (cards, `.borderedProminent` uses, radius 14 and 10)
 2. Profile
 3. Fuel
-4. Home / History
+4. ~~Home / History~~ done: Home and the workout/run cards use `.surfaceCard()` (`Theme.surface` on `Theme.background`, no border, soft light-mode shadow) and `Theme.field` for chips and stat tiles. Profile's workout list picks the new card up through `HistoryCard`.
 5. Sheets and pickers (`SheetButtonStyle` call sites)
 6. Kineto
 7. Onboarding

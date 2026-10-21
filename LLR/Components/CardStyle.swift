@@ -21,3 +21,28 @@ extension View {
         modifier(CardStyle(emphasised: emphasised))
     }
 }
+
+/// Home's card: the grouped-list surface sitting on the grouped background. Light mode
+/// gets a soft shadow and a hairline so the card also reads on a plain white screen (Profile);
+/// in dark the surface contrast alone separates it.
+struct SurfaceCardStyle: ViewModifier {
+    @Environment(\.colorScheme) private var scheme
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: Theme.Radius.card)
+        let light = scheme == .light
+        return content
+            .padding(Theme.cardPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.surface, in: shape)
+            .overlay(shape.stroke(Color.black.opacity(light ? 0.04 : 0)))
+            .shadow(color: .black.opacity(light ? 0.04 : 0), radius: 1, y: 1)
+            .shadow(color: .black.opacity(light ? 0.06 : 0), radius: 8, y: 4)
+    }
+}
+
+extension View {
+    func surfaceCard() -> some View {
+        modifier(SurfaceCardStyle())
+    }
+}

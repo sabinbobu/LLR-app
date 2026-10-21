@@ -4,29 +4,31 @@ struct RunCard: View {
     let workout: Workout
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .firstTextBaseline) {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(workout.title).font(.title3.weight(.semibold))
-                    Text(workout.startedAt.formatted(date: .abbreviated, time: .omitted)).foregroundStyle(.secondary)
+                    Text(workout.startedAt.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()) + " · "
+                        + workout.startedAt.formatted(date: .omitted, time: .shortened))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                Spacer()
-                Image(systemName: "figure.run").font(.title2).foregroundStyle(Theme.accent)
+                Spacer(minLength: 0)
+                WorkoutMenuButton(workout: workout)
+                    .padding(.top, -10)
+                    .padding(.trailing, -10)
             }
-            HStack(spacing: 32) {
+            HStack(spacing: 8) {
                 if let km = workout.distanceKm {
-                    RunStat(label: "Distance", value: "\(km.formatted(.number.precision(.fractionLength(0...2)))) km")
+                    StatTile(label: "Distance", value: km.formatted(.number.precision(.fractionLength(0...2))), unit: "km")
                 }
-                RunStat(label: "Time", value: Format.duration(workout.duration))
+                StatTile(label: "Time", value: Format.duration(workout.duration))
                 if let km = workout.distanceKm {
-                    RunStat(label: "Pace", value: "\(RunLoad.paceLabel(secondsPerKm: RunLoad.paceSecondsPerKm(km: km, seconds: workout.duration))) /km")
+                    StatTile(label: "Pace", value: RunLoad.paceLabel(secondsPerKm: RunLoad.paceSecondsPerKm(km: km, seconds: workout.duration)), unit: "/km")
                 }
-                RunStat(label: "Started", value: workout.startedAt.formatted(date: .omitted, time: .shortened))
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.border, lineWidth: 1.5))
+        .surfaceCard()
         .contentShape(Rectangle())
     }
 }
