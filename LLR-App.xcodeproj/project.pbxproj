@@ -314,6 +314,7 @@
 		EA088DDA3C6828E9D95AC52D /* StructuralBalanceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BE8338EF6C77230EE86448 /* StructuralBalanceRow.swift */; };
 		EA5FEE5358510A2028427AA7 /* WorkoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5C8B979EF38C35294C3D0C /* WorkoutFactory.swift */; };
 		EA6CE00C17C1BDB6E64B7DD4 /* Workout+Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B293E7B7DA22060D1EAD65 /* Workout+Run.swift */; };
+		EB44EECA953DE0258C6C86C9 /* StartHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F35EFC865177A4900BE218B /* StartHero.swift */; };
 		EC3A3B9DD0130465CC6A7055 /* RoutineBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32818D7795BF4B2537F9AAC2 /* RoutineBuilderView.swift */; };
 		EC55C42D38A3560C01624A03 /* BirthdayStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C2C948D95A0F3AD9A2E607 /* BirthdayStep.swift */; };
 		ED8995EAC9F8743381912C72 /* ActivityHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3A692B9AB15F52770BD40D /* ActivityHeatmapView.swift */; };
@@ -326,8 +327,10 @@
 		F190CD484DD3BC239F66D49C /* TrainingSnapshotSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2350D9C9C4FE40D79346F9AF /* TrainingSnapshotSync.swift */; };
 		F20454F0A8FD018E3A901241 /* RestSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B0692260AD9896D328D56 /* RestSound.swift */; };
 		F229E17CFA6666025D4C719C /* BodyMapHitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F56D511F4B30E6BFEA6EFA /* BodyMapHitTest.swift */; };
+		F296FFA2CB952DD16E05CDC1 /* AllWorkoutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800439BEAB01943B425204AB /* AllWorkoutsView.swift */; };
 		F2AF7DA44AFCE5A28CBB4B5D /* PersonalRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182C559C038C3304DE73B4C1 /* PersonalRecords.swift */; };
 		F2DF583467177B66E5BA8B8B /* MuscleTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEA89060B8E8637897F5210 /* MuscleTaxonomy.swift */; };
+		F4B45DE4A18CC001498140F5 /* WeekCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F548F2751061639B46E9B1E /* WeekCard.swift */; };
 		F54C7960CE3CD4D9C1A127A9 /* ExerciseLogCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68213B36329B451A5B73301B /* ExerciseLogCard.swift */; };
 		F701EA8B58FCCB72931ACB0B /* FoodAnalysisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1991996AE7C14DDF0C8F2F1 /* FoodAnalysisTests.swift */; };
 		F7CB1EA4EF97684C8472D656 /* ExerciseRecentSessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD94C7EEE585409651D72DE3 /* ExerciseRecentSessions.swift */; };
@@ -476,6 +479,7 @@
 		3DEB96AF13D786549621F252 /* PersistenceRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceRecoveryTests.swift; sourceTree = "<group>"; };
 		3E7029B4D92D34FC0F9BC4A3 /* RoutineFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFactoryTests.swift; sourceTree = "<group>"; };
 		3F2A79EF1A639365EE0917CC /* WeeklyVolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyVolumeView.swift; sourceTree = "<group>"; };
+		3F35EFC865177A4900BE218B /* StartHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartHero.swift; sourceTree = "<group>"; };
 		41E408B9E28A8B49459C7CD8 /* body_map.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = body_map.json; sourceTree = "<group>"; };
 		42C2C948D95A0F3AD9A2E607 /* BirthdayStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStep.swift; sourceTree = "<group>"; };
 		42F9EB550A00A7839FC8A58F /* SetKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetKind.swift; sourceTree = "<group>"; };
@@ -516,6 +520,7 @@
 		5C06C2223F4CEFC9D3D074A5 /* Effort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effort.swift; sourceTree = "<group>"; };
 		5C52E18DFD2C1B264E240F02 /* MeasurementModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementModelsTests.swift; sourceTree = "<group>"; };
 		5D444E53E6E589F6F5D6692F /* SwapFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapFilterTests.swift; sourceTree = "<group>"; };
+		5F548F2751061639B46E9B1E /* WeekCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekCard.swift; sourceTree = "<group>"; };
 		5FE964CED2E5C9D448CE903E /* MiniWorkoutBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniWorkoutBar.swift; sourceTree = "<group>"; };
 		6057779E01B4F0F885A9F7AE /* KinetoGateStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoGateStateTests.swift; sourceTree = "<group>"; };
 		613C6BDC75B195F08FCE4DC0 /* WorkoutImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutImporter.swift; sourceTree = "<group>"; };
@@ -564,6 +569,7 @@
 		7E0C2B1424A4FB7D0DE99C64 /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
 		7F1C7955F718C2CF6D4D5E1C /* LazyDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyDestination.swift; sourceTree = "<group>"; };
 		7F8AE2653F62FAF42A6CD1BD /* NumberTextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTextTests.swift; sourceTree = "<group>"; };
+		800439BEAB01943B425204AB /* AllWorkoutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllWorkoutsView.swift; sourceTree = "<group>"; };
 		8025E2BB3D2028A7C4FE2BCA /* KinetoPain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoPain.swift; sourceTree = "<group>"; };
 		8232A875463D001FC0DAA6D9 /* LLRTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LLRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BEADC5D53A88A7B1C0C755 /* WorkoutCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCardModel.swift; sourceTree = "<group>"; };
@@ -1075,7 +1081,10 @@
 		86880141F0845A56A3519B87 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				800439BEAB01943B425204AB /* AllWorkoutsView.swift */,
 				7716A9B3FB4426425E53F708 /* HomeView.swift */,
+				3F35EFC865177A4900BE218B /* StartHero.swift */,
+				5F548F2751061639B46E9B1E /* WeekCard.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1500,6 +1509,7 @@
 				ED8995EAC9F8743381912C72 /* ActivityHeatmapView.swift in Sources */,
 				F17980307D5AAED6BEF90EFF /* AddFoodSheet.swift in Sources */,
 				3F8E1F948AEABBF7984C7A83 /* AddRunSheet.swift in Sources */,
+				F296FFA2CB952DD16E05CDC1 /* AllWorkoutsView.swift in Sources */,
 				78590C88553278E764A25978 /* AvatarStore.swift in Sources */,
 				7D10CEE10B623913E01608E0 /* AvatarView.swift in Sources */,
 				7CBE9B69CD3C8EEDE807F1A2 /* BarbellDiagram.swift in Sources */,
@@ -1687,6 +1697,7 @@
 				4AF188EFBC59CD68389F41A8 /* SetRowView.swift in Sources */,
 				21E683724C9D600A4B3CE167 /* SetTableMockup.swift in Sources */,
 				A7FB06D9501B8F1EF8590BC2 /* SettingsView.swift in Sources */,
+				EB44EECA953DE0258C6C86C9 /* StartHero.swift in Sources */,
 				2AED1D6EABF4C58B03899B8C /* Stats.swift in Sources */,
 				49E48D8D47D3EC8673C8E61F /* StretchRoutines.swift in Sources */,
 				1CCB31AB8A14E5AB5DC11C69 /* StructuralBalance.swift in Sources */,
@@ -1707,6 +1718,7 @@
 				AE581CC89F4BCF5997E088C2 /* UndoToast.swift in Sources */,
 				4D697184231BDB03D6900081 /* UnitsStep.swift in Sources */,
 				0702D2736E8F7653251FAD05 /* UserSettings.swift in Sources */,
+				F4B45DE4A18CC001498140F5 /* WeekCard.swift in Sources */,
 				5B2A9FFDEA8C4877243C7722 /* WeeklyRingAvatar.swift in Sources */,
 				7D94FE480FB4B12154C6044D /* WeeklyStatsCard.swift in Sources */,
 				5D436031ADAC5C5FD16F2EA3 /* WeeklyVolume.swift in Sources */,

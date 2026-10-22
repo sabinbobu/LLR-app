@@ -25,9 +25,13 @@ struct SurfaceCardStyle: ViewModifier {
         let lit = scheme == .light
         return content
             .padding(Theme.cardPadding)
-            .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
-            .shadow(color: .black.opacity(lit ? 0.04 : 0), radius: 1, y: 1)
-            .shadow(color: .black.opacity(lit ? 0.06 : 0), radius: 8, y: 4)
+            // On the shape, not the content: a shadow on the content would be cast by every chip and tile inside.
+            .background {
+                RoundedRectangle(cornerRadius: Theme.Radius.card)
+                    .fill(Theme.surface)
+                    .shadow(color: .black.opacity(lit ? 0.04 : 0), radius: 1, y: 1)
+                    .shadow(color: .black.opacity(lit ? 0.06 : 0), radius: 8, y: 4)
+            }
     }
 }
 
