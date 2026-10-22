@@ -24,9 +24,8 @@ struct RunCard: View {
                 RunStat(label: "Started", value: workout.startedAt.formatted(date: .omitted, time: .shortened))
             }
         }
-        .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.border, lineWidth: 1.5))
+        .surfaceCard()
         .contentShape(Rectangle())
     }
 }
