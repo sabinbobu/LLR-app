@@ -53,6 +53,7 @@
 		21647C201A3488C50B0EFF41 /* RestTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F678BFB42E0E6E78A02540B3 /* RestTimer.swift */; };
 		21D94760F55B1C0FA3B5F3C2 /* FuelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAFCCD3BE62B71FE625EF40 /* FuelView.swift */; };
 		21E683724C9D600A4B3CE167 /* SetTableMockup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972A8FFFE72EDD7A5F6104D3 /* SetTableMockup.swift */; };
+		22E460816D710E470B465B2F /* MonthGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F33D71D32BFB1612B55926C /* MonthGrid.swift */; };
 		23954B3AC4B3F6FFD66FC190 /* HomeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D8E4828569CA37EE356DCF /* HomeModelTests.swift */; };
 		23B052374F557054913E8CF5 /* WelcomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10648D56488D04F84A936C1C /* WelcomePage.swift */; };
 		24F41C94134E8BDC534057D1 /* RoutineFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7029B4D92D34FC0F9BC4A3 /* RoutineFactoryTests.swift */; };
@@ -418,6 +419,7 @@
 		1D0D8569F5FE4298C0BA6394 /* AddRunSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRunSheet.swift; sourceTree = "<group>"; };
 		1D620E148B7BDF52CF070D70 /* StructuralBalanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructuralBalanceTests.swift; sourceTree = "<group>"; };
 		1D9988B429F415364552357E /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		1F33D71D32BFB1612B55926C /* MonthGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthGrid.swift; sourceTree = "<group>"; };
 		206431925E24E2FBCC0E023D /* RunEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunEffectView.swift; sourceTree = "<group>"; };
 		20DB435DA1348BEF772F52E0 /* TrainingCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingCalendar.swift; sourceTree = "<group>"; };
 		215D132CA6627F1E85EFA8C1 /* WorkoutInsightsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutInsightsTests.swift; sourceTree = "<group>"; };
@@ -1083,6 +1085,7 @@
 			children = (
 				800439BEAB01943B425204AB /* AllWorkoutsView.swift */,
 				7716A9B3FB4426425E53F708 /* HomeView.swift */,
+				1F33D71D32BFB1612B55926C /* MonthGrid.swift */,
 				3F35EFC865177A4900BE218B /* StartHero.swift */,
 				5F548F2751061639B46E9B1E /* WeekCard.swift */,
 			);
@@ -1620,6 +1623,7 @@
 				5039BF7333695EDD7A601ECF /* MeasurementsView.swift in Sources */,
 				036E769DB675C97BF1E2A8D2 /* MiniWorkoutBar.swift in Sources */,
 				036CB2753A6E2D4A201E88D9 /* Models.swift in Sources */,
+				22E460816D710E470B465B2F /* MonthGrid.swift in Sources */,
 				12EE176579E081C440E331AD /* MultiSelectList.swift in Sources */,
 				690DABBD05F0DB31AF0F0ECA /* MuscleEquipmentFields.swift in Sources */,
 				56C1804C100BD5A850933490 /* MuscleExplorer.swift in Sources */,

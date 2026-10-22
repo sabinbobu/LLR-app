@@ -16,7 +16,7 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     header
-                    WeekCard(week: HomeModel.week(starts: workouts.map(\.startedAt)))
+                    WeekCard(workouts: workouts)
                     hero
                     recent
                 }
