@@ -26,6 +26,7 @@ enum HomeModel {
         let trained: Bool
         let isToday: Bool
         let isFuture: Bool
+        var category: SessionCategory = .none
     }
 
     struct Week: Equatable {
@@ -35,7 +36,7 @@ enum HomeModel {
 
     /// `starts` is every finished lift and run, the same list the Profile ring reads, so the two
     /// never disagree about which days count.
-    static func week(starts: [Date], now: Date = .now, calendar: Calendar = .current) -> Week {
+    static func week(starts: [Date], categories: [Date: SessionCategory] = [:], now: Date = .now, calendar: Calendar = .current) -> Week {
         guard let interval = calendar.dateInterval(of: .weekOfYear, for: now) else {
             return Week(days: [], workoutCount: 0)
         }
@@ -50,9 +51,73 @@ enum HomeModel {
                 number: calendar.component(.day, from: date),
                 trained: wasTrained,
                 isToday: calendar.isDate(date, inSameDayAs: today),
-                isFuture: calendar.startOfDay(for: date) > today
+                isFuture: calendar.startOfDay(for: date) > today,
+                category: categories[calendar.startOfDay(for: date)] ?? .none
             ))
         }
         return Week(days: days, workoutCount: starts.filter { interval.contains($0) }.count)
+    }
+
+    // MARK: totals
+
+    /// What a stats tile needs from one workout. Volume is walked off SwiftData, so callers hand in
+    /// only the sessions of the range they show, not the whole history.
+    struct Session {
+        let start: Date
+        let duration: TimeInterval
+        let volumeKg: Double
+    }
+
+    struct Totals: Equatable {
+        let count: Int
+        let duration: TimeInterval
+        let volumeKg: Double
+    }
+
+    static func totals(_ sessions: [Session]) -> Totals {
+        Totals(count: sessions.count, duration: sessions.reduce(0) { $0 + $1.duration }, volumeKg: sessions.reduce(0) { $0 + $1.volumeKg })
+    }
+
+    /// The colour label for each day; the latest categorised workout of a day wins, like the calendar screen.
+    static func categoryByDay(_ items: [(date: Date, category: SessionCategory)], calendar: Calendar = .current) -> [Date: SessionCategory] {
+        var result: [Date: SessionCategory] = [:]
+        for item in items.filter({ $0.category != .none }).sorted(by: { $0.date < $1.date }) {
+            result[calendar.startOfDay(for: item.date)] = item.category
+        }
+        return result
+    }
+
+    // MARK: month
+
+    /// Weekday initials starting on the calendar's first weekday, matching the week strip.
+    static func weekdayLetters(calendar: Calendar = .current) -> [String] {
+        let symbols = calendar.veryShortWeekdaySymbols
+        let start = calendar.firstWeekday - 1
+        return Array(symbols[start...] + symbols[..<start])
+    }
+
+    /// Leading `nil`s pad the grid so day 1 lands under its actual weekday.
+    static func monthCells(month: Date, starts: [Date], categories: [Date: SessionCategory] = [:],
+                           now: Date = .now, calendar: Calendar = .current) -> [WeekDay?] {
+        guard let interval = calendar.dateInterval(of: .month, for: month) else { return [] }
+        let trained = TrainingCalendar.trainedDays(in: month, workouts: starts, calendar: calendar)
+        let today = calendar.startOfDay(for: now)
+        let leading = (calendar.component(.weekday, from: interval.start) - calendar.firstWeekday + 7) % 7
+        var cells: [WeekDay?] = Array(repeating: nil, count: leading)
+        var day = interval.start
+        while day < interval.end {
+            let start = calendar.startOfDay(for: day)
+            cells.append(WeekDay(
+                letter: "",
+                number: calendar.component(.day, from: day),
+                trained: trained.contains(start),
+                isToday: start == today,
+                isFuture: start > today,
+                category: categories[start] ?? .none
+            ))
+            guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
+            day = next
+        }
+        return cells
     }
 }
