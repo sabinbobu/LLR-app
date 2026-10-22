@@ -16,8 +16,27 @@ struct CardStyle: ViewModifier {
     }
 }
 
+/// The Home redesign's card: a white surface lifted by a soft shadow in light mode, flat in dark
+/// (where the surface is already lighter than the background), with no hairline border.
+struct SurfaceCardStyle: ViewModifier {
+    @Environment(\.colorScheme) private var scheme
+
+    func body(content: Content) -> some View {
+        let lit = scheme == .light
+        return content
+            .padding(Theme.cardPadding)
+            .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+            .shadow(color: .black.opacity(lit ? 0.04 : 0), radius: 1, y: 1)
+            .shadow(color: .black.opacity(lit ? 0.06 : 0), radius: 8, y: 4)
+    }
+}
+
 extension View {
     func card(emphasised: Bool = false) -> some View {
         modifier(CardStyle(emphasised: emphasised))
+    }
+
+    func surfaceCard() -> some View {
+        modifier(SurfaceCardStyle())
     }
 }
