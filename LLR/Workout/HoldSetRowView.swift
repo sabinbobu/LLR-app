@@ -15,9 +15,14 @@ struct HoldSetRowView: View {
     @State private var repsText = ""
     @State private var secondsText = ""
     @State private var rejectCount = 0
+    @State private var repsEdit = SetFieldEdit<Int>()
+    @State private var secondsEdit = SetFieldEdit<Int?>()
     @State private var holdEndsAt: Date?
     @State private var holdRepsLeft = 0
     @State private var holdTask: Task<Void, Never>?
+    @FocusState private var focus: Field?
+
+    private enum Field { case reps, seconds }
 
     private var isDone: Bool { entry.completedAt != nil }
     private var isHolding: Bool { holdEndsAt != nil }
@@ -49,10 +54,12 @@ struct HoldSetRowView: View {
                 .disabled(isHolding)
                 TextField(entry.reps > 0 ? "\(entry.reps)" : "-", text: $repsText)
                     .keyboardType(.numberPad)
+                    .focused($focus, equals: .reps)
                     .frame(maxWidth: .infinity)
                     .disabled(isHolding)
                 TextField(entry.durationSeconds.map { "\($0)" } ?? "-", text: $secondsText)
                     .keyboardType(.numberPad)
+                    .focused($focus, equals: .seconds)
                     .frame(maxWidth: .infinity)
                     .disabled(isHolding)
                 completeButton
@@ -81,12 +88,14 @@ struct HoldSetRowView: View {
         .onDisappear { holdTask?.cancel() }
         .onChange(of: isDone) { _, done in if done { cancelHold() } }
         .onChange(of: repsText) { _, text in
-            if let value = InputLimits.count(text) { entry.reps = value }
+            entry.reps = repsEdit.reps(text, current: entry.reps)
         }
-        // Only a real hold is written: a cleared field (mid-retype) set nil, and one nil turns the
-        // whole card into weight × reps rows, dropping this set's hold for good.
         .onChange(of: secondsText) { _, text in
-            if let value = InputLimits.count(text, max: InputLimits.maxSeconds), value > 0 { entry.durationSeconds = value }
+            entry.durationSeconds = secondsEdit.holdSeconds(text, current: entry.durationSeconds)
+        }
+        .onChange(of: focus) {
+            repsEdit.reset()
+            secondsEdit.reset()
         }
     }
 
