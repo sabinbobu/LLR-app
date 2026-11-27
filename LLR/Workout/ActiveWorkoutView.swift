@@ -7,6 +7,7 @@ struct ActiveWorkoutView: View {
     @State private var model: ActiveWorkoutModel
     @State private var showingPicker = false
     @State private var confirmDiscard = false
+    @State private var confirmingFinish = false
     @State private var showingKinetoCheckOut = false
     /// Gym only: called after Finish keeps the workout, so the caller can show the summary sheet
     /// once this cover has dismissed. Kineto keeps its own check-out flow instead.
@@ -97,7 +98,20 @@ struct ActiveWorkoutView: View {
                     dismiss()
                 }
             }
+            // An alert, not a dialog: it always shows the way back as a button.
+            .alert("Finish workout?", isPresented: $confirmingFinish) {
+                Button("Finish", role: .destructive) { finishWorkout() }
+                Button("Keep Training", role: .cancel) {}
+            } message: {
+                Text(FinishCheck(model.workout).warning ?? "")
+            }
         }
+    }
+
+    private func finishWorkout() {
+        let workout = model.workout
+        if model.finish() { onFinished?(workout) }
+        dismiss()
     }
 
     private var stats: some View {
@@ -161,13 +175,16 @@ struct ActiveWorkoutView: View {
             Button("Finish") {
                 if model.workout.section == .kineto {
                     showingKinetoCheckOut = true
+                } else if FinishCheck(model.workout).warning != nil {
+                    confirmingFinish = true
                 } else {
-                    let workout = model.workout
-                    if model.finish() { onFinished?(workout) }
-                    dismiss()
+                    finishWorkout()
                 }
             }
             .buttonStyle(.borderedProminent)
+            // Discard is the deliberate way out of an empty workout. Kineto keeps Finish: a session
+            // with pain recorded and nothing ticked is still saved.
+            .disabled(model.workout.section == .gym && FinishCheck(model.workout) == .nothingLogged)
         }
         ToolbarItemGroup(placement: .keyboard) {
             Spacer()
