@@ -16,6 +16,9 @@ struct SetRowView: View {
     @State private var rejectCount = 0
     @State private var weightEdit = SetFieldEdit<Double>()
     @State private var repsEdit = SetFieldEdit<Int>()
+    @FocusState private var focus: Field?
+
+    private enum Field { case weight, reps }
 
     private var isDone: Bool { entry.completedAt != nil }
 
@@ -44,9 +47,11 @@ struct SetRowView: View {
             .animation(.bouncy, value: isRecord)
             TextField(entry.weightKg > 0 ? unit.format(kg: entry.weightKg) : "-", text: $weightText)
                 .keyboardType(.decimalPad)
+                .focused($focus, equals: .weight)
                 .frame(maxWidth: .infinity)
             TextField(entry.reps > 0 ? "\(entry.reps)" : "-", text: $repsText)
                 .keyboardType(.numberPad)
+                .focused($focus, equals: .reps)
                 .frame(maxWidth: .infinity)
             if effortScale != .off {
                 EffortChip(rir: Binding(get: { entry.rir }, set: { entry.rir = $0 }), scale: effortScale)
@@ -87,6 +92,10 @@ struct SetRowView: View {
         }
         .onChange(of: repsText) { _, text in
             entry.reps = repsEdit.reps(text, current: entry.reps)
+        }
+        .onChange(of: focus) {
+            weightEdit.reset()
+            repsEdit.reset()
         }
     }
 

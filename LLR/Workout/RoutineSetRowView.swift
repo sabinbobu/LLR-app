@@ -79,6 +79,7 @@ struct RoutineSetRowView: View {
         // A blank or 0 left in the field was never stored; show the hold that will be used.
         .onChange(of: focus) { old, _ in
             if old == .seconds { secondsText = plan.durationSeconds.map(String.init) ?? "" }
+            secondsEdit.reset()
         }
     }
 

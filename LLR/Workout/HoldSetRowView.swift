@@ -20,6 +20,9 @@ struct HoldSetRowView: View {
     @State private var holdEndsAt: Date?
     @State private var holdRepsLeft = 0
     @State private var holdTask: Task<Void, Never>?
+    @FocusState private var focus: Field?
+
+    private enum Field { case reps, seconds }
 
     private var isDone: Bool { entry.completedAt != nil }
     private var isHolding: Bool { holdEndsAt != nil }
@@ -51,10 +54,12 @@ struct HoldSetRowView: View {
                 .disabled(isHolding)
                 TextField(entry.reps > 0 ? "\(entry.reps)" : "-", text: $repsText)
                     .keyboardType(.numberPad)
+                    .focused($focus, equals: .reps)
                     .frame(maxWidth: .infinity)
                     .disabled(isHolding)
                 TextField(entry.durationSeconds.map { "\($0)" } ?? "-", text: $secondsText)
                     .keyboardType(.numberPad)
+                    .focused($focus, equals: .seconds)
                     .frame(maxWidth: .infinity)
                     .disabled(isHolding)
                 completeButton
@@ -87,6 +92,10 @@ struct HoldSetRowView: View {
         }
         .onChange(of: secondsText) { _, text in
             entry.durationSeconds = secondsEdit.holdSeconds(text, current: entry.durationSeconds)
+        }
+        .onChange(of: focus) {
+            repsEdit.reset()
+            secondsEdit.reset()
         }
     }
 
