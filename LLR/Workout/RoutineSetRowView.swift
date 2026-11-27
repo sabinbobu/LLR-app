@@ -13,6 +13,7 @@ struct RoutineSetRowView: View {
     @State private var weightText = ""
     @State private var repsText = ""
     @State private var secondsText = ""
+    @State private var secondsEdit = SetFieldEdit<Int?>()
     @FocusState private var focus: Field?
 
     private enum Field { case weight, reps, seconds }
@@ -66,14 +67,14 @@ struct RoutineSetRowView: View {
             secondsText = plan.durationSeconds.map(String.init) ?? ""
         }
         .onChange(of: weightText) { _, text in
-            plan.weightKg = WeightUnit.parse(text).map(unit.toKg)
+            plan.weightKg = PlannedSetField.weightKg(text, current: plan.weightKg, unit: unit)
         }
         .onChange(of: repsText) { _, text in
             plan.reps = InputLimits.count(text)
         }
         // Unlike reps, a hold can't be blank: one nil turns the card into weight × reps rows.
         .onChange(of: secondsText) { _, text in
-            if let value = InputLimits.count(text, max: InputLimits.maxSeconds), value > 0 { plan.durationSeconds = value }
+            plan.durationSeconds = secondsEdit.holdSeconds(text, current: plan.durationSeconds)
         }
         // A blank or 0 left in the field was never stored; show the hold that will be used.
         .onChange(of: focus) { old, _ in

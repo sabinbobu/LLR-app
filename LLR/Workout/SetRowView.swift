@@ -14,6 +14,8 @@ struct SetRowView: View {
     @State private var weightText = ""
     @State private var repsText = ""
     @State private var rejectCount = 0
+    @State private var weightEdit = SetFieldEdit<Double>()
+    @State private var repsEdit = SetFieldEdit<Int>()
 
     private var isDone: Bool { entry.completedAt != nil }
 
@@ -81,10 +83,10 @@ struct SetRowView: View {
         .sensoryFeedback(.success, trigger: isRecord) { _, new in new }
         .onAppear { if isDone { fillTextFromModel() } }
         .onChange(of: weightText) { _, text in
-            if let value = WeightUnit.parse(text) { entry.weightKg = unit.toKg(value) }
+            entry.weightKg = weightEdit.weightKg(text, current: entry.weightKg, unit: unit)
         }
         .onChange(of: repsText) { _, text in
-            if let value = InputLimits.count(text) { entry.reps = value }
+            entry.reps = repsEdit.reps(text, current: entry.reps)
         }
     }
 
