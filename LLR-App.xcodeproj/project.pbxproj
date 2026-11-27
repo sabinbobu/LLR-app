@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0013487A372A08F7E03B7512 /* Theme+ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15208E2422EAD6246D0990EB /* Theme+ProfileCard.swift */; };
 		0061E0EC6013DFF44026B052 /* RoutineDeleter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDDD8CF8E3CE9C8A09F57D9 /* RoutineDeleter.swift */; };
+		02CF0BAD2DC0D02AF5DB71A3 /* FinishCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BF4765775CF96B501DA8E4 /* FinishCheckTests.swift */; };
 		036CB2753A6E2D4A201E88D9 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4528CC83E493CDE58E1090 /* Models.swift */; };
 		036E769DB675C97BF1E2A8D2 /* MiniWorkoutBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE964CED2E5C9D448CE903E /* MiniWorkoutBar.swift */; };
 		06D8EF2F8C0A6C5D851B2C7B /* ProgramDayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6EAFC577BC68357B7A0AA6 /* ProgramDayCard.swift */; };
@@ -46,6 +47,7 @@
 		1B6F0D8092EC2BE88F429F5F /* ProgressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1108D46B3F9C245B163935 /* ProgressionTests.swift */; };
 		1C8535B7D6238851E509CC3B /* FuelTargetsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7FB02ED7BA11B90F2E669 /* FuelTargetsLoader.swift */; };
 		1CCB31AB8A14E5AB5DC11C69 /* StructuralBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F25C5930BF1C16F2FB3C9 /* StructuralBalance.swift */; };
+		1DD14E29D4E3F5BB585E3F9F /* FinishCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2EF47DDF56003028272B5F /* FinishCheck.swift */; };
 		1E15CD9252199EB3C6D92197 /* StructuralBalanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D620E148B7BDF52CF070D70 /* StructuralBalanceTests.swift */; };
 		1F2B5E9774AB38C2DF9FA072 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63008AC997A76538CFCF76F9 /* RootView.swift */; };
 		2037362F7E9907E253E37AE8 /* MacroRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826C604CF9F6D93EEDBEAEB /* MacroRing.swift */; };
@@ -433,6 +435,7 @@
 		22FA7AD9DD64428B63738B5B /* FoodEntryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntryRow.swift; sourceTree = "<group>"; };
 		2350D9C9C4FE40D79346F9AF /* TrainingSnapshotSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSnapshotSync.swift; sourceTree = "<group>"; };
 		23AFFA337A9952C994F4D864 /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		23BF4765775CF96B501DA8E4 /* FinishCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishCheckTests.swift; sourceTree = "<group>"; };
 		241E4F62956C4D07FBB3D8F0 /* MeasurementModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementModels.swift; sourceTree = "<group>"; };
 		246ED9C547F7F3D5B7E9567E /* MeasurementSeederTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSeederTests.swift; sourceTree = "<group>"; };
 		25068E311D01EBA5EC9E375E /* KinetoCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinetoCatalogView.swift; sourceTree = "<group>"; };
@@ -711,6 +714,7 @@
 		EAC7C185EE28E10DD642C061 /* QuickLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLogSheet.swift; sourceTree = "<group>"; };
 		EAE581993B2006961D06B4BD /* body_map.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = body_map.LICENSE.txt; sourceTree = "<group>"; };
 		EB2D9F2C52242FC63C2AA8A7 /* PainCheckInSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainCheckInSheet.swift; sourceTree = "<group>"; };
+		EB2EF47DDF56003028272B5F /* FinishCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishCheck.swift; sourceTree = "<group>"; };
 		EB872B8E14FFCEFFFEDA0B73 /* RoutineSetRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSetRowView.swift; sourceTree = "<group>"; };
 		EC9CA9D9A70AA3EC132F29BC /* kineto_exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kineto_exercises.json; sourceTree = "<group>"; };
 		ECE51F09E57BF423FC842B6E /* CustomExerciseDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExerciseDraft.swift; sourceTree = "<group>"; };
@@ -825,6 +829,7 @@
 				36ADDA11BA29E18137493374 /* ExerciseMatcher.swift */,
 				8651AEFDBFD6BB23AF3043E5 /* ExerciseMediaStore.swift */,
 				C31574F67D0707E9839216B3 /* ExerciseProgressMetric.swift */,
+				EB2EF47DDF56003028272B5F /* FinishCheck.swift */,
 				8C404FB179783AFCF797DEBF /* FoodAnalysis.swift */,
 				C783D5EBCDF69B5B88AFAF22 /* FoodAnalysis+Identify.swift */,
 				B5D5E42248E202CA937464FC /* FoodLogTime.swift */,
@@ -1007,6 +1012,7 @@
 				31042A4A184C5E8D15569B92 /* ExerciseMediaSessionTests.swift */,
 				4D0EAC0C4FB61D2F69CF7DD6 /* ExerciseProgressMetricTests.swift */,
 				A7B5569DB0ED04FCEC949768 /* ExerciseSwapMoveTests.swift */,
+				23BF4765775CF96B501DA8E4 /* FinishCheckTests.swift */,
 				354AB5A884EB726A67DCD9F6 /* FoodAccuracyTests.swift */,
 				A1991996AE7C14DDF0C8F2F1 /* FoodAnalysisTests.swift */,
 				C0A22811CDFA3D00A6288767 /* FoodIdentifyTests.swift */,
@@ -1428,6 +1434,7 @@
 				A16E7B61B0433413E9F0DECA /* ExerciseMediaSessionTests.swift in Sources */,
 				09FD5E82F9D28A32C432C050 /* ExerciseProgressMetricTests.swift in Sources */,
 				355D518E1F9B5587714ADC6A /* ExerciseSwapMoveTests.swift in Sources */,
+				02CF0BAD2DC0D02AF5DB71A3 /* FinishCheckTests.swift in Sources */,
 				E4D57829A6A9B8A4418C3E9F /* FoodAccuracyTests.swift in Sources */,
 				F701EA8B58FCCB72931ACB0B /* FoodAnalysisTests.swift in Sources */,
 				91A78C09B53DA08A8B6C4327 /* FoodIdentifyTests.swift in Sources */,
@@ -1570,6 +1577,7 @@
 				0B811A02646C1DF09540F3E3 /* ExploreRoutinesView.swift in Sources */,
 				B8958C84F52E58ABE6DB7B44 /* FieldChrome.swift in Sources */,
 				557D65FBF51B0F23534FB7FE /* FilterChip.swift in Sources */,
+				1DD14E29D4E3F5BB585E3F9F /* FinishCheck.swift in Sources */,
 				7EB0840932791B0F520E5762 /* FloatingTabBar.swift in Sources */,
 				A167300A27378780432929CA /* FlowLayout.swift in Sources */,
 				170DFFB00DDFBE1795D92F33 /* FoodAnalysis+Identify.swift in Sources */,
