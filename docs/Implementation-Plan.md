@@ -28,6 +28,10 @@ What was planned, what shipped, what is still open, and what is next. Nothing im
 | U3 | Profile header card: a modern redesign | In review; needs owner's on-device approval | — |
 | D1 | One design system: buttons, cards, corner radii | **Foundation in review** (screens not yet migrated; see `docs/design-system.md`) | — |
 | W1 | Workout tab restructure: start in one tap | In review; layout built from the spec without an owner preview, needs your approval on a device | next PR |
+| A1 | iOS review: set fields no longer rewrite or lose a stored value | Shipped; routine rows covered by unit tests only | #68 |
+| A2 | iOS review: Finish no longer removes sets without asking | Shipped; Kineto not exercised on screen | #69 |
+| A3 | iOS review: "All workouts" cards don't open their workout | **Next**; gated on the #65 freeze check (spec below) | — |
+| A4 | iOS review: exercise search is hidden behind the tab bar | Queued after A3 (spec below) | — |
 
 **Verification.** The full XCTest suite runs on a macOS runner (`.github/workflows/tests.yml`) on every PR and push to `main`; it was green at the last merge. Logic is covered by tests; screens have not been checked on a device.
 
@@ -82,6 +86,40 @@ A run is a `Workout` with `sectionRaw == "run"` and no exercises, so it flows th
 
 ### S1. Rest-timer end sound
 Original two-note tick (`LLR/Resources/rest-tick.wav`, 0.75 s, mono 16-bit PCM). The scheduled "Rest over" notification plays it in the background; `RestSound` plays it in-app when the app is active (iOS suppresses the notification in the foreground), with the `.ambient` audio category so it mixes with music and follows the silent switch. Not auditioned.
+
+### A1. Set fields keep the stored value
+`LLR/Logic/SetFieldEdit.swift`, used by `SetRowView`, `HoldSetRowView` and `RoutineSetRowView`. Two bugs: filling a field with the one-decimal display text saved it back (61.25 kg became 61.3), and fields saved every keystroke but ignored an empty field (deleting a typed 100 left 10). Now text equal to the stored value's display writes nothing, and an emptied field restores the value from before the edit; a focus change starts a new edit. A blank routine weight or reps stays blank. Weights altered earlier are not repaired. Display is still one decimal, so 61.25 reads 61.3. `SetFieldEditTests`. Checked on a 375 pt iOS 26.5 simulator against the store.
+
+### A2. Finish safeguard
+`LLR/Logic/FinishCheck.swift` and `ActiveWorkoutView`. With unticked sets, an alert gives the count and offers **Keep Training** or **Finish**. A gym workout with nothing ticked has Finish disabled (minimise and Discard still work). With every set ticked, Finish needs no extra tap. Kineto is unchanged, because a session with pain recorded and nothing ticked is still saved. `FinishCheckTests`. Gym cases checked on a 375 pt simulator.
+
+## Now: iOS review fixes A3 and A4
+
+One PR each, in this order. Neither changes the data model or adds a dependency.
+
+### A3. "All workouts" cards open their workout
+**Symptom (reproduced).** Home → See all → tap a workout: nothing visible happens. Back then shows that workout's detail, pushed underneath. Cards on Home and Profile work. The screen was added in #66.
+
+**Cause (hypothesis, not yet proven).** `AllWorkoutsView` is pushed by a destination link, but its cards push values that are resolved by `navigationDestination` back on `HomeView`.
+
+**Change.** In `AllWorkoutsView`, link with `NavigationLink { LazyDestination { HistoryDestination(workout:) } }`. If that doesn't fix it, drop the hypothesis and investigate again. `LazyDestination` is required: `WorkoutDetailView` has a filtered `@Query` on its root, the pattern behind the #65 freeze.
+
+**Rejected.** Pushing `AllWorkoutsView` by value: it changes how a filtered-query screen is pushed.
+
+**#65 freeze check** (temporary UI test, not committed; 375 pt and 440 pt simulators)
+1. Control: in a scratch copy, remove #65's `LazyDestination` wrappers. The check must detect the freeze. **If it can't, stop and don't merge.**
+2. In the scratch copy, try the new link without `LazyDestination` and record the result.
+3. Open and go back five times each: All workouts with lift and run details; Home and Profile cards; Exercises, exercise detail, search and muscle explorer; Kineto Browse Catalog and Pain history.
+4. Pass: each destination appears within 10 s, Back returns to the right screen, and app CPU settles below 10%. Readings taken on an overloaded Mac don't count as a pass.
+5. Open and close Edit from a detail, then delete a test workout from it.
+
+**Limits.** Only the iOS 26.5 runtime is available, so iOS 17 is untested. No permanent UI test is added (UI tests are deferred).
+
+### A4. Exercise search is visible
+On iOS 26 the default search field sits under the floating tab bar. Use `.searchable(text:placement: .navigationBarDrawer(displayMode: .always))` in `ExerciseListView`, as `ExercisePickerView` does. Check on both sizes that the field is visible and filters. `ExerciseListView` has a filtered query on its root and isn't wrapped, so include it in the A3 freeze check.
+
+### Review findings not yet scheduled
+Timed sets (the check only starts a countdown; a hold on a just-added set can cancel itself), layout at large text sizes, low contrast of suggested set values, Kineto screening defaults and dead ends, and App Store readiness (privacy manifest, privacy policy, AI consent, photo usage string).
 
 ## Next: R2. Add Run — distance, time, exhaustion
 
